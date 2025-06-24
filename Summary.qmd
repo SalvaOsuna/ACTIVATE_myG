@@ -1,0 +1,411 @@
+---
+title: "Genetic diversity in the ACTIVATE lentil panel"
+author: "Salvador Osuna-Caballero"
+format: html
+editor: visual
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = F, echo = T, message = F, warning = F, 
+                      comment = NA, out.width = "100%")
+```
+---
+
+## Download Full Variant Set
+
+The compressed (.gz) VCF file can be downloaded from Jbrowse2. This includes SNPs and SV (indels) for the 197 lines with the following filtering criteria:
+
+-   MAF 0.05-0.95
+
+-   Max missing 10%
+
+-   Minimum SNP quality = 30
+
+The compress file has a size of 8.4 GB so I subset the data by chromosome using "bcftools" in `{bash}`:
+
+```{bash}
+
+bcftools view -r Lcu.1GRN.Chr1 lentil_snps.vcf.gz -o chr1_snps.vcf
+bcftools view -r Lcu.1GRN.Chr2 lentil_snps.vcf.gz -o chr2_snps.vcf
+bcftools view -r Lcu.1GRN.Chr3 lentil_snps.vcf.gz -o chr3_snps.vcf
+bcftools view -r Lcu.1GRN.Chr4 lentil_snps.vcf.gz -o chr4_snps.vcf
+bcftools view -r Lcu.1GRN.Chr5 lentil_snps.vcf.gz -o chr5_snps.vcf
+bcftools view -r Lcu.1GRN.Chr6 lentil_snps.vcf.gz -o chr6_snps.vcf
+bcftools view -r Lcu.1GRN.Chr7 lentil_snps.vcf.gz -o chr7_snps.vcf
+
+```
+
+Once I have compressed VCF files for each chromosome, I've filtered those files to keep only biallelic SNPs (indels excluded):
+
+```{bash}
+
+bcftools view -m2 -M2 -v snps chr1_snps.vcf.gz -Oz -o chr1_biallelic.vcf.gz
+bcftools view -m2 -M2 -v snps chr2_snps.vcf.gz -Oz -o chr2_biallelic.vcf.gz
+bcftools view -m2 -M2 -v snps chr3_snps.vcf.gz -Oz -o chr3_biallelic.vcf.gz
+bcftools view -m2 -M2 -v snps chr4_snps.vcf.gz -Oz -o chr4_biallelic.vcf.gz
+bcftools view -m2 -M2 -v snps chr5_snps.vcf.gz -Oz -o chr5_biallelic.vcf.gz
+bcftools view -m2 -M2 -v snps chr6_snps.vcf.gz -Oz -o chr6_biallelic.vcf.gz
+bcftools view -m2 -M2 -v snps chr7_snps.vcf.gz -Oz -o chr7_biallelic.vcf.gz
+
+```
+
+Since there is ungenotyped markers on the data set (max missing 10%), I imputed them on each chromosome using Beagle 5.5 (more info about the algorigthm at https://doi.org/10.1016/j.ajhg.2018.07.015):
+
+```{bash}
+
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr1_biallelic.vcf.gz out=chr1_imputed nthreads=8
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr2_biallelic.vcf.gz out=chr2_imputed nthreads=8
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr3_biallelic.vcf.gz out=chr3_imputed nthreads=8
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr4_biallelic.vcf.gz out=chr4_imputed nthreads=8
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr5_biallelic.vcf.gz out=chr5_imputed nthreads=8
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr6_biallelic.vcf.gz out=chr6_imputed nthreads=8
+java –Xmx16g -jar beagle.27Feb25.75f.jar gt=chr7_biallelic.vcf.gz out=chr7_imputed nthreads=8
+```
+
+After that, I processed each chromosome and saved it to disc. I extracted the genotypes using the `extract.gt()` function and converted the biallelic markers to numeric (0\|0 = 0 Homozygous ref; 0\|1 and 1\|0 = 1 Heterozygous; 1\|1 = 2 Homozygous alt). I did that using the "vcfR" package in `{R}`:
+
+```{r}
+
+#Install and Load Required Packages
+if (!require("vcfR")) install.packages("vcfR")
+
+# Load libraries
+library(vcfR)
+library(tidyverse)
+
+# List of chromosomes
+chroms <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7")
+
+# Process each chromosome and save to disk
+for (chr in chroms) {
+  cat("Processing", chr, "\n")
+  
+  # Load imputed_biallelic VCF
+  vcf <- read.vcfR(paste0(chr, "_imputed.vcf.gz"), verbose = FALSE)
+  
+  # Extract genotypes
+  gt <- extract.gt(vcf, element = "GT")
+  
+  # Manual conversion to numeric
+  gt_num <- matrix(NA, nrow = nrow(gt), ncol = ncol(gt))
+  for (i in 1:nrow(gt)) {
+    for (j in 1:ncol(gt)) {
+      if (is.na(gt[i, j])) {
+        gt_num[i, j] <- NA
+      } else if (gt[i, j] == "0|0") { #Note if the sep is represented as | or /
+        gt_num[i, j] <- 0 # Homozygous reference
+      } else if (gt[i, j] %in% c("0|1", "1|0")) {
+        gt_num[i, j] <- 1 # Heterozygous
+      } else if (gt[i, j] == "1|1") {
+        gt_num[i, j] <- 2 # Homozygous alternate
+      }
+    }
+  }
+  rownames(gt_num) <- rownames(gt)
+  colnames(gt_num) <- colnames(gt)
+  
+  # Save to disk
+  saveRDS(gt_num, file = paste0(chr, "_gt_num.rds"))
+  
+  # Clean up
+  rm(vcf, gt, gt_num)
+  gc()
+}
+
+```
+
+*Note:* I did the conversion to numeric manually through a loop, since the VCF function for doing that didn't work (too large dataset perhaps).
+
+Now I have a .rds file (compressed) for each chromosome with the **biallelic SNPs**, **filtered**, and **imputed** for the 197 lines (Figure 1).
+
+![Figure 1. Files ready to go for each chr showing their sizes in MB](gt_num%20files.png)
+
+## LD blocking
+
+The `chrX_gt_num.rds` files can be used to run different genetic diversity analysis. However, the number of genetic variants go from 1.3 to 2.6 millions depending on the chromosome (Table1). This can be challenging for running association analysis such as GWAS or GS. Therefore, it is convenient to reduce the number of genetic variants through binning.
+
+*Note:* "Genetic marker binning is a process used in metagenomics to classify DNA sequences obtained from metagenomic sequencing into discrete groups or **bins** based on their similarity to each other".
+
+Here, I'm going to bin the variants based on their linkage disequilibrium to identify haplotypes (LD blocks) using PLINK in `{bash}`.
+
+-   PLINK documentation: [Linkage disequilibrium - PLINK 1.9](https://www.cog-genomics.org/plink/1.9/ld#blocks).
+
+-   More info about the LD blocking algorithm: https://doi.org/10.1126/science.1069424.
+
+First, install PLINK and create a directory:
+
+```{bash}
+
+# Create a directory for PLINK
+mkdir -p ~/bin
+cd ~/bin
+
+# Download PLINK 1.9 (64-bit Linux version)
+wget https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20201019.zip
+
+# Unzip the archive
+unzip plink_linux_x86_64_20201019.zip
+
+# Make the plink binary executable
+chmod +x plink
+
+# Optionally add PLINK to your PATH permanently
+echo 'export PATH="$HOME/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# Test the installation
+plink --help
+```
+
+Then, create the CSI indexes with the adjusted parameters:
+
+```{bash}
+
+for chr in chr1 chr2 chr3 chr4 chr5 chr6 chr7; do 
+tabix -p vcf -C --min-shift 14 ${chr}_imputed.vcf.gz 
+done 
+```
+
+Convert the VCF files to an usable PLINK file and run the LD block analysis:
+
+```{bash}
+
+#VCF-to-PLINK conversion
+for chr in chr1 chr2 chr3 chr4 chr5 chr6 chr7; do
+plink --vcf ${chr}_imputed.vcf.gz --make-bed --out ${chr}_plink --double-id --allow-extra-chr
+done
+
+#LD BLOCK analysis
+for chr in chr1 chr2 chr3 chr4 chr5 chr6 chr7; do
+  /home/salvador/bin/plink --bfile ${chr}_plink --blocks no-pheno-req --out ${chr}_blocks --allow-extra-chr
+done
+```
+
+From that analysis I got 4 files for each chr, (using chr7 as example):
+
+-   chr7_blocks.nosex
+
+-   chr7_blocks.blocks (.blocks files contain one line per block, each with an asterisk followed by variant IDs.)
+
+-   chr7_blocks.blocks.det (.blocks.det files have a header line, followed by one line per block with the following six fields (Figure 2)):
+
+    -   CHR: Chromosome code
+
+    -   BP1: First base-pair coordinate
+
+    -   BP2: Last base-pair coordinate
+
+    -   KB: Block length in kbs
+
+    -   NSNPS: Number of variants in block
+
+    -   SNPS: '\|'-delimited variant IDs)
+
+-   chr7_blocks.log
+
+![Figure 2. example output of chr7_blocks.blocks.det](LD%20blocking%20example.png)
+
+Table 1 shows the number of variants before and after applying the LD blocking approach:
+
+| Chromosome    | SNPs (n)  | LD blocks (n) |
+|---------------|-----------|---------------|
+| Lcu.1GRN.Chr1 | 2,378,059 | 26,569        |
+| Lcu.1GRN.Chr2 | 2,571,440 | 27,150        |
+| Lcu.1GRN.Chr3 | 1,297,188 | 17,566        |
+| Lcu.1GRN.Chr4 | 1,255,068 | 22,686        |
+| Lcu.1GRN.Chr5 | 1,888,965 | 26,335        |
+| Lcu.1GRN.Chr6 | 1,232,722 | 14,238        |
+| Lcu.1GRN.Chr7 | 2,597,363 | 36,842        |
+
+: Table1.
+
+Next step is to figure out how to choose the representative SNP per LD block. For instance, between the variant located at 67,454 bp (BP1) and 67,465 bp (BP2) there is 4 SNPs. The easiest solution could be just pick the BP1 column and pull out those markers from the `_imputed.vcf.gz` file for each chromosome.
+
+A better solution could be to calculate the minor allele frequency (MAF) for each marker in the LD block (from BP1 to BP2) and select the SNP with the higher MAF as a representative for that block. I can do that in `{R}`:
+
+```{r}
+
+# Load required packages
+library(vcfR)
+library(dplyr)
+
+# List of chromosomes
+chroms <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7")
+
+# Function to calculate MAF from genotypes
+calculate_maf <- function(gt) {
+  # Convert genotype matrix to numeric
+  gts <- apply(gt, 1, function(x) {
+    # Replace phased (e.g., 0|1) and unphased (e.g., 0/1) with numeric alleles
+    x <- gsub("[|/]1", "1", gsub("[|/]0", "0", x))
+    as.numeric(x)
+  })
+  # Transpose to get SNPs as rows, samples as columns
+  gts <- t(gts)
+  # Calculate MAF (minimum of allele frequency and 1 - frequency)
+  maf <- apply(gts, 1, function(x) min(mean(x, na.rm = TRUE), 1 - mean(x, na.rm = TRUE)))
+  return(maf)
+}
+
+# Process each chromosome
+for (chr in chroms) {
+  cat("Processing", chr, "\n")
+  
+  # Read the blocks.det file
+  blocks <- read.table(paste0(chr, "_blocks.blocks.det"), header = TRUE, stringsAsFactors = FALSE)
+  
+  # Create a data frame with CHR, BP1, and BP2
+  block_ranges <- data.frame(
+    chr_full = blocks$CHR,  # e.g., "Lcu.1GRN.Chr7"
+    bp1 = blocks$BP1,      # Start position
+    bp2 = blocks$BP2       # End position
+  )
+  
+  # Load the imputed VCF file
+  vcf_file <- paste0(chr, "_imputed.vcf.gz")
+  vcf <- read.vcfR(vcf_file, verbose = FALSE)
+  
+  # Extract chromosome and position from the VCF (POS is in the FIX column)
+  vcf_pos <- getFIX(vcf)
+  vcf_chrom <- vcf_pos[, 1]  # Chromosome column
+  vcf_pos <- as.numeric(vcf_pos[, 2])  # Position column
+  
+  # Initialize a list to store representative SNP indices
+  rep_snps <- integer()
+  
+  # Loop through each block range
+  for (i in 1:nrow(block_ranges)) {
+    chrom <- block_ranges$chr_full[i]
+    start_pos <- block_ranges$bp1[i]
+    end_pos <- block_ranges$bp2[i]
+    
+    # Find indices of SNPs within the block range
+    block_indices <- which(vcf_chrom == chrom & vcf_pos >= start_pos & vcf_pos <= end_pos)
+    
+    if (length(block_indices) > 0) {
+      # Subset the VCF to get genotypes for SNPs in the block
+      block_vcf <- vcf[block_indices, ]
+      
+      # Extract genotypes (excluding the first 5 fixed columns: CHROM, POS, ID...)
+      block_gt <- block_vcf@gt[, -c(1:5), drop = FALSE]
+      
+      # Calculate MAF for each SNP in the block
+      maf_values <- calculate_maf(block_gt)
+      
+      # Find the index of the SNP with the highest MAF within the block indices
+      max_maf_idx <- block_indices[which.max(maf_values)]
+      
+      # Add the representative SNP index to the list
+      rep_snps <- c(rep_snps, max_maf_idx)
+    } else {
+      warning(paste("No SNPs found in block", chrom, start_pos, "-", end_pos))
+    }
+  }
+  
+  # Subset the VCF to include only representative SNPs
+  if (length(rep_snps) > 0) {
+    subset_vcf <- vcf[rep_snps, ]
+    
+    # Write the subsetted VCF to a new file
+    write.vcf(subset_vcf, paste0(chr, "_imputed_ldrep_maf.vcf.gz"), mask = FALSE)
+    
+    # Report the number of representative SNPs
+    cat("Number of representative SNPs in", chr, ":", nrow(subset_vcf), "\n")
+  } else {
+    cat("No representative SNPs found for", chr, "\n")
+  }
+}
+
+# Clean up for saving RAM memory
+rm(vcf, subset_vcf, block_ranges, rep_snps)
+gc()
+```
+
+## Principal Component Analyses
+
+Now I have seven files, one per chromosome, `_imputed_ldrep_maf.vcf.gz`, with the imputed (+ filtered) variants binned by haplotypes. I run PCA analysis over the full variant set (on the 197 lines) and the haplotypes by chromosome and all chr together to visualize differences.
+
+For this visualization goal, I did the PCAs using the "SNPRelate" package and I make it interactive using the "plotly" package in `{R}`:
+
+```{r, chunck-label}
+
+# Load required packages
+library(SNPRelate)
+library(plotly)
+library(vcfR)
+
+# Function to perform interactive PCA and save as HTML
+perform_interactive_pca <- function(vcf_file, title, output_html) {
+  # Convert VCF to GDS format
+  gds_file <- paste0(tools::file_path_sans_ext(output_html), "_gds.gds")
+  snpgdsVCF2GDS(vcf_file, gds_file, method = "biallelic.only")
+  genofile <- snpgdsOpen(gds_file)
+  
+  # Perform PCA
+  pca <- snpgdsPCA(genofile, autosome.only = FALSE)  # Allow non-standard chromosomes
+  
+  # Get sample IDs and PC scores
+  sample.id <- pca$sample.id
+  pc.percent <- pca$varprop * 100
+  pc1 <- pca$eigenvect[, 1]
+  pc2 <- pca$eigenvect[, 2]
+  
+  # Create a data frame for plotting
+  pca_data <- data.frame(Sample = sample.id, PC1 = pc1, PC2 = pc2)
+  
+  # Create interactive plot with plotly
+  p <- plot_ly(pca_data, x = ~PC1, y = ~PC2, type = 'scatter', mode = 'markers',
+               text = ~Sample,  # Hover text shows sample ID
+               hoverinfo = 'text',
+               marker = list(size = 10, opacity = 0.6, color = 'blue'))
+  
+  # Update layout
+  p <- layout(p, title = title,
+              xaxis = list(title = paste0("PC1 (", round(pc.percent[1], 2), "%)")),
+              yaxis = list(title = paste0("PC2 (", round(pc.percent[2], 2), "%)")))
+  
+  # Save as HTML
+  htmlwidgets::saveWidget(p, file = output_html)
+  
+  # Close GDS file
+  snpgdsClose(genofile)
+  
+  # Return PCA summary
+  cat("Interactive PCA for", title, "saved as", output_html, ". Variance explained - PC1:",
+      round(pc.percent[1], 2), "%, PC2:", round(pc.percent[2], 2), "%\n")
+  return(pca_data)
+}
+
+# List of chromosomes
+chroms <- c("chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7")
+
+# Process individual chromosomes for MAF-based LD-representative VCFs
+for (chr in chroms) {
+  maf_vcf <- paste0(chr, "_imputed_ldrep_maf.vcf.gz")
+  title <- paste("Interactive PCA -", chr, "LD Representative SNPs (MAF-based, 197 lines)")
+  output_html <- paste0(chr, "_ldrep_maf_pca_plot.html")
+  perform_interactive_pca(maf_vcf, title, output_html)
+}
+
+# Combine all MAF-based LD-representative VCFs into a single VCF
+maf_vcf_list <- lapply(chroms, function(chr) read.vcfR(paste0(chr, "_imputed_ldrep_maf.vcf.gz"), verbose = FALSE))
+combined_maf_vcf <- do.call(rbind, maf_vcf_list)
+write.vcf(combined_maf_vcf, "all_chrs_imputed_ldrep_maf.vcf.gz", mask = FALSE)
+
+# Perform PCA on combined MAF-based LD-representative VCF
+title <- "Interactive PCA - All Chromosomes LD Representative SNPs (MAF-based, 197 lines)"
+output_html <- "all_chrs_ldrep_maf_pca_plot.html"
+perform_interactive_pca("all_chrs_imputed_ldrep_maf.vcf.gz", title, output_html)
+
+# Clean up
+rm(maf_vcf_list, combined_maf_vcf)
+gc()
+```
+
+For each chr and all chr together I generated two PCA .html files: one using all the variants (millions, Table 1) and other one using the LD blocks. As an example, I'm showing here a screenshot for the PCAs for all chr together using both datasets:
+
+> [PCAs/all_chrs_full_pca_plot.html](PCAs/all_chrs_full_pca_plot.html)
+
+<iframe src="PCAs/all_chrs_full_pca_plot.html" style="width:100%; height:600px;" data-external="1">
+
+</iframe>
