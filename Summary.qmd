@@ -405,8 +405,8 @@ gc()
 
 For each chr and all chr together I generated two PCA .html files: one using all the variants (millions, Table 1) and other one using the LD blocks. As an example, I'm showing here a screenshot for the PCAs for all chr together using both datasets:
 
-> [PCA full set of variants for the 197 ACTIVATE lentil lines](all_chrs_full_pca_plot.html)
+> [PCA full set of variants for the 197 ACTIVATE lentil lines](Figures/all_chrs_full_pca_plot.html)
 
-<iframe src="all_chrs_full_pca_plot.html" style="width:100%; height:600px;" data-external="1">
+<iframe src="Figures/all_chrs_full_pca_plot.html" style="width:100%; height:600px;" data-external="1">
 
 </iframe>
