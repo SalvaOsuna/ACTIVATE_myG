@@ -9,13 +9,16 @@ library(SeqArray)
 library(SNPRelate)
 
 # Define your file names
-setwd("dataq/genetic_diversity/")
-vcf_fn <- "Lcu.1GRN-ACTIVATE-lightly filtered.vcf.gz"
-gds_fn <- "Lcu_ACTIVATE_biallelic.gds"
+ #setwd("data/")
+vcf_fn <- "data/Lcu.1GRN-ACTIVATE-lightly filtered.vcf.gz"
+gds_fn <- "data/Lcu_ACTIVATE_biallelic.gds"
 
 # 1. Convert VCF to GDS
 # parallel = 4 uses 4 cores to speed this up. Adjust based on your PC.
-seqVCF2GDS(vcf_fn, gds_fn, method = "biallelic.only")
+
+seqVCF2GDS(vcf_fn, 
+           gds_fn, 
+           method = "biallelic.only")
 
 # 2. Open the connection to the new GDS file
 genofile <- seqOpen(gds_fn)
