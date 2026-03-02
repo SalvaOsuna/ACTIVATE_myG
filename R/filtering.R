@@ -202,3 +202,95 @@ cat("Success! You now have standalone SV files.\n")
 
 # You can now safely close the original working file
 seqClose(genofile)
+
+#Remove RILs####
+# Load necessary libraries
+library(gdsfmt)
+library(SeqArray)
+library(SNPRelate)
+
+# --- 1. Define Inputs, Outputs, and Samples to Remove ---
+gds_files <- c(
+  "data/ACT197_SVs.gds",
+  "data/ACT197_biallelic.gds",
+  "data/ACT197_biallelic_PRUNED.gds",
+  "data/ACT197_biallelic_codingonly.gds"
+)
+
+out_files <- c(
+  "data/ACT187_SVs.gds",
+  "data/ACT187_biallelic.gds",
+  "data/ACT187_biallelic_PRUNED.gds",
+  "data/ACT187_biallelic_codingonly.gds"
+)
+
+gen_to_remove <- c(
+  "LR-86-10_ACT", "LR-86-11_ACT", "LR-86-12_ACT",
+  "LR-86-18_ACT", "LR-86-2_ACT",  "LR-86-45_ACT",
+  "LR-86-48_ACT", "LR-86-50_ACT", "LR-86-57_ACT",
+  "LR-86-73_ACT"
+)
+
+# --- 2. Define the Smart Subsetting Function ---
+filter_gds_samples <- function(in_file, out_file, remove_ids) {
+  
+  if(!file.exists(in_file)) {
+    warning(paste("File not found:", in_file))
+    return(NULL)
+  }
+  
+  cat(paste("\nProcessing:", basename(in_file), "...\n"))
+  
+  # Check File Format
+  f_check <- openfn.gds(in_file)
+  file_format <- get.attr.gdsn(f_check$root)$FileFormat
+  closefn.gds(f_check)
+  
+  if (!is.null(file_format) && file_format == "SEQ_ARRAY") {
+    cat("  Format: SeqArray\n")
+    
+    # Open with SeqArray
+    f <- seqOpen(in_file)
+    
+    # Get all samples and determine which to keep
+    all_samples <- seqGetData(f, "sample.id")
+    keep_samples <- setdiff(all_samples, remove_ids)
+    
+    cat(paste("  Original samples:", length(all_samples), "\n"))
+    cat(paste("  Samples to keep:", length(keep_samples), "\n"))
+    
+    # Apply filter
+    seqSetFilter(f, sample.id = keep_samples, verbose=FALSE) 
+    
+    # Export to new file
+    cat(paste("  Exporting to:", basename(out_file), "\n"))
+    seqExport(f, out_file, verbose=FALSE)
+    
+    seqClose(f)
+    
+  } else {
+    cat("  Format: SNP GDS (SNPRelate)\n")
+    
+    # Open with SNPRelate
+    f <- snpgdsOpen(in_file)
+    
+    # Get all samples and determine which to keep
+    all_samples <- read.gdsn(index.gdsn(f, "sample.id"))
+    keep_samples <- setdiff(all_samples, remove_ids)
+    
+    cat(paste("  Original samples:", length(all_samples), "\n"))
+    cat(paste("  Samples to keep:", length(keep_samples), "\n"))
+    
+    # Create the new subsetted file
+    cat(paste("  Exporting to:", basename(out_file), "\n"))
+    snpgdsCreateGenoSet(in_file, out_file, sample.id = keep_samples, verbose=FALSE)
+    
+    snpgdsClose(f)
+  }
+  
+  cat("  Done.\n")
+}
+
+# --- 3. Execute Subsetting ---
+# Apply the function to all matching input/output pairs
+mapply(filter_gds_samples, gds_files, out_files, MoreArgs = list(remove_ids = gen_to_remove))
