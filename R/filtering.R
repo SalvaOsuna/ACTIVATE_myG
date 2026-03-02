@@ -116,7 +116,7 @@ seqClose(genofile)
 #impute####
 # --- 1. Load Data ---
 # Load the objects created in the previous step
-load("data/ACTIVATE_GAPIT_SV_Input.RData") 
+load("data/ACTIVATE_GAPIT_SV_Input.RData")
 # This loads 'myGD' and 'myGM' into your environment
 
 # --- 2. Filter by Missing Rate ---
