@@ -7,18 +7,21 @@ library(dplyr)
 
 #all chromosomes####
 # --- 1. Configuration ---
+ #modify this based on the datasets
 gds_files <- c(
-  "data/ACT197_SVs.gds",
+  "data/LDP324_nofiltered.gds",
   "data/ACT197_biallelic.gds",
+  "data/Merged_Analysis_RealCoords.gds",
   "data/ACT197_biallelic_PRUNED.gds",
   "data/ACT197_biallelic_codingonly.gds"
 )
 
 dataset_labels <- c(
-  "SVs",
-  "All Biallelic SNPs ",
-  "LD-Pruned SNPs",
-  "Coding SNPs"
+  "LDP324_SNPs",
+  "ACT197_SNPs ",
+  "LDP324+ACT197",
+  "ACT197_Pruned",
+  "ACT197_Coding_SNPs"
 )
 
 max_distance_bp <- 10000000  # Max distance to plot (10 Mb)
@@ -139,7 +142,7 @@ p <- ggplot(plot_data, aes(x = Distance / 1000000, y = R2, color = Dataset)) +
   geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkgrey") +
   
   labs(
-    title = "LD Decay Comparison in ACTIVATE Lentil Panel",
+    title = "LD Decay Comparison in Breeding Lines (ACT197) vs Diversity Panel (LDP324)",
     x = "Physical Distance (Megabases)",
     y = expression("Linkage Disequilibrium (" * r^2 * ")"),
     color = "Dataset"
@@ -155,7 +158,7 @@ p <- ggplot(plot_data, aes(x = Distance / 1000000, y = R2, color = Dataset)) +
 print(p)
 
 # Save the plot
-ggsave("Results/ACTIVATE_LD_Decay_Comparison.png", plot = p, width = 9, height = 6, dpi = 600)
+ggsave("Results/ACTIVATE_LD_Decay_Comparison2.png", plot = p, width = 9, height = 6, dpi = 600)
 cat("Done! Plot saved to ACTIVATE_LD_Decay_Comparison.png\n")
 
 #by chromosome####
@@ -168,17 +171,19 @@ library(dplyr)
 
 # --- 1. Configuration ---
 gds_files <- c(
-  "data/ACT197_SVs.gds",
+  "data/LDP324_nofiltered.gds",
   "data/ACT197_biallelic.gds",
+  "data/Merged_Analysis_RealCoords.gds",
   "data/ACT197_biallelic_PRUNED.gds",
   "data/ACT197_biallelic_codingonly.gds"
 )
 
 dataset_labels <- c(
-  "SVs",
-  "All Biallelic SNPs",
-  "LD-Pruned SNPs",
-  "Coding SNPs"
+  "LDP324_SNPs",
+  "ACT197_SNPs ",
+  "LDP324+ACT197",
+  "ACT197_Pruned",
+  "ACT197_Coding_SNPs"
 )
 
 max_distance_bp <- 10000000  # Max distance to plot (10 Mb)
@@ -333,7 +338,7 @@ for (chr_name in unique_chrs) {
   
   # Clean up the chromosome name for the filename (e.g., handles "Lcu.1GRN.Chr1")
   clean_chr_name <- gsub("[^A-Za-z0-9_]", "_", chr_name)
-  out_file <- paste0("Results/ACTIVATE_LD_Decay_", clean_chr_name, ".png")
+  out_file <- paste0("Results/ACTIVATE_LD_Decay2_", clean_chr_name, ".png")
   
   # Save the plot
   ggsave(out_file, plot = p, width = 9, height = 6, dpi = 600)
