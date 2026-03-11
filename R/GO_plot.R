@@ -6,9 +6,11 @@ library(GenomicRanges)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
+BiocManager::install("GO.db")
 library(GO.db)
 library(AnnotationDbi)
 library(Biostrings)
+
 # --- 1. Load Data ---
 cat("Loading GFF3 annotation and Significant XP-CLR regions...\n")
 
@@ -20,7 +22,7 @@ gff <- import(gff_file)
 genes <- gff[gff$type %in% c("gene", "mRNA")]
 
 # Load the Significant Regions from your target scenario
-target_scenario <- "Py_Scenario2_Breeding" # Change to Py_Scenario2_Breeding or Py_Scenario1_Adaptation for the other run
+target_scenario <- "Py_Scenario1_Adaptation" # Change to Py_Scenario2_Breeding or Py_Scenario1_Adaptation for the other run
 sig_regions <- read.csv(sprintf("Results/%s_SignificantRegions.csv", target_scenario))
 
 # Convert to GenomicRanges
@@ -190,10 +192,10 @@ library(stringr)
 cat("Loading protein sequences and candidate gene list...\n")
 
 # 1. Define the scenario
-target_scenario <- "Py_Scenario2_Breeding" # Change to Py_Scenario2_Breeding or Py_Scenario1_Adaptation for the other run
+target_scenario <- "Py_Scenario1_Adaptation" # Change to Py_Scenario2_Breeding or Py_Scenario1_Adaptation for the other run
 
 # 2. Load your candidate genes
-candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scenario), sep = ";")
+candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scenario))
 
 # Clean up the IDs (sometimes GFF3 adds prefixes like "gene:" or "mRNA:" that aren't in the FASTA)
 query_ids <- str_remove_all(candidates_df$ID, "^(gene:|mRNA:|transcript:)")
@@ -239,35 +241,44 @@ candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scena
 candidates_df <- candidates_df %>%
   mutate(clean_id = gsub("^(gene:|mRNA:|transcript:)", "", ID))
 
-# 2. Load the InterPro TSV file
-# Note: Check the exact filename of your downloaded TSV
-interpro_file <- "data/iprscan5-p1m_breeding1.tsv" 
+# Reading TSV file using read_tsv()
+library(readr)
+# I did this intermediate step because in interpro I cannot scan more than 100 proteins
+df <- read_tsv('Results/iprscan5-Breeding_1-100.tsv',col_names = F)
+df2 <- read_tsv('Results/iprscan5_breeding_100-179.tsv',col_names = F)
+interpro_file <- rbind(df, df2)
+write_tsv(interpro_file, 'Results/Py_Scenario2_Breeding_interpro_results.tsv',col_names = F)
 
-# InterPro TSVs from the web often have a header. 
-# We use read.delim which handles tab-separated data perfectly.
-interpro_df <- read.delim(interpro_file, header = F, stringsAsFactors = FALSE)
-write.table(interpro_df, "Results/interpro_df1.csv", sep = ";")
-interpro_df <- read.delim("Results/interpro_df1.csv", header = F, stringsAsFactors = FALSE, sep = ";")
+# 2. Load the headerless InterPro TSV
+interpro_file <- "Results/Py_Scenario2_Breeding_interpro_results.tsv"
 
-# 3. Extract the GO terms
-# We only need the protein ID and the GO annotations column.
-# Note: InterPro column names can vary slightly (e.g., "GO.annotations" or "GO_annotations").
-# We will dynamically find the column containing "GO"
-go_col <- grep("V15", colnames(interpro_df), ignore.case = TRUE, value = TRUE)
+interpro_df <- read.delim(interpro_file, header = FALSE, stringsAsFactors = FALSE)
 
-if (length(go_col) == 0) {
-  stop("Could not find a GO column in the TSV. Please check the column names!")
-}
+# Assign the proper standard InterPro column names
+colnames(interpro_df) <- c("ID", "md5", "length", "analysis", 
+                           "sig_acc", "sig_desc", "start", "stop", "evalue", 
+                           "status", "date", "ipr_acc", "ipr_desc", 
+                           "go_terms", "pathways")
 
+# 3. Extract and Clean the GO terms
 go_mapping <- interpro_df %>%
-  dplyr::select(V2, all_of(go_col[1])) %>%
-  # Rename for easier handling
-  dplyr::rename(ID = 1, go_terms = 2) %>%
-  # Remove rows with no GO terms
+  dplyr::select(ID, go_terms) %>%
+  # Remove rows where GO terms are missing or just a hyphen
   filter(go_terms != "" & !is.na(go_terms) & go_terms != "-") %>%
-  # InterPro separates multiple GO terms with a pipe (|)
+  # Split multiple GO terms on the pipe character
   separate_rows(go_terms, sep = "\\|") %>%
-  distinct()
+  # Strip out the database tags in parentheses (e.g., "(InterPro)" or "(PANTHER)")
+  mutate(go_terms = gsub("\\(.*\\)", "", go_terms)) %>%
+  # Remove the whitespace just in case
+  mutate(go_terms = trimws(go_terms)) %>%
+  # Keep only unique combinations of gene + GO term
+  distinct(ID, go_terms)
+
+go_mapping <- go_mapping %>%
+  # Remove a literal dot (\\.) followed by digits ([0-9]+) at the end of the string ($)
+  mutate(ID = sub("\\.[0-9]+$", "", ID)) %>%
+  # Re-run distinct just in case multiple transcripts collapsed into the same gene ID
+  distinct(ID, go_terms)
 
 # 4. Merge with your candidate genes
 final_go_df <- candidates_df %>%
@@ -284,48 +295,62 @@ mapped_terms <- suppressMessages(
 
 final_go_df <- final_go_df %>%
   left_join(mapped_terms, by = c("go_terms" = "GOID")) %>%
-  mutate(term_name = ifelse(is.na(TERM), go_terms, TERM))
+  # Keep only valid BP, MF, CC ontologies (filters out missing data)
+  filter(ONTOLOGY %in% c("BP", "MF", "CC")) %>%
+  mutate(
+    term_name = ifelse(is.na(TERM), go_terms, TERM),
+    # Expand the acronyms for beautiful facet labels
+    ontology_full = case_when(
+      ONTOLOGY == "BP" ~ "Biological Process",
+      ONTOLOGY == "MF" ~ "Molecular Function",
+      ONTOLOGY == "CC" ~ "Cellular Component"
+    )
+  )
 
-# 6. Count and rank the biological functions
+# 6. Count and rank WITHIN each Ontology category
 go_counts <- final_go_df %>%
-  count(term_name, name = "gene_count") %>%
-  arrange(desc(gene_count)) %>%
-  # Optional: Filter out super generic terms if they dominate the plot
-  # filter(!term_name %in% c("biological_process", "molecular_function", "cellular_component")) %>%
-  head(20)
+  count(ontology_full, term_name, name = "gene_count") %>%
+  group_by(ontology_full) %>%
+  # Grab the top 10 terms per category to keep the plot balanced
+  slice_max(order_by = gene_count, n = 10, with_ties = FALSE) %>%
+  ungroup()
 
-# 7. Generate the Lollipop Plot
-cat("Generating GO Term plot...\n")
+# 7. Generate the Faceted Lollipop Plot
+cat("Generating Faceted GO Term plot...\n")
 
 plot_title <- gsub("_", " ", target_scenario)
 
-p_go <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = gene_count)) +
-  geom_segment(aes(x = reorder(term_name, gene_count), xend = term_name, y = 0, yend = gene_count), color = "steelblue") +
-  geom_point(color = "firebrick", size = 4, alpha = 0.8) +
+p_go_faceted <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = gene_count, color = ontology_full)) +
+  # The Lollipop sticks
+  geom_segment(aes(xend = term_name, yend = 0), linewidth = 1) +
+  # The Lollipop heads
+  geom_point(size = 4, alpha = 0.9) +
   coord_flip() + 
+  # Facet by Ontology, letting the Y-axis (which is flipped to X) scale independently
+  # space = "free_y" ensures categories with fewer than 10 terms don't look awkwardly stretched
+  facet_grid(ontology_full ~ ., scales = "free_y", space = "free_y") +
+  # Assign distinct colors to the three categories
+  scale_color_manual(values = c("Biological Process" = "#1b9e77", 
+                                "Molecular Function" = "#d95f02", 
+                                "Cellular Component" = "#7570b3")) +
   labs(
-    title = paste("Top 20 Biological Functions Selected in", plot_title),
-    subtitle = "Gene Ontology (GO) terms from InterProScan mapping",
-    x = "Biological Function",
+    title = paste("Functional Classification of Selected Genes:", plot_title),
+    subtitle = "Top GO terms faceted by Ontology",
+    x = "Gene Ontology (GO) Term",
     y = "Number of Selected Genes"
   ) +
   theme_bw() +
   theme(
+    legend.position = "none", # Hide legend since the facet strips act as labels
     axis.text.y = element_text(size = 11, color = "black"),
+    strip.background = element_rect(fill = "grey90", color = "black"),
+    strip.text.y = element_text(size = 11, face = "bold", angle = 270), # Rotate text for readability
     panel.grid.minor = element_blank(),
     panel.grid.major.y = element_blank(),
     plot.title = element_text(face = "bold")
   )
-
 # Save the plot
-ggsave(sprintf("Results/%s_InterPro_GO_Terms.png", target_scenario), plot = p_go, width = 11, height = 7, dpi = 600)
+ggsave(sprintf("Results/%s_InterPro_GO_Faceted.png", target_scenario), plot = p_go_faceted, width = 12, height = 9, dpi = 600)
 cat("Done! Beautiful GO Term plot saved.\n")
 
 
-#second option####
-# Reading TSV file using read_tsv()
-library(readr)
-df <- read_tsv('Results/Py_Scenario1_Adaptation_Candidate_Proteins_GO.tsv',col_names = F)
-df2 <- read_tsv('Results/iprscan5-R20260311-172448-0084-64854508-p1m.tsv',col_names = F)
-interpro_file <- rbind(df, df2)
-write_tsv(interpro_file, 'Results/Py_Scenario1_Adaptation_Candidate_GO.tsv',col_names = F)

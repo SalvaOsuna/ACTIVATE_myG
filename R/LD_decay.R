@@ -11,17 +11,17 @@ library(dplyr)
 gds_files <- c(
   "data/LDP324_nofiltered.gds",
   "data/ACT197_biallelic.gds",
-  "data/Merged_Analysis_RealCoords.gds",
-  "data/ACT197_biallelic_PRUNED.gds",
-  "data/ACT197_biallelic_codingonly.gds"
+  "data/Merged_Analysis_RealCoords.gds"
+  #"data/ACT197_biallelic_PRUNED.gds",
+  #"data/ACT197_biallelic_codingonly.gds"
 )
 
 dataset_labels <- c(
   "LDP324_SNPs",
   "ACT197_SNPs ",
-  "LDP324+ACT197",
-  "ACT197_Pruned",
-  "ACT197_Coding_SNPs"
+  "LDP324+ACT197"
+  #"ACT197_Pruned",
+  #"ACT197_Coding_SNPs"
 )
 
 max_distance_bp <- 10000000  # Max distance to plot (10 Mb)
@@ -173,17 +173,17 @@ library(dplyr)
 gds_files <- c(
   "data/LDP324_nofiltered.gds",
   "data/ACT197_biallelic.gds",
-  "data/Merged_Analysis_RealCoords.gds",
-  "data/ACT197_biallelic_PRUNED.gds",
-  "data/ACT197_biallelic_codingonly.gds"
+  "data/Merged_Analysis_RealCoords.gds"
+  #"data/ACT197_biallelic_PRUNED.gds",
+  #"data/ACT197_biallelic_codingonly.gds"
 )
 
 dataset_labels <- c(
   "LDP324_SNPs",
   "ACT197_SNPs ",
-  "LDP324+ACT197",
-  "ACT197_Pruned",
-  "ACT197_Coding_SNPs"
+  "LDP324+ACT197"
+  #"ACT197_Pruned",
+  #"ACT197_Coding_SNPs"
 )
 
 max_distance_bp <- 10000000  # Max distance to plot (10 Mb)
@@ -338,7 +338,7 @@ for (chr_name in unique_chrs) {
   
   # Clean up the chromosome name for the filename (e.g., handles "Lcu.1GRN.Chr1")
   clean_chr_name <- gsub("[^A-Za-z0-9_]", "_", chr_name)
-  out_file <- paste0("Results/ACTIVATE_LD_Decay2_", clean_chr_name, ".png")
+  out_file <- paste0("Results/ACTIVATE_LD_Decay3_", clean_chr_name, ".png")
   
   # Save the plot
   ggsave(out_file, plot = p, width = 9, height = 6, dpi = 600)

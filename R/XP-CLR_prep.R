@@ -527,8 +527,7 @@ prep_lollipop_data <- function(scenario_prefix, threshold_quantile = 0.99) {
 
 # --- 2. Load Data for Both Scenarios ---
 data_adapt <- prep_lollipop_data("Py_Scenario1_Adaptation")
-data_breed <- prep_lollipop_data("Py_Scenario2_Breeding")
-
+data_breed <- prep_lollipop_data("Py_Scenario2_Breeding") 
 # --- 3. Define the Color Palette ---
 # Approximating the colors from your provided image
 chr_colors <- c(
@@ -591,3 +590,118 @@ final_plot <- plot_a / plot_b
 ggsave("Results/XPCLR_Stacked_Lollipop.png", plot = final_plot, width = 12, height = 8, dpi = 600)
 
 cat("Done! Check 'XPCLR_Stacked_Lollipop.png' in your Results folder.\n")
+
+#lollipop plot with R results####
+library(ggplot2)
+library(dplyr)
+library(data.table)
+library(patchwork)
+
+cat("Loading native R XP-CLR data for lollipop plots...\n")
+
+# --- 1. Define a function to prepare the R CSV data ---
+prep_r_lollipop_data <- function(file_path, threshold_quantile = 0.99) {
+  
+  if(!file.exists(file_path)) stop(paste("File not found:", file_path))
+  
+  # Load the single CSV file
+  df <- fread(file_path)
+  
+  # Normalize column names to lowercase to make them easy to target
+  colnames(df) <- tolower(colnames(df))
+  
+  # The native R output might name the position 'pos', 'position', or 'bp'
+  # We dynamically grab the score and position columns
+  clean_df <- df %>%
+    dplyr::rename(
+      bp_mid = mid_pos_mb,
+      xpclr_val = xpclr,
+      chr_name = chr
+    ) %>%
+    filter(!is.na(xpclr_val), is.finite(xpclr_val)) %>%
+    mutate(
+      xpclr_val = as.numeric(xpclr_val),
+      # Safely extract the chromosome number (handles "Lcu.1GRN.Chr1" or just "1")
+      chr_num = as.numeric(gsub(".*Chr", "", chr_name))
+    )
+  
+  # Calculate cumulative positions for a continuous X-axis
+  chr_lens <- clean_df %>% group_by(chr_num) %>% summarize(chr_max = max(bp_mid, na.rm = TRUE))
+  chr_lens$offset <- cumsum(as.numeric(chr_lens$chr_max)) - chr_lens$chr_max
+  
+  clean_df <- clean_df %>% 
+    left_join(chr_lens, by = "chr_num") %>%
+    mutate(bp_cum = bp_mid + offset)
+  
+  # Calculate X-axis breaks (center of each chromosome)
+  axis_df <- clean_df %>% group_by(chr_num) %>% summarize(center = mean(bp_cum, na.rm = TRUE))
+  
+  # Calculate threshold based on raw XP-CLR scores (Top 1%)
+  thresh_val <- quantile(clean_df$xpclr_val, threshold_quantile, na.rm = TRUE)
+  
+  return(list(data = clean_df, axis = axis_df, threshold = thresh_val))
+}
+
+# --- 2. Load Data for Both Scenarios ---
+# Make sure these point to the folder where your CSVs are located (e.g., "Results/" or "data/")
+file_adapt <- "Results/XPCLR_Scenario1_Adaptation_AllScores.csv"
+file_breed <- "Results/XPCLR_Scenario2_Breeding_AllScores.csv"
+
+data_adapt <- prep_r_lollipop_data(file_adapt)
+data_breed <- prep_r_lollipop_data(file_breed)
+
+# --- 3. Define the Color Palette ---
+chr_colors <- c(
+  "1" = "#1b9e77", "2" = "#d95f02", "3" = "#7570b3", 
+  "4" = "#e7298a", "5" = "#66a61e", "6" = "#e6ab02", "7" = "#a6761d"
+)
+
+# --- 4. Define the Plotting Function ---
+make_lollipop_plot <- function(prep_data, title_label, show_x_labels = FALSE) {
+  df <- prep_data$data
+  ax <- prep_data$axis
+  thr <- prep_data$threshold
+  
+  p <- ggplot(df, aes(x = bp_cum, y = xpclr_val, color = as.character(chr_num))) +
+    geom_segment(aes(xend = bp_cum, yend = 0), alpha = 0.8, linewidth = 0.4) +
+    geom_point(size = 1.2, alpha = 0.9) +
+    geom_hline(yintercept = thr, color = "firebrick", linetype = "dashed", linewidth = 0.8) +
+    annotate("text", x = min(df$bp_cum) - (max(df$bp_cum)*0.02), y = thr, 
+             label = round(thr, 2), color = "firebrick", hjust = 1, vjust = -0.5, size = 3.5, fontface = "bold") +
+    scale_color_manual(values = chr_colors) +
+    scale_x_continuous(breaks = ax$center, labels = paste("LG", ax$chr_num, sep=""), expand = c(0.02, 0.02)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    coord_cartesian(clip = "off") + 
+    labs(x = NULL, y = "XP-CLR", title = title_label) +
+    theme_classic() +
+    theme(
+      legend.position = "none",
+      plot.title = element_text(face = "bold", size = 16),
+      axis.title.y = element_text(size = 14, face = "bold", margin = margin(r = 15)),
+      axis.text.y = element_text(size = 11, color = "black"),
+      axis.line.y = element_line(color = "black"),
+      axis.text.x = if(show_x_labels) element_text(size = 11, face = "bold", color = "black") else element_blank(),
+      axis.ticks.x = if(show_x_labels) element_line(color = "black") else element_blank(),
+      axis.line.x = if(show_x_labels) element_line(color = "black") else element_blank(),
+      plot.margin = margin(t = 10, r = 10, b = 10, l = 40)
+    )
+  
+  return(p)
+}
+
+# --- 5. Generate and Combine Plots ---
+cat("Building final stacked R plot...\n")
+
+# Panel A: Adaptation (Native R)
+plot_a <- make_lollipop_plot(data_adapt, "a (Native R: Adaptation)", show_x_labels = FALSE)
+
+# Panel B: Breeding (Native R)
+plot_b <- make_lollipop_plot(data_breed, "b (Native R: Breeding)", show_x_labels = TRUE)
+
+# Stack with patchwork
+final_plot <- plot_a / plot_b
+
+# Save the high-resolution image
+ggsave("R_XPCLR_Stacked_Lollipop.png", plot = final_plot, width = 12, height = 8, dpi = 600)
+
+cat("Done! Check 'R_XPCLR_Stacked_Lollipop.png' in your working directory.\n")
