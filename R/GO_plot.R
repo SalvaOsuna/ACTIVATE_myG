@@ -320,3 +320,12 @@ p_go <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = gene_count
 # Save the plot
 ggsave(sprintf("Results/%s_InterPro_GO_Terms.png", target_scenario), plot = p_go, width = 11, height = 7, dpi = 600)
 cat("Done! Beautiful GO Term plot saved.\n")
+
+
+#second option####
+# Reading TSV file using read_tsv()
+library(readr)
+df <- read_tsv('Results/Py_Scenario1_Adaptation_Candidate_Proteins_GO.tsv',col_names = F)
+df2 <- read_tsv('Results/iprscan5-R20260311-172448-0084-64854508-p1m.tsv',col_names = F)
+interpro_file <- rbind(df, df2)
+write_tsv(interpro_file, 'Results/Py_Scenario1_Adaptation_Candidate_GO.tsv',col_names = F)
