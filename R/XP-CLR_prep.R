@@ -210,7 +210,7 @@ library(dplyr)
 
 # --- 1. Define the XP-CLR Wrapper Function ---
 run_custom_xpclr <- function(gds_file, ref_file, obj_file, out_prefix, 
-                             window_size = 50000, step_size = 10000, thin_bp = 2000) {
+                             window_size = 500000, step_size = 50000, thin_bp = 2000) {
   
   cat(sprintf("\n======================================================\n"))
   cat(sprintf("Running XP-CLR: %s\n", out_prefix))
@@ -693,15 +693,15 @@ make_lollipop_plot <- function(prep_data, title_label, show_x_labels = FALSE) {
 cat("Building final stacked R plot...\n")
 
 # Panel A: Adaptation (Native R)
-plot_a <- make_lollipop_plot(data_adapt, "a (Native R: Adaptation)", show_x_labels = FALSE)
+plot_a <- make_lollipop_plot(data_adapt, "a", show_x_labels = FALSE)
 
 # Panel B: Breeding (Native R)
-plot_b <- make_lollipop_plot(data_breed, "b (Native R: Breeding)", show_x_labels = TRUE)
+plot_b <- make_lollipop_plot(data_breed, "b", show_x_labels = TRUE)
 
 # Stack with patchwork
 final_plot <- plot_a / plot_b
 
 # Save the high-resolution image
-ggsave("R_XPCLR_Stacked_Lollipop.png", plot = final_plot, width = 12, height = 8, dpi = 600)
+ggsave("Results/R_XPCLR_Stacked_Lollipop.png", plot = final_plot, width = 12, height = 8, dpi = 600)
 
 cat("Done! Check 'R_XPCLR_Stacked_Lollipop.png' in your working directory.\n")

@@ -102,11 +102,35 @@ for(q_id in query_ids) {
 # Subset the FASTA file
 candidate_peps <- pep_seqs[keep_seqs]
 
-# 5. Export the new, tiny FASTA file!
-out_fasta <- sprintf("Results/%s_Candidate_Proteins.fasta", target_scenario)
-writeXStringSet(candidate_peps, out_fasta)
+cat("Creating InterPro upload chunks...\n")
 
-cat(sprintf("Success! Extracted %d candidate protein sequences to %s\n", length(candidate_peps), out_fasta))
+# 5. Define chunk size and create a specific folder
+chunk_size <- 100
+chunk_dir <- sprintf("Results/%s_InterPro_Chunks", target_scenario)
+
+# Create the folder if it doesn't already exist
+if (!dir.exists(chunk_dir)) {
+  dir.create(chunk_dir, recursive = TRUE)
+}
+
+# 6. Split the protein sequences and save them
+num_seqs <- length(candidate_peps)
+# Create a vector that assigns each sequence to a chunk number (1, 1, ..., 2, 2, ...)
+chunk_indices <- ceiling(seq_len(num_seqs) / chunk_size)
+
+# Split the AAStringSet into a list of smaller AAStringSets
+pep_chunks <- split(candidate_peps, chunk_indices)
+
+cat(sprintf("Splitting %d sequences into %d chunks...\n", num_seqs, length(pep_chunks)))
+
+# Loop through the list and save each chunk
+for (i in seq_along(pep_chunks)) {
+  # Format the filename with leading zeros (e.g., chunk_01.fasta, chunk_02.fasta)
+  chunk_filename <- file.path(chunk_dir, sprintf("chunk_%02d.fasta", i))
+  writeXStringSet(pep_chunks[[i]], chunk_filename)
+}
+
+cat(sprintf("Success! All chunks saved to the folder: %s\n", chunk_dir))
 
 #ploting GO####
 library(dplyr)
@@ -118,55 +142,65 @@ library(AnnotationDbi)
 cat("Loading InterPro annotations and candidate genes...\n")
 
 # 1. Load your candidate genes
-target_scenario <- "Py_Scenario2_Breeding" # Change to Py_Scenario2_Breeding or Py_Scenario1_Adaptation for the other run
-candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scenario), sep = ";")
+target_scenario <- "XPCLR_Scenario1_Adaptation" # Change to XPCLR_Scenario2_Breeding or XPCLR_Scenario1_Adaptation for the other run
+candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scenario))
 
 # Clean the IDs in your candidates dataframe so they match the InterPro output exactly
 candidates_df <- candidates_df %>%
   mutate(clean_id = gsub("^(gene:|mRNA:|transcript:)", "", ID))
 
-# Reading TSV file using read_tsv()
-library(readr)
-# I did this intermediate step because in interpro I cannot scan more than 100 proteins
-df <- read_tsv('Results/iprscan5-Breeding_1-100.tsv',col_names = F)
-df2 <- read_tsv('Results/iprscan5_breeding_100-179.tsv',col_names = F)
-interpro_file <- rbind(df, df2)
-write_tsv(interpro_file, 'Results/Py_Scenario2_Breeding_interpro_results.tsv',col_names = F)
+cat("Finding and stitching InterPro TSV chunks...\n")
 
-# 2. Load the headerless InterPro TSV
-interpro_file <- "Results/Py_Scenario2_Breeding_interpro_results.tsv"
+# --- 2. Load and Stitch the Headerless InterPro TSVs ---
 
-interpro_df <- read.delim(interpro_file, header = FALSE, stringsAsFactors = FALSE)
+# Define the folder where you saved all those downloaded TSV chunks
+# (Update this path if you saved them somewhere else!)
+tsv_folder <- "Results/XPCLR_Scenario1_Adaptation_InterPro_Chunks" 
+
+# Search the folder for all files matching the chunk naming pattern
+file_pattern <- paste0("^iprscan5-", target_scenario, ".*\\.tsv$")
+tsv_files <- list.files(path = tsv_folder, pattern = file_pattern, full.names = TRUE)
+
+if(length(tsv_files) == 0) {
+  stop("No TSV files found! Check your folder path and target_scenario name.")
+}
+
+cat(sprintf("Found %d InterPro TSV files. Combining them now...\n", length(tsv_files)))
+
+# Read all files into a list, then bind them into one large dataframe
+interpro_list <- lapply(tsv_files, function(file) {
+  read.delim(file, header = FALSE, stringsAsFactors = FALSE)
+})
+interpro_df <- bind_rows(interpro_list)
 
 # Assign the proper standard InterPro column names
-colnames(interpro_df) <- c("ID", "md5", "length", "analysis", 
+colnames(interpro_df) <- c("protein_acc", "md5", "length", "analysis", 
                            "sig_acc", "sig_desc", "start", "stop", "evalue", 
                            "status", "date", "ipr_acc", "ipr_desc", 
                            "go_terms", "pathways")
 
-# 3. Extract and Clean the GO terms
+# --- 3. Extract and Clean the GO terms ---
+cat("Extracting and cleaning GO terms...\n")
+
 go_mapping <- interpro_df %>%
-  dplyr::select(ID, go_terms) %>%
+  dplyr::select(protein_acc, go_terms) %>%
+  dplyr::rename(clean_id = protein_acc) %>%
   # Remove rows where GO terms are missing or just a hyphen
   filter(go_terms != "" & !is.na(go_terms) & go_terms != "-") %>%
   # Split multiple GO terms on the pipe character
   separate_rows(go_terms, sep = "\\|") %>%
   # Strip out the database tags in parentheses (e.g., "(InterPro)" or "(PANTHER)")
   mutate(go_terms = gsub("\\(.*\\)", "", go_terms)) %>%
-  # Remove the whitespace just in case
+  # Remove whitespace
   mutate(go_terms = trimws(go_terms)) %>%
+  # Snip off the transcript suffix (e.g., turning .1 into just the gene ID)
+  mutate(clean_id = sub("\\.[0-9]+$", "", clean_id)) %>%
   # Keep only unique combinations of gene + GO term
-  distinct(ID, go_terms)
-
-go_mapping <- go_mapping %>%
-  # Remove a literal dot (\\.) followed by digits ([0-9]+) at the end of the string ($)
-  mutate(ID = sub("\\.[0-9]+$", "", ID)) %>%
-  # Re-run distinct just in case multiple transcripts collapsed into the same gene ID
-  distinct(ID, go_terms)
+  distinct(clean_id, go_terms)
 
 # 4. Merge with your candidate genes
 final_go_df <- candidates_df %>%
-  inner_join(go_mapping, by = "ID")
+  inner_join(go_mapping, by = "clean_id")
 
 cat(sprintf("Successfully mapped GO terms to %d candidate genes!\n", length(unique(final_go_df$clean_id))))
 
