@@ -76,7 +76,7 @@ library(stringr)
 cat("Loading protein sequences and candidate gene list...\n")
 
 # 1. Define the scenario
-target_scenario <- "XPCLR_Scenario2_Breeding" # Change to XPCLR_Scenario2_Breeding or XPCLR_Scenario1_Adaptation for the other run
+target_scenario <- "XPCLR_Scenario1_Adaptation" # Change to XPCLR_Scenario2_Breeding or XPCLR_Scenario1_Adaptation for the other run
 
 # 2. Load your candidate genes
 candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scenario))
@@ -142,7 +142,7 @@ library(AnnotationDbi)
 cat("Loading InterPro annotations and candidate genes...\n")
 
 # 1. Load your candidate genes
-target_scenario <- "XPCLR_Scenario1_Adaptation" # Change to XPCLR_Scenario2_Breeding or XPCLR_Scenario1_Adaptation for the other run
+target_scenario <- "XPCLR_Scenario2_Breeding" # Change to XPCLR_Scenario2_Breeding or XPCLR_Scenario1_Adaptation for the other run
 candidates_df <- read.csv(sprintf("Results/%s_Candidate_Genes.csv", target_scenario))
 
 # Clean the IDs in your candidates dataframe so they match the InterPro output exactly
@@ -155,7 +155,7 @@ cat("Finding and stitching InterPro TSV chunks...\n")
 
 # Define the folder where you saved all those downloaded TSV chunks
 # (Update this path if you saved them somewhere else!)
-tsv_folder <- "Results/XPCLR_Scenario1_Adaptation_InterPro_Chunks" 
+tsv_folder <- "Results/XPCLR_Scenario2_Breeding_InterPro_Chunks" 
 
 # Search the folder for all files matching the chunk naming pattern
 file_pattern <- paste0("^iprscan5-", target_scenario, ".*\\.tsv$")
@@ -224,13 +224,14 @@ final_go_df <- final_go_df %>%
       ONTOLOGY == "CC" ~ "Cellular Component"
     )
   )
+write.csv(final_go_df, "Results/XPCLR_Scenario2_Breeding_Final_GO.csv", row.names = FALSE)
 
 # 6. Count and rank WITHIN each Ontology category
 go_counts <- final_go_df %>%
   count(ontology_full, term_name, name = "gene_count") %>%
   group_by(ontology_full) %>%
   # Grab the top 10 terms per category to keep the plot balanced
-  slice_max(order_by = gene_count, n = 10, with_ties = FALSE) %>%
+  slice_max(order_by = gene_count, n = 20, with_ties = FALSE) %>%
   ungroup()
 
 # 7. Generate the Faceted Lollipop Plot
@@ -238,7 +239,7 @@ cat("Generating Faceted GO Term plot...\n")
 
 plot_title <- gsub("_", " ", target_scenario)
 
-p_go_faceted <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = gene_count, color = ontology_full)) +
+p_go_faceted <- ggplot(go_counts , aes(x = reorder(term_name, gene_count), y = gene_count, color = ontology_full)) +
   # The Lollipop sticks
   geom_segment(aes(xend = term_name, yend = 0), linewidth = 1) +
   # The Lollipop heads
@@ -271,4 +272,175 @@ p_go_faceted <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = ge
 ggsave(sprintf("Results/%s_InterPro_GO_Faceted.png", target_scenario), plot = p_go_faceted, width = 12, height = 9, dpi = 600)
 cat("Done! Beautiful GO Term plot saved.\n")
 
+#Venn diagram####
+library(dplyr)
+library(ggplot2)
+library(ggVennDiagram)
 
+cat("Preparing Biological Process lists for Venn Diagram...\n")
+
+# --- 1. Load your final GO dataframes ---
+# (Assuming you saved your final_go_df for each scenario, or you have them loaded in your environment)
+# For example, you might have saved them like this in your previous scripts:
+# write.csv(final_go_df, "Results/Py_Scenario1_Adaptation_Final_GO.csv", row.names = FALSE)
+
+df_adapt <- read.csv("Results/XPCLR_Scenario1_Adaptation_Final_GO.csv", stringsAsFactors = FALSE)
+df_breed <- read.csv("Results/XPCLR_Scenario2_Breeding_Final_GO.csv", stringsAsFactors = FALSE)
+
+# --- 2. Filter for Biological Processes and extract unique terms ---
+# We use unique() because we just want to know IF a pathway was targeted, 
+# not how many times it was targeted.
+bp_adapt <- df_adapt %>%
+  filter(ONTOLOGY == "BP") %>%
+  pull(term_name) %>%
+  unique()
+
+bp_breed <- df_breed %>%
+  filter(ONTOLOGY == "BP") %>%
+  pull(term_name) %>%
+  unique()
+
+# --- 3. Create the List Object for the Venn Diagram ---
+venn_list <- list(
+  "Adaptation (Scenario 1)" = bp_adapt,
+  "Breeding (Scenario 2)" = bp_breed
+)
+
+# --- 4. Plot the Venn Diagram ---
+cat("Generating plot...\n")
+
+p_venn <- ggVennDiagram(venn_list, 
+                        label_alpha = 0, # Removes the ugly white box behind the numbers
+                        category.names = c("Adaptation", "Breeding"),
+                        set_color = "black", # Outline of the circles
+                        set_size = 4) +      # Size of the title text
+  # Use a clean color gradient (e.g., from light grey to a deep blue/green)
+  scale_fill_gradient(low = "#F4FAFE", high = "#2B83BA") +
+  labs(
+    title = "Overlap of Selected Biological Processes",
+    subtitle = "Shared vs. Unique pathways driven by evolutionary pressure",
+    fill = "Number of\nGO Terms"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5),
+    legend.position = "right"
+  )
+
+# Save the plot
+ggsave("Results/BP_Venn_Diagram.png", plot = p_venn, width = 8, height = 8, dpi = 600, bg = "white")
+cat("Venn diagram saved to Results folder!\n\n")
+
+# --- 5. Extract the specific terms for your manuscript ---
+cat("--- Extracted Pathways for Manuscript Results ---\n")
+
+# Shared by both
+shared_bp <- intersect(bp_adapt, bp_breed)
+cat(sprintf("Number of Shared BP Terms: %d\n", length(shared_bp)))
+
+# Unique to Adaptation
+unique_adapt <- setdiff(bp_adapt, bp_breed)
+cat(sprintf("Number of Unique Adaptation BP Terms: %d\n", length(unique_adapt)))
+
+# Unique to Breeding
+unique_breed <- setdiff(bp_breed, bp_adapt)
+cat(sprintf("Number of Unique Breeding BP Terms: %d\n", length(unique_breed)))
+
+# Save these lists so you can read them easily
+write.csv(data.frame(Term = shared_bp), "Results/Venn_Shared_BP.csv", row.names = FALSE)
+write.csv(data.frame(Term = unique_adapt), "Results/Venn_Unique_Adaptation_BP.csv", row.names = FALSE)
+write.csv(data.frame(Term = unique_breed), "Results/Venn_Unique_Breeding_BP.csv", row.names = FALSE)
+
+cat("CSV files containing the exact overlapping and unique terms have been saved.\n")
+
+#lolipop plot with just unique terms####
+library(dplyr)
+library(ggplot2)
+
+cat("Categorizing GO Terms across scenarios...\n")
+
+# --- 1. Load your final GO dataframes ---
+# (Make sure these point to the dataframes you generated in the GO plotting step)
+df_adapt <- read.csv("Results/XPCLR_Scenario1_Adaptation_Final_GO.csv", stringsAsFactors = FALSE)
+df_breed <- read.csv("Results/XPCLR_Scenario2_Breeding_Final_GO.csv", stringsAsFactors = FALSE)
+
+# --- 2. Identify Unique and Shared Terms ---
+terms_adapt <- unique(df_adapt$term_name)
+terms_breed <- unique(df_breed$term_name)
+
+shared_terms <- intersect(terms_adapt, terms_breed)
+unique_adapt <- setdiff(terms_adapt, terms_breed)
+unique_breed <- setdiff(terms_breed, terms_adapt)
+
+# --- 3. Create the Master Comparison CSV ---
+# Build a simple dataframe tagging each term
+presence_df <- bind_rows(
+  data.frame(term_name = unique_adapt, Presence = "Scenario 1 (Adaptation Only)"),
+  data.frame(term_name = unique_breed, Presence = "Scenario 2 (Breeding Only)"),
+  data.frame(term_name = shared_terms, Presence = "Both Scenarios")
+)
+
+# Grab the Ontology categories to make the CSV more informative
+ontology_map <- bind_rows(
+  df_adapt %>% dplyr::select(term_name, ONTOLOGY, ontology_full),
+  df_breed %>% dplyr::select(term_name, ONTOLOGY, ontology_full)
+) %>% distinct(term_name, .keep_all = TRUE)
+
+master_csv <- presence_df %>%
+  left_join(ontology_map, by = "term_name") %>%
+  arrange(Presence, ONTOLOGY, term_name)
+
+write.csv(master_csv, "Results/GO_Terms_Comparison_Master.csv", row.names = FALSE)
+cat("Master comparison CSV saved to 'Results/GO_Terms_Comparison_Master.csv'!\n\n")
+
+# --- 4. Define a Function to Plot Unique Lollipops ---
+plot_unique_lollipop <- function(df, target_terms, title_label, filename_out) {
+  
+  # Filter the dataframe to ONLY include terms from our target list
+  unique_df <- df %>%
+    filter(term_name %in% target_terms) %>%
+    filter(ONTOLOGY %in% c("BP", "MF", "CC"))
+  
+  # Count and rank the top 10 UNIQUE terms per ontology
+  go_counts <- unique_df %>%
+    count(ontology_full, term_name, name = "gene_count") %>%
+    group_by(ontology_full) %>%
+    slice_max(order_by = gene_count, n = 10, with_ties = FALSE) %>%
+    ungroup()
+  
+  # Generate the plot
+  p <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = gene_count, color = ontology_full)) +
+    geom_segment(aes(xend = term_name, yend = 0), linewidth = 1) +
+    geom_point(size = 4, alpha = 0.9) +
+    coord_flip() + 
+    facet_grid(ontology_full ~ ., scales = "free_y", space = "free_y") +
+    scale_color_manual(values = c("Biological Process" = "#1b9e77", 
+                                  "Molecular Function" = "#d95f02", 
+                                  "Cellular Component" = "#7570b3")) +
+    labs(
+      title = paste("Unique Functional Drivers:", title_label),
+      subtitle = "Excluding GO terms shared across both evolutionary phases",
+      x = "Gene Ontology (GO) Term",
+      y = "Number of Selected Genes"
+    ) +
+    theme_bw() +
+    theme(
+      legend.position = "none",
+      axis.text.y = element_text(size = 11, color = "black"),
+      strip.background = element_rect(fill = "grey90", color = "black"),
+      strip.text.y = element_text(size = 11, face = "bold", angle = 270),
+      panel.grid.minor = element_blank(),
+      panel.grid.major.y = element_blank(),
+      plot.title = element_text(face = "bold")
+    )
+  
+  ggsave(filename_out, plot = p, width = 12, height = 9, dpi = 600)
+}
+
+# --- 5. Generate the Unique Plots ---
+cat("Generating unique-only lollipop plots...\n")
+
+plot_unique_lollipop(df_adapt, unique_adapt, "Adaptation Phase", "Results/Py_Scenario1_Unique_GO_Faceted.png")
+plot_unique_lollipop(df_breed, unique_breed, "Modern Breeding Phase", "Results/Py_Scenario2_Unique_GO_Faceted.png")
+
+cat("Done! Both unique plots saved successfully.\n")

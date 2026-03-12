@@ -596,6 +596,7 @@ library(ggplot2)
 library(dplyr)
 library(data.table)
 library(patchwork)
+library(ggrepel)
 
 cat("Loading native R XP-CLR data for lollipop plots...\n")
 
@@ -650,6 +651,23 @@ file_breed <- "Results/XPCLR_Scenario2_Breeding_AllScores.csv"
 data_adapt <- prep_r_lollipop_data(file_adapt)
 data_breed <- prep_r_lollipop_data(file_breed)
 
+# --- 3. Define the Labels for Your Specific Genes ---
+# Identify the exact window position (bp_mid) and score (xpclr_val) from your significant regions CSV
+# Replace these example coordinates with your actual lentil genes
+labels_adapt <- data.frame(
+  chr_num = c(2,4,2,4),
+  bp_mid = c(52.657,106.326,416.548,288.766), # Raw physical position in Mb on the chromosome
+  xpclr_val = c(300,435,405,240),        # The height of the peak
+  gene_name = c("Phytochrome","Meristem maintenance/developement","Structural chrom maintenance","GIGANTEA")
+)
+
+labels_breed <- data.frame(
+  chr_num = c(3, 6,6),
+  bp_mid = c(110.047, 292.989, 375.836 ), 
+  xpclr_val = c(200, 235, 240),
+  gene_name = c("Cellulose synthase", "Actin-depolymerizing factor","Meristem maintenance/developement")
+)
+
 # --- 3. Define the Color Palette ---
 chr_colors <- c(
   "1" = "#1b9e77", "2" = "#d95f02", "3" = "#7570b3", 
@@ -657,7 +675,7 @@ chr_colors <- c(
 )
 
 # --- 4. Define the Plotting Function ---
-make_lollipop_plot <- function(prep_data, title_label, show_x_labels = FALSE) {
+make_lollipop_plot <- function(prep_data, title_label, show_x_labels = FALSE, labels_df = NULL) {
   df <- prep_data$data
   ax <- prep_data$axis
   thr <- prep_data$threshold
@@ -670,7 +688,7 @@ make_lollipop_plot <- function(prep_data, title_label, show_x_labels = FALSE) {
              label = round(thr, 2), color = "firebrick", hjust = 1, vjust = -0.5, size = 3.5, fontface = "bold") +
     scale_color_manual(values = chr_colors) +
     scale_x_continuous(breaks = ax$center, labels = paste("LG", ax$chr_num, sep=""), expand = c(0.02, 0.02)) +
-    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.15))) + # Increased top expansion to fit labels
     coord_cartesian(clip = "off") + 
     labs(x = NULL, y = "XP-CLR", title = title_label) +
     theme_classic() +
@@ -686,22 +704,46 @@ make_lollipop_plot <- function(prep_data, title_label, show_x_labels = FALSE) {
       plot.margin = margin(t = 10, r = 10, b = 10, l = 40)
     )
   
+  # Add ggrepel labels if a dataframe is provided
+  if (!is.null(labels_df)) {
+    # Dynamically extract the X-axis offset for each chromosome so labels align properly
+    offset_map <- df %>% distinct(chr_num, offset)
+    
+    labels_mapped <- labels_df %>%
+      left_join(offset_map, by = "chr_num") %>%
+      mutate(bp_cum = bp_mid + offset)
+    
+    p <- p + geom_label_repel(
+      data = labels_mapped,
+      aes(x = bp_cum, y = xpclr_val, label = gene_name),
+      inherit.aes = FALSE, # Prevents conflicts with the main plot aesthetics
+      color = "black",
+      fill = "white",
+      fontface = "bold",
+      size = 3.5,
+      box.padding = 1.2,
+      point.padding = 0.5,
+      segment.color = "black",
+      segment.size = 0.6,
+      min.segment.length = 0,
+      nudge_y = max(df$xpclr_val) * 0.15 # Pushes the label slightly above the peak
+    )
+  }
+  
   return(p)
 }
 
 # --- 5. Generate and Combine Plots ---
 cat("Building final stacked R plot...\n")
 
-# Panel A: Adaptation (Native R)
-plot_a <- make_lollipop_plot(data_adapt, "a", show_x_labels = FALSE)
-
-# Panel B: Breeding (Native R)
-plot_b <- make_lollipop_plot(data_breed, "b", show_x_labels = TRUE)
+# Pass the label dataframes into the function
+plot_a <- make_lollipop_plot(data_adapt, "a)", show_x_labels = FALSE, labels_df = labels_adapt)
+plot_b <- make_lollipop_plot(data_breed, "b)", show_x_labels = TRUE, labels_df = labels_breed)
 
 # Stack with patchwork
 final_plot <- plot_a / plot_b
 
 # Save the high-resolution image
-ggsave("Results/R_XPCLR_Stacked_Lollipop.png", plot = final_plot, width = 12, height = 8, dpi = 600)
+ggsave("Results/R_XPCLR_Stacked_Lollipop2.png", plot = final_plot, width = 12, height = 8, dpi = 600)
 
 cat("Done! Check 'R_XPCLR_Stacked_Lollipop.png' in your working directory.\n")
