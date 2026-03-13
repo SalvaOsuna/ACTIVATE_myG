@@ -1,0 +1,649 @@
+seqnames,start,end,ID,Name,Description
+Lcu.1GRN.Chr2,129067374,129067610,Lcu.1GRN.2g025170,Lcu.1GRN.2g025170,(thale cress) hypothetical protein
+Lcu.1GRN.Chr4,304511590,304511814,Lcu.1GRN.4g036480,Lcu.1GRN.4g036480,[RNA-polymerase]-subunit kinase
+Lcu.1GRN.Chr2,51063639,51063938,Lcu.1GRN.2g015050,Lcu.1GRN.2g015050,12-oxophytodienoate reductase-like protein
+Lcu.1GRN.Chr4,380270741,380272962,Lcu.1GRN.4g049640,Lcu.1GRN.4g049640,1-aminocyclopropane-1-carboxylate oxidase
+Lcu.1GRN.Chr4,380322023,380324239,Lcu.1GRN.4g049650,Lcu.1GRN.4g049650,1-aminocyclopropane-1-carboxylate oxidase
+Lcu.1GRN.Chr6,175701328,175702824,Lcu.1GRN.6g020010,Lcu.1GRN.6g020010,1-aminocyclopropane-1-carboxylate oxidase homolog 1-like
+Lcu.1GRN.Chr6,174213578,174214011,Lcu.1GRN.6g019780,Lcu.1GRN.6g019780,28 kDa heat-and acid-stable phosphoprotein-like protein
+Lcu.1GRN.Chr4,380376244,380377464,Lcu.1GRN.4g049690,Lcu.1GRN.4g049690,2-oxoglutarate-dependent dioxygenase
+Lcu.1GRN.Chr4,380463384,380464808,Lcu.1GRN.4g049700,Lcu.1GRN.4g049700,2-oxoglutarate-dependent dioxygenase
+Lcu.1GRN.Chr4,380509994,380511360,Lcu.1GRN.4g049730,Lcu.1GRN.4g049730,2-oxoglutarate-dependent dioxygenase
+Lcu.1GRN.Chr4,380551550,380552935,Lcu.1GRN.4g049740,Lcu.1GRN.4g049740,2-oxoglutarate-dependent dioxygenase
+Lcu.1GRN.Chr4,380608242,380609452,Lcu.1GRN.4g049750,Lcu.1GRN.4g049750,2-oxoglutarate-dependent dioxygenase
+Lcu.1GRN.Chr3,371096846,371097064,Lcu.1GRN.3g052430,Lcu.1GRN.3g052430,2'-phosphotransferase
+Lcu.1GRN.Chr6,231486177,231487754,Lcu.1GRN.6g026180,Lcu.1GRN.6g026180,30S ribosomal protein S1;  chloroplastic
+Lcu.1GRN.Chr2,50743954,50746535,Lcu.1GRN.2g015010,Lcu.1GRN.2g015010,30S ribosomal protein S6
+Lcu.1GRN.Chr2,128924410,128924952,Lcu.1GRN.2g025130,Lcu.1GRN.2g025130,40S ribosomal protein S13
+Lcu.1GRN.Chr4,432594888,432595319,Lcu.1GRN.4g059560,Lcu.1GRN.4g059560,40S ribosomal protein S17-like
+Lcu.1GRN.Chr4,432700007,432700438,Lcu.1GRN.4g059600,Lcu.1GRN.4g059600,40S ribosomal protein S17-like
+Lcu.1GRN.Chr4,351182130,351182668,Lcu.1GRN.4g044840,Lcu.1GRN.4g044840,40S ribosomal protein S28
+Lcu.1GRN.Chr6,176141888,176144320,Lcu.1GRN.6g020070,Lcu.1GRN.6g020070,4F5 domain-containing protein
+Lcu.1GRN.Chr3,360904972,360908198,Lcu.1GRN.3g050960,Lcu.1GRN.3g050960,50S ribosomal protein L17
+Lcu.1GRN.Chr2,175700909,175702355,Lcu.1GRN.2g029850,Lcu.1GRN.2g029850,5'-nucleotidase domain-containing protein
+Lcu.1GRN.Chr3,364703561,364707622,Lcu.1GRN.3g051860,Lcu.1GRN.3g051860,6; 7-dimethyl-8-ribityllumazine synthase
+Lcu.1GRN.Chr6,231181692,231183500,Lcu.1GRN.6g026140,Lcu.1GRN.6g026140,60S ribosomal protein L7
+Lcu.1GRN.Chr2,51783404,51784066,Lcu.1GRN.2g015170,Lcu.1GRN.2g015170,6-phosphogluconate dehydrogenase;  decarboxylating
+Lcu.1GRN.Chr3,363940208,363951911,Lcu.1GRN.3g051650,Lcu.1GRN.3g051650,Aa_trans domain-containing protein
+Lcu.1GRN.Chr3,405427778,405440634,Lcu.1GRN.3g058580,Lcu.1GRN.3g058580,AB hydrolase-1 domain-containing protein
+Lcu.1GRN.Chr3,405493901,405511649,Lcu.1GRN.3g058600,Lcu.1GRN.3g058600,AB hydrolase-1 domain-containing protein
+Lcu.1GRN.Chr6,231917193,231917537,Lcu.1GRN.6g026230,Lcu.1GRN.6g026230,ABC transporter A family member 8-like
+Lcu.1GRN.Chr6,160516563,160528178,Lcu.1GRN.6g018140,Lcu.1GRN.6g018140,ABC transporter B family member 15-like
+Lcu.1GRN.Chr6,160871942,160876438,Lcu.1GRN.6g018170,Lcu.1GRN.6g018170,ABC transporter B family member 15-like
+Lcu.1GRN.Chr4,351314078,351318652,Lcu.1GRN.4g044850,Lcu.1GRN.4g044850,ABC transporter B family protein
+Lcu.1GRN.Chr2,129194501,129201459,Lcu.1GRN.2g025180,Lcu.1GRN.2g025180,ABC transporter D family member 2;  chloroplastic
+Lcu.1GRN.Chr6,173607105,173607541,Lcu.1GRN.6g019680,Lcu.1GRN.6g019680,ABC transporter F family member 3
+Lcu.1GRN.Chr6,231185705,231187330,Lcu.1GRN.6g026150,Lcu.1GRN.6g026150,Acetohydroxy-acid synthase small subunit
+Lcu.1GRN.Chr2,128962543,128964861,Lcu.1GRN.2g025150,Lcu.1GRN.2g025150,Acid phosphatase/vanadium-dependent haloperoxidase
+Lcu.1GRN.Chr3,371400488,371400820,Lcu.1GRN.3g052470,Lcu.1GRN.3g052470,Aconitate hydratase
+Lcu.1GRN.Chr6,173023312,173024500,Lcu.1GRN.6g019610,Lcu.1GRN.6g019610,ACT domain-containing protein ACR
+Lcu.1GRN.Chr6,174205170,174208642,Lcu.1GRN.6g019770,Lcu.1GRN.6g019770,Acyl-[acyl-carrier-protein] hydrolase
+Lcu.1GRN.Chr6,231410701,231411081,Lcu.1GRN.6g026170,Lcu.1GRN.6g026170,Acyl-coenzyme A thioesterase 9;  mitochondrial-like
+Lcu.1GRN.Chr6,236278598,236282050,Lcu.1GRN.6g026830,Lcu.1GRN.6g026830,ADP/ATP carrier protein
+Lcu.1GRN.Chr4,351429526,351432877,Lcu.1GRN.4g044880,Lcu.1GRN.4g044880,ADP-ribosyl cyclase/cyclic ADP-ribose hydrolase
+Lcu.1GRN.Chr6,236270987,236277883,Lcu.1GRN.6g026820,Lcu.1GRN.6g026820,Alcohol dehydrogenase
+Lcu.1GRN.Chr4,380367034,380369406,Lcu.1GRN.4g049680,Lcu.1GRN.4g049680,Aldo/keto reductase family oxidoreductase
+Lcu.1GRN.Chr3,360681833,360682236,Lcu.1GRN.3g050920,Lcu.1GRN.3g050920,Alpha-galactosidase
+Lcu.1GRN.Chr6,106386380,106391544,Lcu.1GRN.6g012680,Lcu.1GRN.6g012680,Altered inheritance of mitochondria protein 32-like
+Lcu.1GRN.Chr3,363979328,363981222,Lcu.1GRN.3g051660,Lcu.1GRN.3g051660,Amino acid permease
+Lcu.1GRN.Chr3,364012530,364015812,Lcu.1GRN.3g051670,Lcu.1GRN.3g051670,Amino acid permease
+Lcu.1GRN.Chr4,297811254,297812023,Lcu.1GRN.4g035490,Lcu.1GRN.4g035490,Amino acid permease 2-like protein
+Lcu.1GRN.Chr3,363817953,363820016,Lcu.1GRN.3g051610,Lcu.1GRN.3g051610,Amino-acid permease BAT1-like protein
+Lcu.1GRN.Chr4,291268195,291270402,Lcu.1GRN.4g034600,Lcu.1GRN.4g034600,Arginine decarboxylase
+Lcu.1GRN.Chr4,291380784,291384849,Lcu.1GRN.4g034650,Lcu.1GRN.4g034650,Arginine decarboxylase
+Lcu.1GRN.Chr2,50117984,50118699,Lcu.1GRN.2g014960,Lcu.1GRN.2g014960,aspartic proteinase-like protein 2
+Lcu.1GRN.Chr2,50140339,50141053,Lcu.1GRN.2g014970,Lcu.1GRN.2g014970,aspartic proteinase-like protein 2
+Lcu.1GRN.Chr6,233642099,233642305,Lcu.1GRN.6g026460,Lcu.1GRN.6g026460,Aspartyl-tRNA synthetase
+Lcu.1GRN.Chr4,335287491,335291417,Lcu.1GRN.4g041770,Lcu.1GRN.4g041770,Assimilatory sulfite reductase (ferredoxin)
+Lcu.1GRN.Chr6,288162166,288163737,Lcu.1GRN.6g033730,Lcu.1GRN.6g033730,ATG8-interacting protein 1
+Lcu.1GRN.Chr4,298642162,298646418,Lcu.1GRN.4g035590,Lcu.1GRN.4g035590,ATP-dependent Clp protease proteolytic subunit
+Lcu.1GRN.Chr6,287896950,287907800,Lcu.1GRN.6g033650,Lcu.1GRN.6g033650,ATP-dependent helicase BRM-like
+Lcu.1GRN.Chr3,361067560,361078512,Lcu.1GRN.3g051020,Lcu.1GRN.3g051020,ATP-dependent zinc metalloprotease FtsH-like protein
+Lcu.1GRN.Chr6,287787574,287791243,Lcu.1GRN.6g033640,Lcu.1GRN.6g033640,AT-rich interactive domain protein
+Lcu.1GRN.Chr3,363932866,363939229,Lcu.1GRN.3g051640,Lcu.1GRN.3g051640,Auxilin-related protein 2
+Lcu.1GRN.Chr6,232782309,232786858,Lcu.1GRN.6g026290,Lcu.1GRN.6g026290,Auxin transporter-like protein
+Lcu.1GRN.Chr6,233971088,233976072,Lcu.1GRN.6g026520,Lcu.1GRN.6g026520,Auxin transporter-like protein 2
+Lcu.1GRN.Chr3,365089412,365089738,Lcu.1GRN.3g051920,Lcu.1GRN.3g051920,auxin-responsive protein SAUR32-like
+Lcu.1GRN.Chr4,290344260,290344985,Lcu.1GRN.4g034430,Lcu.1GRN.4g034430,B3 domain-containing protein At3g25182-like
+Lcu.1GRN.Chr6,107039683,107041600,Lcu.1GRN.6g012720,Lcu.1GRN.6g012720,Beta-1; 4-mannosyl-glycoprotein 4-beta-N-acetylglucosaminyltransferase
+Lcu.1GRN.Chr6,174822017,174824839,Lcu.1GRN.6g019940,Lcu.1GRN.6g019940,Beta-amyrin 24-hydroxylase
+Lcu.1GRN.Chr3,364216356,364222939,Lcu.1GRN.3g051740,Lcu.1GRN.3g051740,Beta-galactosidase
+Lcu.1GRN.Chr3,364272545,364277034,Lcu.1GRN.3g051760,Lcu.1GRN.3g051760,Beta-galactosidase
+Lcu.1GRN.Chr6,160506001,160507571,Lcu.1GRN.6g018110,Lcu.1GRN.6g018110,Beta-galactosidase
+Lcu.1GRN.Chr6,160507611,160509040,Lcu.1GRN.6g018120,Lcu.1GRN.6g018120,Beta-galactosidase
+Lcu.1GRN.Chr6,171427417,171429881,Lcu.1GRN.6g019380,Lcu.1GRN.6g019380,Boron transporter 4-like
+Lcu.1GRN.Chr6,176376818,176377398,Lcu.1GRN.6g020180,Lcu.1GRN.6g020180,BRI1-associated receptor kinase
+Lcu.1GRN.Chr4,298252628,298255393,Lcu.1GRN.4g035530,Lcu.1GRN.4g035530,BURP domain protein
+Lcu.1GRN.Chr4,298355381,298357493,Lcu.1GRN.4g035540,Lcu.1GRN.4g035540,BURP domain protein
+Lcu.1GRN.Chr4,298583824,298585242,Lcu.1GRN.4g035550,Lcu.1GRN.4g035550,BURP domain protein
+Lcu.1GRN.Chr6,177203769,177204326,Lcu.1GRN.6g020280,Lcu.1GRN.6g020280,Caffeic acid O-methyltransferase
+Lcu.1GRN.Chr4,432091996,432098338,Lcu.1GRN.4g059480,Lcu.1GRN.4g059480,Calcium/calmodulin-dependent protein kinase
+Lcu.1GRN.Chr6,156424186,156425519,Lcu.1GRN.6g017510,Lcu.1GRN.6g017510,Calcium-binding protein
+Lcu.1GRN.Chr4,290145349,290154288,Lcu.1GRN.4g034400,Lcu.1GRN.4g034400,Calreticulin
+Lcu.1GRN.Chr6,232676985,232678410,Lcu.1GRN.6g026270,Lcu.1GRN.6g026270,Carboxypeptidase
+Lcu.1GRN.Chr4,291348204,291349234,Lcu.1GRN.4g034610,Lcu.1GRN.4g034610,Carboxypeptidase
+Lcu.1GRN.Chr6,176719845,176723085,Lcu.1GRN.6g020220,Lcu.1GRN.6g020220,Cationic amino acid transporter 2;  vacuolar protein
+Lcu.1GRN.Chr6,173736568,173737182,Lcu.1GRN.6g019710,Lcu.1GRN.6g019710,Cationic amino acid transporter 2;  vacuolar protein
+Lcu.1GRN.Chr3,364639662,364645161,Lcu.1GRN.3g051840,Lcu.1GRN.3g051840,CBS domain-containing protein CBSCBSPB3-like
+Lcu.1GRN.Chr6,234095364,234101103,Lcu.1GRN.6g026580,Lcu.1GRN.6g026580,CCT-beta
+Lcu.1GRN.Chr6,174274153,174275970,Lcu.1GRN.6g019810,Lcu.1GRN.6g019810,Cell division control protein 45 homolog
+Lcu.1GRN.Chr4,380863074,380865461,Lcu.1GRN.4g049820,Lcu.1GRN.4g049820,cell division cycle-associated 7-like protein
+Lcu.1GRN.Chr2,51091586,51092152,Lcu.1GRN.2g015080,Lcu.1GRN.2g015080,cell wall / vacuolar inhibitor of fructosidase 1-like
+Lcu.1GRN.Chr2,51260707,51261273,Lcu.1GRN.2g015100,Lcu.1GRN.2g015100,cell wall / vacuolar inhibitor of fructosidase 1-like
+Lcu.1GRN.Chr3,361063698,361064240,Lcu.1GRN.3g051010,Lcu.1GRN.3g051010,Cell wall/vacuolar inhibitor of fructosidase 2-like protein
+Lcu.1GRN.Chr6,178143890,178154806,Lcu.1GRN.6g020380,Lcu.1GRN.6g020380,chromatin modification-related protein EAF1 B-like isoform X2
+Lcu.1GRN.Chr4,335074101,335075520,Lcu.1GRN.4g041730,Lcu.1GRN.4g041730,Cinnamoyl-CoA reductase-like protein
+Lcu.1GRN.Chr4,335154618,335156093,Lcu.1GRN.4g041750,Lcu.1GRN.4g041750,Cinnamoyl-CoA reductase-like protein
+Lcu.1GRN.Chr2,175702996,175704878,Lcu.1GRN.2g029860,Lcu.1GRN.2g029860,CMP-sialic acid transporter
+Lcu.1GRN.Chr4,304788091,304793339,Lcu.1GRN.4g036520,Lcu.1GRN.4g036520,Coatomer subunit alpha
+Lcu.1GRN.Chr3,405216142,405226331,Lcu.1GRN.3g058520,Lcu.1GRN.3g058520,Copper P1B-ATPase
+Lcu.1GRN.Chr3,405981665,405982096,Lcu.1GRN.3g058630,Lcu.1GRN.3g058630,Copper transport protein
+Lcu.1GRN.Chr4,307512460,307515141,Lcu.1GRN.4g036800,Lcu.1GRN.4g036800,CRM domain-containing protein
+Lcu.1GRN.Chr2,129236785,129242157,Lcu.1GRN.2g025190,Lcu.1GRN.2g025190,CTP synthase
+Lcu.1GRN.Chr3,371399883,371400263,Lcu.1GRN.3g052460,Lcu.1GRN.3g052460,Curved DNA-binding protein
+Lcu.1GRN.Chr4,335425293,335428831,Lcu.1GRN.4g041780,Lcu.1GRN.4g041780,Cyclin-B1-2-like
+Lcu.1GRN.Chr6,172202608,172209048,Lcu.1GRN.6g019490,Lcu.1GRN.6g019490,cyclin-C1-2-like
+Lcu.1GRN.Chr3,364407390,364420122,Lcu.1GRN.3g051800,Lcu.1GRN.3g051800,Cyclin-dependent kinase
+Lcu.1GRN.Chr6,233830697,233831936,Lcu.1GRN.6g026500,Lcu.1GRN.6g026500,Cysteine synthase
+Lcu.1GRN.Chr6,288032798,288035645,Lcu.1GRN.6g033680,Lcu.1GRN.6g033680,Cysteine synthase
+Lcu.1GRN.Chr6,160504096,160505957,Lcu.1GRN.6g018100,Lcu.1GRN.6g018100,Cysteine synthase
+Lcu.1GRN.Chr4,273949917,273951099,Lcu.1GRN.4g032340,Lcu.1GRN.4g032340,Cytochrome b561 and DOMON domain-containing protein
+Lcu.1GRN.Chr3,370553776,370555115,Lcu.1GRN.3g052380,Lcu.1GRN.3g052380,Cytochrome P450 family protein
+Lcu.1GRN.Chr3,370555129,370556660,Lcu.1GRN.3g052390,Lcu.1GRN.3g052390,Cytochrome P450 family protein
+Lcu.1GRN.Chr6,172608719,172611152,Lcu.1GRN.6g019590,Lcu.1GRN.6g019590,Cytochrome P450 family protein
+Lcu.1GRN.Chr2,51054846,51055958,Lcu.1GRN.2g015040,Lcu.1GRN.2g015040,Desiccation-related protein PCC13-62
+Lcu.1GRN.Chr2,50159707,50160801,Lcu.1GRN.2g014980,Lcu.1GRN.2g014980,Desiccation-related protein PCC13-62-like
+Lcu.1GRN.Chr2,50870365,50871443,Lcu.1GRN.2g015020,Lcu.1GRN.2g015020,Desiccation-related protein PCC13-62-like
+Lcu.1GRN.Chr2,50969745,50970805,Lcu.1GRN.2g015030,Lcu.1GRN.2g015030,Desiccation-related protein PCC13-62-like
+Lcu.1GRN.Chr6,233633581,233635017,Lcu.1GRN.6g026430,Lcu.1GRN.6g026430,DExH-box ATP-dependent RNA helicase
+Lcu.1GRN.Chr6,233643796,233648955,Lcu.1GRN.6g026470,Lcu.1GRN.6g026470,DExH-box ATP-dependent RNA helicase DExH12
+Lcu.1GRN.Chr6,233649023,233651641,Lcu.1GRN.6g026480,Lcu.1GRN.6g026480,DExH-box ATP-dependent RNA helicase DExH12
+Lcu.1GRN.Chr6,160127989,160128372,Lcu.1GRN.6g018070,Lcu.1GRN.6g018070,Disease resistance protein
+Lcu.1GRN.Chr6,160125767,160127817,Lcu.1GRN.6g018060,Lcu.1GRN.6g018060,Disease resistance protein (TIR-NBS-LRR class)
+Lcu.1GRN.Chr4,304765262,304765762,Lcu.1GRN.4g036510,Lcu.1GRN.4g036510,DNA helicase
+Lcu.1GRN.Chr3,363314438,363327244,Lcu.1GRN.3g051440,Lcu.1GRN.3g051440,DNA polymerase
+Lcu.1GRN.Chr6,172211399,172215032,Lcu.1GRN.6g019500,Lcu.1GRN.6g019500,DNA polymerase epsilon catalytic subunit
+Lcu.1GRN.Chr4,304755654,304760496,Lcu.1GRN.4g036500,Lcu.1GRN.4g036500,DNA replication licensing factor MCM4
+Lcu.1GRN.Chr3,363616266,363645982,Lcu.1GRN.3g051520,Lcu.1GRN.3g051520,DNA topoisomerase
+Lcu.1GRN.Chr2,51784486,51784770,Lcu.1GRN.2g015180,Lcu.1GRN.2g015180,DNA-binding protein;  putative
+Lcu.1GRN.Chr4,380907286,380918156,Lcu.1GRN.4g049830,Lcu.1GRN.4g049830,DNA-directed DNA polymerase
+Lcu.1GRN.Chr4,305145602,305158713,Lcu.1GRN.4g036550,Lcu.1GRN.4g036550,D-ribulose kinase
+Lcu.1GRN.Chr6,173447244,173449781,Lcu.1GRN.6g019640,Lcu.1GRN.6g019640,DUF223 domain protein
+Lcu.1GRN.Chr6,107632486,107635005,Lcu.1GRN.6g012760,Lcu.1GRN.6g012760,DUF223 domain protein
+Lcu.1GRN.Chr4,273936246,273938677,Lcu.1GRN.4g032320,Lcu.1GRN.4g032320,DUF223 domain-containing protein
+Lcu.1GRN.Chr6,171233375,171235943,Lcu.1GRN.6g019360,Lcu.1GRN.6g019360,DUF223 domain-containing protein
+Lcu.1GRN.Chr3,364231510,364233279,Lcu.1GRN.3g051750,Lcu.1GRN.3g051750,DUF223 domain-containing protein
+Lcu.1GRN.Chr6,174691770,174692240,Lcu.1GRN.6g019900,Lcu.1GRN.6g019900,DUF223 domain-containing protein
+Lcu.1GRN.Chr6,156537448,156538656,Lcu.1GRN.6g017540,Lcu.1GRN.6g017540,DUF4216 domain-containing protein
+Lcu.1GRN.Chr6,156539689,156540883,Lcu.1GRN.6g017550,Lcu.1GRN.6g017550,DUF4216 domain-containing protein
+Lcu.1GRN.Chr6,156531847,156535049,Lcu.1GRN.6g017520,Lcu.1GRN.6g017520,DUF4218 domain-containing protein
+Lcu.1GRN.Chr6,156535464,156537209,Lcu.1GRN.6g017530,Lcu.1GRN.6g017530,DUF4218 domain-containing protein
+Lcu.1GRN.Chr2,175873818,175874309,Lcu.1GRN.2g029870,Lcu.1GRN.2g029870,DUF4283 domain protein
+Lcu.1GRN.Chr6,168222755,168223636,Lcu.1GRN.6g019020,Lcu.1GRN.6g019020,DUF506 family protein
+Lcu.1GRN.Chr6,232248913,232249688,Lcu.1GRN.6g026240,Lcu.1GRN.6g026240,DUF659 domain-containing protein
+Lcu.1GRN.Chr6,176114600,176116631,Lcu.1GRN.6g020050,Lcu.1GRN.6g020050,DUF659 domain-containing protein
+Lcu.1GRN.Chr6,156420906,156423477,Lcu.1GRN.6g017500,Lcu.1GRN.6g017500,DUF659 domain-containing protein
+Lcu.1GRN.Chr3,365371260,365385457,Lcu.1GRN.3g052010,Lcu.1GRN.3g052010,DUF668 family protein
+Lcu.1GRN.Chr6,174540861,174542429,Lcu.1GRN.6g019880,Lcu.1GRN.6g019880,DUF674 family protein
+Lcu.1GRN.Chr6,174641837,174643509,Lcu.1GRN.6g019890,Lcu.1GRN.6g019890,DUF674 family protein
+Lcu.1GRN.Chr6,287166034,287166555,Lcu.1GRN.6g033540,Lcu.1GRN.6g033540,E3 ubiquitin-protein ligase rha1b-like protein
+Lcu.1GRN.Chr6,231120819,231121590,Lcu.1GRN.6g026130,Lcu.1GRN.6g026130,E3 ubiquitin-protein ligase XBAT33
+Lcu.1GRN.Chr4,351058830,351059610,Lcu.1GRN.4g044780,Lcu.1GRN.4g044780,Early nodulin-like protein
+Lcu.1GRN.Chr4,351071440,351072327,Lcu.1GRN.4g044790,Lcu.1GRN.4g044790,Early nodulin-like protein
+Lcu.1GRN.Chr6,168819980,168820826,Lcu.1GRN.6g019060,Lcu.1GRN.6g019060,Ectonucleotide pyrophosphatase/phosphodiesterase
+Lcu.1GRN.Chr6,287545253,287551815,Lcu.1GRN.6g033580,Lcu.1GRN.6g033580,EGF-like domain-containing protein
+Lcu.1GRN.Chr4,350879110,350893197,Lcu.1GRN.4g044710,Lcu.1GRN.4g044710,Electron transfer flavoprotein subunit alpha
+Lcu.1GRN.Chr3,405291156,405293052,Lcu.1GRN.3g058550,Lcu.1GRN.3g058550,Endoglucanase
+Lcu.1GRN.Chr3,405372520,405374429,Lcu.1GRN.3g058560,Lcu.1GRN.3g058560,Endoglucanase
+Lcu.1GRN.Chr6,174426904,174430230,Lcu.1GRN.6g019860,Lcu.1GRN.6g019860,Endoplasmic reticulum transmembrane protein
+Lcu.1GRN.Chr6,167901596,167905050,Lcu.1GRN.6g019010,Lcu.1GRN.6g019010,enoyl-[acyl-carrier-protein] reductase [NADH];  chloroplastic-like
+Lcu.1GRN.Chr6,175551494,175555236,Lcu.1GRN.6g020000,Lcu.1GRN.6g020000,ER lumen protein-retaining receptor
+Lcu.1GRN.Chr2,51076014,51078431,Lcu.1GRN.2g015060,Lcu.1GRN.2g015060,ER membrane protein complex subunit 6
+Lcu.1GRN.Chr6,173226228,173227697,Lcu.1GRN.6g019620,Lcu.1GRN.6g019620,Ethylene-responsive transcription factor-like protein
+Lcu.1GRN.Chr3,364352609,364355672,Lcu.1GRN.3g051780,Lcu.1GRN.3g051780,Eukaryotic aspartyl protease family protein
+Lcu.1GRN.Chr3,365284108,365285472,Lcu.1GRN.3g051950,Lcu.1GRN.3g051950,Eukaryotic aspartyl protease family protein
+Lcu.1GRN.Chr4,273839989,273840349,Lcu.1GRN.4g032280,Lcu.1GRN.4g032280,Eukaryotic translation initiation factor 3 subunit L
+Lcu.1GRN.Chr4,273840747,273843505,Lcu.1GRN.4g032290,Lcu.1GRN.4g032290,Eukaryotic translation initiation factor 3 subunit L
+Lcu.1GRN.Chr6,156549342,156556414,Lcu.1GRN.6g017560,Lcu.1GRN.6g017560,Eukaryotic translation initiation factor 4G-like protein
+Lcu.1GRN.Chr6,156804257,156815326,Lcu.1GRN.6g017590,Lcu.1GRN.6g017590,Eukaryotic translation initiation factor 4G-like protein
+Lcu.1GRN.Chr3,365818295,365819942,Lcu.1GRN.3g052090,Lcu.1GRN.3g052090,Exostosin family protein
+Lcu.1GRN.Chr4,273460773,273462327,Lcu.1GRN.4g032190,Lcu.1GRN.4g032190,Expansin
+Lcu.1GRN.Chr6,160990496,160996535,Lcu.1GRN.6g018180,Lcu.1GRN.6g018180,FAR1
+Lcu.1GRN.Chr3,363716255,363719393,Lcu.1GRN.3g051550,Lcu.1GRN.3g051550,Farnesylcysteine lyase-like protein
+Lcu.1GRN.Chr3,364117441,364133477,Lcu.1GRN.3g051700,Lcu.1GRN.3g051700,FBD-associated F-box protein At4g10400
+Lcu.1GRN.Chr3,363704744,363707043,Lcu.1GRN.3g051540,Lcu.1GRN.3g051540,F-box domain-containing protein
+Lcu.1GRN.Chr6,173528933,173529870,Lcu.1GRN.6g019660,Lcu.1GRN.6g019660,F-box domain-containing protein
+Lcu.1GRN.Chr2,50229921,50231006,Lcu.1GRN.2g014990,Lcu.1GRN.2g014990,F-box protein At5g49610
+Lcu.1GRN.Chr6,177212245,177213312,Lcu.1GRN.6g020290,Lcu.1GRN.6g020290,F-box/kelch-repeat protein At5g15710
+Lcu.1GRN.Chr6,175193934,175195743,Lcu.1GRN.6g019980,Lcu.1GRN.6g019980,F-box/RNI/FBD-like domain protein;  putative
+Lcu.1GRN.Chr4,431544565,431549664,Lcu.1GRN.4g059390,Lcu.1GRN.4g059390,Fe2OG dioxygenase domain-containing protein
+Lcu.1GRN.Chr4,431676175,431677846,Lcu.1GRN.4g059420,Lcu.1GRN.4g059420,Fe2OG dioxygenase domain-containing protein
+Lcu.1GRN.Chr4,380363593,380365391,Lcu.1GRN.4g049670,Lcu.1GRN.4g049670,Fe2OG dioxygenase domain-containing protein
+Lcu.1GRN.Chr3,405134060,405135908,Lcu.1GRN.3g058480,Lcu.1GRN.3g058480,Ferredoxin-like protein
+Lcu.1GRN.Chr3,365804456,365807595,Lcu.1GRN.3g052080,Lcu.1GRN.3g052080,Ferrochelatase
+Lcu.1GRN.Chr6,173284268,173293159,Lcu.1GRN.6g019630,Lcu.1GRN.6g019630,FHA domain-containing protein FHA2
+Lcu.1GRN.Chr3,364603463,364605901,Lcu.1GRN.3g051830,Lcu.1GRN.3g051830,Filament-like plant protein 3
+Lcu.1GRN.Chr3,361219998,361221334,Lcu.1GRN.3g051060,Lcu.1GRN.3g051060,Flavin-containing monooxygenase
+Lcu.1GRN.Chr6,234968555,234971313,Lcu.1GRN.6g026730,Lcu.1GRN.6g026730,Flocculation protein FLO11-like
+Lcu.1GRN.Chr6,171505517,171508431,Lcu.1GRN.6g019400,Lcu.1GRN.6g019400,G domain-containing protein
+Lcu.1GRN.Chr3,370959944,370961512,Lcu.1GRN.3g052420,Lcu.1GRN.3g052420,Gag-pol polyprotein
+Lcu.1GRN.Chr6,235468567,235471074,Lcu.1GRN.6g026750,Lcu.1GRN.6g026750,Gag-protease polyprotein
+Lcu.1GRN.Chr3,364178921,364183744,Lcu.1GRN.3g051710,Lcu.1GRN.3g051710,Gal_mutarotas_2 domain-containing protein
+Lcu.1GRN.Chr6,107355031,107356609,Lcu.1GRN.6g012740,Lcu.1GRN.6g012740,GDSL esterase/lipase
+Lcu.1GRN.Chr4,432503284,432504934,Lcu.1GRN.4g059530,Lcu.1GRN.4g059530,Geranylgeranyl pyrophosphate synthase
+Lcu.1GRN.Chr3,363236727,363238754,Lcu.1GRN.3g051420,Lcu.1GRN.3g051420,gibberellin 20 oxidase 2-like
+Lcu.1GRN.Chr6,236070996,236075734,Lcu.1GRN.6g026810,Lcu.1GRN.6g026810,Glutamate N-acetyltransferase/ amino-acid N-acetyltransferase
+Lcu.1GRN.Chr6,234072645,234074057,Lcu.1GRN.6g026530,Lcu.1GRN.6g026530,Glutamyl-tRNA reductase
+Lcu.1GRN.Chr6,234080806,234085642,Lcu.1GRN.6g026540,Lcu.1GRN.6g026540,Glutamyl-tRNA reductase
+Lcu.1GRN.Chr3,364598761,364603011,Lcu.1GRN.3g051820,Lcu.1GRN.3g051820,Glutamyl-tRNA(Gln) amidotransferase subunit A
+Lcu.1GRN.Chr6,232267799,232270498,Lcu.1GRN.6g026250,Lcu.1GRN.6g026250,Glycerol-3-phosphate acyltransferase
+Lcu.1GRN.Chr4,273570359,273570631,Lcu.1GRN.4g032200,Lcu.1GRN.4g032200,Glycine cleavage system H protein
+Lcu.1GRN.Chr4,273580681,273580953,Lcu.1GRN.4g032210,Lcu.1GRN.4g032210,Glycine cleavage system H protein
+Lcu.1GRN.Chr6,231620106,231621413,Lcu.1GRN.6g026200,Lcu.1GRN.6g026200,Glycosyltransferase
+Lcu.1GRN.Chr6,231799020,231800327,Lcu.1GRN.6g026210,Lcu.1GRN.6g026210,Glycosyltransferase
+Lcu.1GRN.Chr6,231112344,231113648,Lcu.1GRN.6g026120,Lcu.1GRN.6g026120,Glycosyltransferase
+Lcu.1GRN.Chr6,231369768,231371063,Lcu.1GRN.6g026160,Lcu.1GRN.6g026160,Glycosyltransferase
+Lcu.1GRN.Chr6,174498926,174505721,Lcu.1GRN.6g019870,Lcu.1GRN.6g019870,GPI transamidase component PIG-S;  related protein
+Lcu.1GRN.Chr4,274082528,274084747,Lcu.1GRN.4g032380,Lcu.1GRN.4g032380,GRAS family transcription factor
+Lcu.1GRN.Chr4,274085381,274087093,Lcu.1GRN.4g032390,Lcu.1GRN.4g032390,GRAS family transcription factor
+Lcu.1GRN.Chr4,274106715,274108493,Lcu.1GRN.4g032420,Lcu.1GRN.4g032420,GRAS family transcription factor
+Lcu.1GRN.Chr6,287591136,287591528,Lcu.1GRN.6g033590,Lcu.1GRN.6g033590,GRF zinc finger protein
+Lcu.1GRN.Chr4,305200368,305200601,Lcu.1GRN.4g036560,Lcu.1GRN.4g036560,GRF zinc finger protein
+Lcu.1GRN.Chr6,171509310,171511838,Lcu.1GRN.6g019410,Lcu.1GRN.6g019410,GTP cyclohydrolase 1
+Lcu.1GRN.Chr3,405376486,405379844,Lcu.1GRN.3g058570,Lcu.1GRN.3g058570,Guanine nucleotide-binding protein alpha subunit
+Lcu.1GRN.Chr6,288044778,288046525,Lcu.1GRN.6g033710,Lcu.1GRN.6g033710,HAD-like domain-containing protein
+Lcu.1GRN.Chr6,288047292,288052235,Lcu.1GRN.6g033720,Lcu.1GRN.6g033720,HAD-like domain-containing protein
+Lcu.1GRN.Chr3,365312097,365313548,Lcu.1GRN.3g051980,Lcu.1GRN.3g051980,HDAC_interact domain-containing protein
+Lcu.1GRN.Chr6,173608546,173609869,Lcu.1GRN.6g019690,Lcu.1GRN.6g019690,Heat shock protein 90
+Lcu.1GRN.Chr3,372874055,372874326,Lcu.1GRN.3g052580,Lcu.1GRN.3g052580,Heat shock protein 90
+Lcu.1GRN.Chr3,363661016,363662003,Lcu.1GRN.3g051530,Lcu.1GRN.3g051530,Helicase-like transcription factor CHR28
+Lcu.1GRN.Chr4,297812491,297815212,Lcu.1GRN.4g035500,Lcu.1GRN.4g035500,Heterogeneous nuclear ribonucleoprotein 1
+Lcu.1GRN.Chr6,172273021,172275212,Lcu.1GRN.6g019530,Lcu.1GRN.6g019530,Hexosyltransferase
+Lcu.1GRN.Chr3,360910940,360914735,Lcu.1GRN.3g050970,Lcu.1GRN.3g050970,Hexosyltransferase
+Lcu.1GRN.Chr3,405788692,405789075,Lcu.1GRN.3g058620,Lcu.1GRN.3g058620,Hexosyltransferase
+Lcu.1GRN.Chr6,235951111,235952273,Lcu.1GRN.6g026790,Lcu.1GRN.6g026790,High mobility group (HMG)-box protein
+Lcu.1GRN.Chr4,334764478,334765565,Lcu.1GRN.4g041700,Lcu.1GRN.4g041700,High mobility group B protein 7-like
+Lcu.1GRN.Chr6,172498848,172500107,Lcu.1GRN.6g019560,Lcu.1GRN.6g019560,Histidine kinase
+Lcu.1GRN.Chr3,360824830,360827990,Lcu.1GRN.3g050930,Lcu.1GRN.3g050930,Histone-lysine N-methyltransferase ATXR5
+Lcu.1GRN.Chr6,171909882,171913281,Lcu.1GRN.6g019420,Lcu.1GRN.6g019420,histone-lysine N-methyltransferase EZA1-like
+Lcu.1GRN.Chr6,171929335,171931587,Lcu.1GRN.6g019460,Lcu.1GRN.6g019460,histone-lysine N-methyltransferase EZA1-like
+Lcu.1GRN.Chr2,175100783,175104785,Lcu.1GRN.2g029820,Lcu.1GRN.2g029820,Homeobox-leucine zipper protein
+Lcu.1GRN.Chr4,290134256,290137887,Lcu.1GRN.4g034390,Lcu.1GRN.4g034390,Hydroxyacylglutathione hydrolase
+Lcu.1GRN.Chr4,334840736,334841697,Lcu.1GRN.4g041720,Lcu.1GRN.4g041720,hydroxyproline O-galactosyltransferase GALT2
+Lcu.1GRN.Chr4,432075987,432076362,Lcu.1GRN.4g059430,Lcu.1GRN.4g059430,hypothetical protein
+Lcu.1GRN.Chr4,432078059,432079041,Lcu.1GRN.4g059440,Lcu.1GRN.4g059440,hypothetical protein
+Lcu.1GRN.Chr6,172298482,172298817,Lcu.1GRN.6g019540,Lcu.1GRN.6g019540,hypothetical protein
+Lcu.1GRN.Chr6,174747532,174748984,Lcu.1GRN.6g019910,Lcu.1GRN.6g019910,hypothetical protein
+Lcu.1GRN.Chr6,174805998,174806390,Lcu.1GRN.6g019930,Lcu.1GRN.6g019930,hypothetical protein
+Lcu.1GRN.Chr6,168610643,168612319,Lcu.1GRN.6g019050,Lcu.1GRN.6g019050,hypothetical protein
+Lcu.1GRN.Chr4,350672179,350673362,Lcu.1GRN.4g044690,Lcu.1GRN.4g044690,hypothetical protein
+Lcu.1GRN.Chr6,174215476,174215820,Lcu.1GRN.6g019790,Lcu.1GRN.6g019790,hypothetical protein
+Lcu.1GRN.Chr2,51082576,51082740,Lcu.1GRN.2g015070,Lcu.1GRN.2g015070,hypothetical protein
+Lcu.1GRN.Chr2,51267746,51268000,Lcu.1GRN.2g015120,Lcu.1GRN.2g015120,hypothetical protein
+Lcu.1GRN.Chr6,287134520,287135218,Lcu.1GRN.6g033530,Lcu.1GRN.6g033530,hypothetical protein
+Lcu.1GRN.Chr6,287649075,287650119,Lcu.1GRN.6g033600,Lcu.1GRN.6g033600,hypothetical protein
+Lcu.1GRN.Chr6,287681760,287682201,Lcu.1GRN.6g033620,Lcu.1GRN.6g033620,hypothetical protein
+Lcu.1GRN.Chr6,287915390,287916005,Lcu.1GRN.6g033660,Lcu.1GRN.6g033660,hypothetical protein
+Lcu.1GRN.Chr4,290729290,290729490,Lcu.1GRN.4g034530,Lcu.1GRN.4g034530,hypothetical protein
+Lcu.1GRN.Chr3,372648272,372648937,Lcu.1GRN.3g052540,Lcu.1GRN.3g052540,hypothetical protein
+Lcu.1GRN.Chr6,288040466,288041098,Lcu.1GRN.6g033690,Lcu.1GRN.6g033690,hypothetical protein
+Lcu.1GRN.Chr3,364801920,364803978,Lcu.1GRN.3g051880,Lcu.1GRN.3g051880,hypothetical protein
+Lcu.1GRN.Chr4,431598312,431598635,Lcu.1GRN.4g059400,Lcu.1GRN.4g059400,hypothetical protein
+Lcu.1GRN.Chr6,178417567,178418869,Lcu.1GRN.6g020390,Lcu.1GRN.6g020390,hypothetical protein
+Lcu.1GRN.Chr6,156813859,156814154,Lcu.1GRN.6g017600,Lcu.1GRN.6g017600,hypothetical protein
+Lcu.1GRN.Chr4,308312968,308313183,Lcu.1GRN.4g036870,Lcu.1GRN.4g036870,hypothetical protein
+Lcu.1GRN.Chr6,167512294,167512590,Lcu.1GRN.6g018930,Lcu.1GRN.6g018930,hypothetical protein
+Lcu.1GRN.Chr3,365228925,365229164,Lcu.1GRN.3g051940,Lcu.1GRN.3g051940,hypothetical protein
+Lcu.1GRN.Chr3,365288363,365290612,Lcu.1GRN.3g051960,Lcu.1GRN.3g051960,hypothetical protein
+Lcu.1GRN.Chr3,365315258,365316339,Lcu.1GRN.3g051990,Lcu.1GRN.3g051990,hypothetical protein
+Lcu.1GRN.Chr4,305307126,305307545,Lcu.1GRN.4g036570,Lcu.1GRN.4g036570,hypothetical protein
+Lcu.1GRN.Chr6,173452935,173453529,Lcu.1GRN.6g019650,Lcu.1GRN.6g019650,Inactive dual specificity protein phosphatase-like At4g18593
+Lcu.1GRN.Chr4,290606744,290608234,Lcu.1GRN.4g034480,Lcu.1GRN.4g034480,Inositol 1; 3; 4-trisphosphate 5/6-kinase
+Lcu.1GRN.Chr6,171915115,171917294,Lcu.1GRN.6g019430,Lcu.1GRN.6g019430,Integrase catalytic domain-containing protein
+Lcu.1GRN.Chr4,308004236,308007180,Lcu.1GRN.4g036850,Lcu.1GRN.4g036850,Integrase catalytic domain-containing protein
+Lcu.1GRN.Chr6,167511718,167511996,Lcu.1GRN.6g018920,Lcu.1GRN.6g018920,Integrase catalytic domain-containing protein
+Lcu.1GRN.Chr4,380797361,380798063,Lcu.1GRN.4g049810,Lcu.1GRN.4g049810,Integrase catalytic domain-containing protein
+Lcu.1GRN.Chr2,128867295,128874380,Lcu.1GRN.2g025120,Lcu.1GRN.2g025120,Isocitrate dehydrogenase [NADP]
+Lcu.1GRN.Chr4,380698005,380699232,Lcu.1GRN.4g049780,Lcu.1GRN.4g049780,Isoflavone 4'-O-methyltransferase
+Lcu.1GRN.Chr4,380715973,380717149,Lcu.1GRN.4g049790,Lcu.1GRN.4g049790,Isoflavone 4'-O-methyltransferase
+Lcu.1GRN.Chr2,50730481,50735924,Lcu.1GRN.2g015000,Lcu.1GRN.2g015000,J domain-containing protein
+Lcu.1GRN.Chr6,176322007,176325228,Lcu.1GRN.6g020110,Lcu.1GRN.6g020110,KH domain-containing protein
+Lcu.1GRN.Chr6,176348969,176349310,Lcu.1GRN.6g020130,Lcu.1GRN.6g020130,KH domain-containing protein
+Lcu.1GRN.Chr6,172215125,172215972,Lcu.1GRN.6g019510,Lcu.1GRN.6g019510,KH domain-containing protein
+Lcu.1GRN.Chr4,273223847,273225995,Lcu.1GRN.4g032170,Lcu.1GRN.4g032170,Kinase 1B
+Lcu.1GRN.Chr3,405746143,405747649,Lcu.1GRN.3g058610,Lcu.1GRN.3g058610,Kinase 1B
+Lcu.1GRN.Chr4,304878517,304889331,Lcu.1GRN.4g036540,Lcu.1GRN.4g036540,kinesin-like protein KIN-7D;  mitochondrial
+Lcu.1GRN.Chr4,290345525,290348424,Lcu.1GRN.4g034440,Lcu.1GRN.4g034440,Lactamase_B domain-containing protein
+Lcu.1GRN.Chr6,234810717,234812021,Lcu.1GRN.6g026690,Lcu.1GRN.6g026690,Lactosylceramide 4-alpha-galactosyltransferase-like protein
+Lcu.1GRN.Chr6,234090594,234091112,Lcu.1GRN.6g026560,Lcu.1GRN.6g026560,LEA_2 domain-containing protein
+Lcu.1GRN.Chr3,364102864,364103499,Lcu.1GRN.3g051690,Lcu.1GRN.3g051690,Leucine aminopeptidase
+Lcu.1GRN.Chr6,234470944,234474099,Lcu.1GRN.6g026660,Lcu.1GRN.6g026660,Leucine-rich receptor-like kinase family protein
+Lcu.1GRN.Chr6,234251141,234253306,Lcu.1GRN.6g026620,Lcu.1GRN.6g026620,Lipoyl(octanoyl) transferase
+Lcu.1GRN.Chr6,235490296,235493756,Lcu.1GRN.6g026760,Lcu.1GRN.6g026760,LOW QUALITY PROTEIN: uncharacterized protein LOC113785493
+Lcu.1GRN.Chr6,232905365,232912308,Lcu.1GRN.6g026310,Lcu.1GRN.6g026310,LOW QUALITY PROTEIN: uncharacterized protein LOC113785801
+Lcu.1GRN.Chr4,432529318,432536449,Lcu.1GRN.4g059540,Lcu.1GRN.4g059540,LOW QUALITY PROTEIN: uncharacterized protein LOC113785801
+Lcu.1GRN.Chr6,174323608,174329696,Lcu.1GRN.6g019850,Lcu.1GRN.6g019850,LOW QUALITY PROTEIN: uncharacterized protein LOC113785801
+Lcu.1GRN.Chr4,272655520,272656984,Lcu.1GRN.4g032120,Lcu.1GRN.4g032120,LRR receptor-like kinase family protein
+Lcu.1GRN.Chr6,233179473,233182690,Lcu.1GRN.6g026350,Lcu.1GRN.6g026350,lysine-specific demethylase JMJ25-like
+Lcu.1GRN.Chr4,298604536,298605162,Lcu.1GRN.4g035560,Lcu.1GRN.4g035560,Lysine-specific histone demethylase 1 homolog 3
+Lcu.1GRN.Chr6,172539438,172540821,Lcu.1GRN.6g019570,Lcu.1GRN.6g019570,Lysosomal pro-X carboxypeptidase-like protein
+Lcu.1GRN.Chr3,405483648,405483953,Lcu.1GRN.3g058590,Lcu.1GRN.3g058590,Magnesium chelatase
+Lcu.1GRN.Chr3,365350166,365354380,Lcu.1GRN.3g052000,Lcu.1GRN.3g052000,Magnesium transporter NIPA2
+Lcu.1GRN.Chr4,380623558,380624283,Lcu.1GRN.4g049770,Lcu.1GRN.4g049770,Maternal effect embryo arrest 14
+Lcu.1GRN.Chr2,128858965,128860321,Lcu.1GRN.2g025100,Lcu.1GRN.2g025100,Mediator of RNA polymerase II transcription subunit 22-like protein
+Lcu.1GRN.Chr4,291085553,291091661,Lcu.1GRN.4g034580,Lcu.1GRN.4g034580,Membrane-associated 30 kDa protein;  chloroplastic
+Lcu.1GRN.Chr6,288043137,288044493,Lcu.1GRN.6g033700,Lcu.1GRN.6g033700,Mesoderm development candidate 2
+Lcu.1GRN.Chr6,156892515,156898233,Lcu.1GRN.6g017610,Lcu.1GRN.6g017610,Metacaspase-1
+Lcu.1GRN.Chr6,168860859,168861551,Lcu.1GRN.6g019080,Lcu.1GRN.6g019080,Metallophos domain-containing protein
+Lcu.1GRN.Chr6,157010681,157011373,Lcu.1GRN.6g017640,Lcu.1GRN.6g017640,Metallophos domain-containing protein
+Lcu.1GRN.Chr6,178124902,178128942,Lcu.1GRN.6g020370,Lcu.1GRN.6g020370,Methylmalonate-semialdehyde dehydrogenase (CoA acylating)
+Lcu.1GRN.Chr4,272923832,272925129,Lcu.1GRN.4g032130,Lcu.1GRN.4g032130,Mitochondrial import inner membrane translocase subunit Tim9
+Lcu.1GRN.Chr3,365299261,365301915,Lcu.1GRN.3g051970,Lcu.1GRN.3g051970,Mitochondrial phosphate carrier protein 1;  mitochondrial
+Lcu.1GRN.Chr6,168349332,168353787,Lcu.1GRN.6g019040,Lcu.1GRN.6g019040,Mitochondrial-processing peptidase subunit beta;  mitochondrial
+Lcu.1GRN.Chr3,372469175,372470400,Lcu.1GRN.3g052520,Lcu.1GRN.3g052520,Myb-related protein 308
+Lcu.1GRN.Chr3,405236535,405266522,Lcu.1GRN.3g058530,Lcu.1GRN.3g058530,myosin-15-like
+Lcu.1GRN.Chr4,335235791,335237953,Lcu.1GRN.4g041760,Lcu.1GRN.4g041760,Myosin-9-like
+Lcu.1GRN.Chr3,364350276,364351365,Lcu.1GRN.3g051770,Lcu.1GRN.3g051770,NAC domain-containing protein
+Lcu.1GRN.Chr2,129597175,129598479,Lcu.1GRN.2g025210,Lcu.1GRN.2g025210,NAC domain-containing protein
+Lcu.1GRN.Chr6,107636151,107639309,Lcu.1GRN.6g012770,Lcu.1GRN.6g012770,NAC domain-containing protein
+Lcu.1GRN.Chr3,363786993,363791715,Lcu.1GRN.3g051580,Lcu.1GRN.3g051580,NAD-dependent protein deacylase
+Lcu.1GRN.Chr4,351319087,351319740,Lcu.1GRN.4g044860,Lcu.1GRN.4g044860,NDR1-like protein
+Lcu.1GRN.Chr3,371246084,371246538,Lcu.1GRN.3g052440,Lcu.1GRN.3g052440,NET domain-containing protein
+Lcu.1GRN.Chr6,172248223,172251804,Lcu.1GRN.6g019520,Lcu.1GRN.6g019520,Nuclear transport factor 2 and RNA recognition motif protein
+Lcu.1GRN.Chr4,350694100,350695596,Lcu.1GRN.4g044700,Lcu.1GRN.4g044700,Nucleic acid-binding OB-fold-like protein
+Lcu.1GRN.Chr4,274216044,274220669,Lcu.1GRN.4g032430,Lcu.1GRN.4g032430,Nucleobase-ascorbate transporter 6-like protein
+Lcu.1GRN.Chr6,167608334,167609358,Lcu.1GRN.6g018950,Lcu.1GRN.6g018950,Nucleoprotein
+Lcu.1GRN.Chr6,231028978,231032601,Lcu.1GRN.6g026110,Lcu.1GRN.6g026110,Nucleoredoxin 2
+Lcu.1GRN.Chr3,364977859,364989461,Lcu.1GRN.3g051890,Lcu.1GRN.3g051890,Nucleotidyltransferase family protein
+Lcu.1GRN.Chr3,365058383,365068711,Lcu.1GRN.3g051910,Lcu.1GRN.3g051910,Nucleotidyltransferase family protein
+Lcu.1GRN.Chr6,287922913,287925006,Lcu.1GRN.6g033670,Lcu.1GRN.6g033670,O-acyltransferase WSD1-like protein
+Lcu.1GRN.Chr4,298081145,298081731,Lcu.1GRN.4g035520,Lcu.1GRN.4g035520,O-fucosyltransferase family protein
+Lcu.1GRN.Chr3,361152163,361158589,Lcu.1GRN.3g051050,Lcu.1GRN.3g051050,O-fucosyltransferase family protein
+Lcu.1GRN.Chr6,175003109,175004708,Lcu.1GRN.6g019950,Lcu.1GRN.6g019950,omega-hydroxypalmitate O-feruloyl transferase-like
+Lcu.1GRN.Chr4,273929673,273934668,Lcu.1GRN.4g032310,Lcu.1GRN.4g032310,OSBP(Oxysterol binding protein)-related protein 3C
+Lcu.1GRN.Chr6,234812312,234812887,Lcu.1GRN.6g026700,Lcu.1GRN.6g026700,Ovule protein
+Lcu.1GRN.Chr6,177239238,177244179,Lcu.1GRN.6g020300,Lcu.1GRN.6g020300,oxalate--CoA ligase-like
+Lcu.1GRN.Chr6,177358768,177361632,Lcu.1GRN.6g020310,Lcu.1GRN.6g020310,oxalate--CoA ligase-like
+Lcu.1GRN.Chr3,365763094,365766834,Lcu.1GRN.3g052060,Lcu.1GRN.3g052060,Oxysterol-binding protein-related protein
+Lcu.1GRN.Chr6,173749586,173750467,Lcu.1GRN.6g019730,Lcu.1GRN.6g019730,Pantothenate kinase 2-like protein
+Lcu.1GRN.Chr6,173766380,173767261,Lcu.1GRN.6g019740,Lcu.1GRN.6g019740,Pantothenate kinase 2-like protein
+Lcu.1GRN.Chr6,173783186,173784067,Lcu.1GRN.6g019750,Lcu.1GRN.6g019750,Pantothenate kinase 2-like protein
+Lcu.1GRN.Chr3,365928219,365930355,Lcu.1GRN.3g052120,Lcu.1GRN.3g052120,Patellin-3-like protein
+Lcu.1GRN.Chr3,372556569,372559699,Lcu.1GRN.3g052530,Lcu.1GRN.3g052530,Pecanex-like protein
+Lcu.1GRN.Chr6,160089032,160090769,Lcu.1GRN.6g018050,Lcu.1GRN.6g018050,Pectinesterase
+Lcu.1GRN.Chr6,160404445,160406295,Lcu.1GRN.6g018090,Lcu.1GRN.6g018090,Pectinesterase
+Lcu.1GRN.Chr6,171094404,171094913,Lcu.1GRN.6g019340,Lcu.1GRN.6g019340,Pectinesterase inhibitor-like protein
+Lcu.1GRN.Chr6,171226899,171227408,Lcu.1GRN.6g019350,Lcu.1GRN.6g019350,Pectinesterase inhibitor-like protein
+Lcu.1GRN.Chr6,171432059,171432568,Lcu.1GRN.6g019390,Lcu.1GRN.6g019390,Pectinesterase inhibitor-like protein
+Lcu.1GRN.Chr3,360915834,360917758,Lcu.1GRN.3g050980,Lcu.1GRN.3g050980,Pectinesterase/pectinesterase inhibitor
+Lcu.1GRN.Chr6,233623644,233625806,Lcu.1GRN.6g026420,Lcu.1GRN.6g026420,Pentatricopeptide repeat-containing protein
+Lcu.1GRN.Chr6,175189894,175191648,Lcu.1GRN.6g019970,Lcu.1GRN.6g019970,Pentatricopeptide repeat-containing protein
+Lcu.1GRN.Chr4,350958133,350958962,Lcu.1GRN.4g044720,Lcu.1GRN.4g044720,Pentatricopeptide repeat-containing protein
+Lcu.1GRN.Chr4,380613100,380615271,Lcu.1GRN.4g049760,Lcu.1GRN.4g049760,Pentatricopeptide repeat-containing protein
+Lcu.1GRN.Chr6,236367009,236367314,Lcu.1GRN.6g026860,Lcu.1GRN.6g026860,Pentatricopeptide repeat-containing protein At4g02820;  mitochondrial
+Lcu.1GRN.Chr4,351344132,351354487,Lcu.1GRN.4g044870,Lcu.1GRN.4g044870,Pentatricopeptide repeat-containing protein At4g04790;  mitochondrial
+Lcu.1GRN.Chr6,177765174,177770138,Lcu.1GRN.6g020360,Lcu.1GRN.6g020360,Pentatricopeptide repeat-containing protein At5g48730;  chloroplastic
+Lcu.1GRN.Chr6,235350660,235360501,Lcu.1GRN.6g026740,Lcu.1GRN.6g026740,Pentatricopeptide repeat-containing protein family
+Lcu.1GRN.Chr4,432079100,432080836,Lcu.1GRN.4g059450,Lcu.1GRN.4g059450,Pentatricopeptide repeat-containing protein family
+Lcu.1GRN.Chr6,173688219,173720939,Lcu.1GRN.6g019700,Lcu.1GRN.6g019700,Peptidase S1;  PA clan
+Lcu.1GRN.Chr4,290930656,290931989,Lcu.1GRN.4g034560,Lcu.1GRN.4g034560,Peptidylprolyl isomerase
+Lcu.1GRN.Chr4,273951275,273953289,Lcu.1GRN.4g032350,Lcu.1GRN.4g032350,Peroxisomal fatty acid beta-oxidation multifunctional protein
+Lcu.1GRN.Chr6,232675115,232676799,Lcu.1GRN.6g026260,Lcu.1GRN.6g026260,PGG domain-containing protein
+Lcu.1GRN.Chr3,361147313,361148250,Lcu.1GRN.3g051030,Lcu.1GRN.3g051030,PH domain-containing protein
+Lcu.1GRN.Chr6,288280240,288283420,Lcu.1GRN.6g033740,Lcu.1GRN.6g033740,Phosphate transporter
+Lcu.1GRN.Chr6,176827677,176832100,Lcu.1GRN.6g020250,Lcu.1GRN.6g020250,Phosphatidylinositol 3-kinase
+Lcu.1GRN.Chr3,365604585,365608376,Lcu.1GRN.3g052040,Lcu.1GRN.3g052040,Phosphatidylinositol 4-phosphate 5-kinase
+Lcu.1GRN.Chr6,178435955,178442832,Lcu.1GRN.6g020400,Lcu.1GRN.6g020400,Phosphatidylinositol/phosphatidylcholine transfer protein
+Lcu.1GRN.Chr4,298077203,298080940,Lcu.1GRN.4g035510,Lcu.1GRN.4g035510,Phosphoglucomutase (alpha-D-glucose-1; 6-bisphosphate-dependent)
+Lcu.1GRN.Chr3,372232093,372233060,Lcu.1GRN.3g052500,Lcu.1GRN.3g052500,Phytochrome
+Lcu.1GRN.Chr2,51116253,51117653,Lcu.1GRN.2g015090,Lcu.1GRN.2g015090,Plant invertase/pectin methylesterase inhibitor superfamily protein
+Lcu.1GRN.Chr4,290694545,290697639,Lcu.1GRN.4g034520,Lcu.1GRN.4g034520,Plant regulator RWP-RK family protein
+Lcu.1GRN.Chr4,304693583,304693885,Lcu.1GRN.4g036490,Lcu.1GRN.4g036490,Plant viral-response family protein
+Lcu.1GRN.Chr4,432086549,432087138,Lcu.1GRN.4g059470,Lcu.1GRN.4g059470,Plasma membrane ATPase
+Lcu.1GRN.Chr3,372226368,372226908,Lcu.1GRN.3g052490,Lcu.1GRN.3g052490,Plasma membrane ATPase
+Lcu.1GRN.Chr6,174215909,174219913,Lcu.1GRN.6g019800,Lcu.1GRN.6g019800,Pleiotropic drug resistance protein 3-like
+Lcu.1GRN.Chr4,334676352,334677424,Lcu.1GRN.4g041690,Lcu.1GRN.4g041690,P-loop containing nucleoside triphosphate hydrolase protein
+Lcu.1GRN.Chr6,232881634,232882187,Lcu.1GRN.6g026300,Lcu.1GRN.6g026300,PMD domain-containing protein
+Lcu.1GRN.Chr6,233661404,233662852,Lcu.1GRN.6g026490,Lcu.1GRN.6g026490,PMD domain-containing protein
+Lcu.1GRN.Chr6,233832923,233834089,Lcu.1GRN.6g026510,Lcu.1GRN.6g026510,PMD domain-containing protein
+Lcu.1GRN.Chr4,273179650,273181032,Lcu.1GRN.4g032160,Lcu.1GRN.4g032160,PMD domain-containing protein
+Lcu.1GRN.Chr4,297730050,297730691,Lcu.1GRN.4g035480,Lcu.1GRN.4g035480,PMD domain-containing protein
+Lcu.1GRN.Chr6,176716286,176717032,Lcu.1GRN.6g020210,Lcu.1GRN.6g020210,PMD domain-containing protein
+Lcu.1GRN.Chr6,176910765,176911493,Lcu.1GRN.6g020260,Lcu.1GRN.6g020260,PMD domain-containing protein
+Lcu.1GRN.Chr6,168830400,168831275,Lcu.1GRN.6g019070,Lcu.1GRN.6g019070,PMD domain-containing protein
+Lcu.1GRN.Chr4,290335437,290338180,Lcu.1GRN.4g034410,Lcu.1GRN.4g034410,PMD domain-containing protein
+Lcu.1GRN.Chr3,360509853,360511848,Lcu.1GRN.3g050910,Lcu.1GRN.3g050910,PMD domain-containing protein
+Lcu.1GRN.Chr6,160168941,160170463,Lcu.1GRN.6g018080,Lcu.1GRN.6g018080,PMD domain-containing protein
+Lcu.1GRN.Chr2,129053816,129055075,Lcu.1GRN.2g025160,Lcu.1GRN.2g025160,PMD domain-containing protein
+Lcu.1GRN.Chr2,129729495,129730559,Lcu.1GRN.2g025220,Lcu.1GRN.2g025220,PMD domain-containing protein
+Lcu.1GRN.Chr4,305363468,305365986,Lcu.1GRN.4g036590,Lcu.1GRN.4g036590,PMD domain-containing protein
+Lcu.1GRN.Chr3,405128703,405131577,Lcu.1GRN.3g058470,Lcu.1GRN.3g058470,PMEI domain-containing protein
+Lcu.1GRN.Chr4,432083218,432083460,Lcu.1GRN.4g059460,Lcu.1GRN.4g059460,Polcalcin Phl p 7
+Lcu.1GRN.Chr6,157223045,157226678,Lcu.1GRN.6g017660,Lcu.1GRN.6g017660,Polygalacturonase inhibitor
+Lcu.1GRN.Chr6,157464997,157466001,Lcu.1GRN.6g017700,Lcu.1GRN.6g017700,Polygalacturonase inhibitor
+Lcu.1GRN.Chr2,51666327,51671047,Lcu.1GRN.2g015140,Lcu.1GRN.2g015140,Prefoldin subunit 3
+Lcu.1GRN.Chr4,432603757,432604874,Lcu.1GRN.4g059580,Lcu.1GRN.4g059580,Procollagen-proline 3-dioxygenase
+Lcu.1GRN.Chr4,432701780,432704998,Lcu.1GRN.4g059610,Lcu.1GRN.4g059610,Procollagen-proline 3-dioxygenase
+Lcu.1GRN.Chr3,360830650,360831707,Lcu.1GRN.3g050940,Lcu.1GRN.3g050940,Proteasome activator subunit 4
+Lcu.1GRN.Chr4,307819512,307825325,Lcu.1GRN.4g036820,Lcu.1GRN.4g036820,Protein DETOXIFICATION
+Lcu.1GRN.Chr4,307902957,307906002,Lcu.1GRN.4g036830,Lcu.1GRN.4g036830,Protein DETOXIFICATION
+Lcu.1GRN.Chr4,307972207,308027358,Lcu.1GRN.4g036840,Lcu.1GRN.4g036840,Protein DETOXIFICATION
+Lcu.1GRN.Chr6,233606613,233608421,Lcu.1GRN.6g026380,Lcu.1GRN.6g026380,Protein DETOXIFICATION
+Lcu.1GRN.Chr6,287682503,287684540,Lcu.1GRN.6g033630,Lcu.1GRN.6g033630,Protein DETOXIFICATION
+Lcu.1GRN.Chr4,350993317,350998967,Lcu.1GRN.4g044750,Lcu.1GRN.4g044750,protein disulfide-isomerase 5-4
+Lcu.1GRN.Chr4,351004833,351008121,Lcu.1GRN.4g044770,Lcu.1GRN.4g044770,Protein disulfide-isomerase 5-4-like
+Lcu.1GRN.Chr4,291372965,291375634,Lcu.1GRN.4g034640,Lcu.1GRN.4g034640,protein DMR6-LIKE OXYGENASE 2-like
+Lcu.1GRN.Chr6,236295055,236297359,Lcu.1GRN.6g026850,Lcu.1GRN.6g026850,Protein FAR1-RELATED SEQUENCE
+Lcu.1GRN.Chr6,233542536,233543350,Lcu.1GRN.6g026360,Lcu.1GRN.6g026360,Protein FAR1-RELATED SEQUENCE
+Lcu.1GRN.Chr6,233544329,233545257,Lcu.1GRN.6g026370,Lcu.1GRN.6g026370,Protein FAR1-RELATED SEQUENCE
+Lcu.1GRN.Chr3,364089770,364092151,Lcu.1GRN.3g051680,Lcu.1GRN.3g051680,Protein FAR1-RELATED SEQUENCE
+Lcu.1GRN.Chr2,51809221,51812044,Lcu.1GRN.2g015190,Lcu.1GRN.2g015190,Protein FAR1-RELATED SEQUENCE
+Lcu.1GRN.Chr4,273226854,273229549,Lcu.1GRN.4g032180,Lcu.1GRN.4g032180,Protein kinase
+Lcu.1GRN.Chr3,365820332,365823363,Lcu.1GRN.3g052100,Lcu.1GRN.3g052100,Protein kinase
+Lcu.1GRN.Chr6,106190957,106194055,Lcu.1GRN.6g012670,Lcu.1GRN.6g012670,Protein kinase
+Lcu.1GRN.Chr3,363573588,363576597,Lcu.1GRN.3g051510,Lcu.1GRN.3g051510,Protein kinase domain-containing protein
+Lcu.1GRN.Chr2,128862778,128865213,Lcu.1GRN.2g025110,Lcu.1GRN.2g025110,Protein kinase domain-containing protein
+Lcu.1GRN.Chr3,372813803,372817966,Lcu.1GRN.3g052570,Lcu.1GRN.3g052570,Protein LAX PANICLE 2
+Lcu.1GRN.Chr6,236287105,236288592,Lcu.1GRN.6g026840,Lcu.1GRN.6g026840,protein MAIN-LIKE 1-like
+Lcu.1GRN.Chr6,156562051,156563968,Lcu.1GRN.6g017570,Lcu.1GRN.6g017570,protein MAIN-LIKE 1-like
+Lcu.1GRN.Chr4,350959140,350960508,Lcu.1GRN.4g044730,Lcu.1GRN.4g044730,protein NRT1/ PTR FAMILY 8.1-like
+Lcu.1GRN.Chr3,370502818,370503490,Lcu.1GRN.3g052350,Lcu.1GRN.3g052350,Protein ORANGE-LIKE;  chloroplastic
+Lcu.1GRN.Chr3,405266633,405267608,Lcu.1GRN.3g058540,Lcu.1GRN.3g058540,Protein OXIDATIVE STRESS 3 LIKE 2
+Lcu.1GRN.Chr4,304807127,304813608,Lcu.1GRN.4g036530,Lcu.1GRN.4g036530,Protein PALE CRESS;  chloroplastic
+Lcu.1GRN.Chr6,176147052,176147882,Lcu.1GRN.6g020080,Lcu.1GRN.6g020080,protein PYRICULARIA ORYZAE RESISTANCE 21-like
+Lcu.1GRN.Chr3,371376992,371377243,Lcu.1GRN.3g052450,Lcu.1GRN.3g052450,Protein transport protein Sec61 subunit gamma
+Lcu.1GRN.Chr6,173737927,173740584,Lcu.1GRN.6g019720,Lcu.1GRN.6g019720,Protein trichome birefringence-like 38
+Lcu.1GRN.Chr6,175835745,175839091,Lcu.1GRN.6g020020,Lcu.1GRN.6g020020,Protein XRI1
+Lcu.1GRN.Chr4,298899815,298900712,Lcu.1GRN.4g035600,Lcu.1GRN.4g035600,Protein Ycf2
+Lcu.1GRN.Chr4,298909224,298910972,Lcu.1GRN.4g035610,Lcu.1GRN.4g035610,Protein Ycf2
+Lcu.1GRN.Chr6,235556254,235558586,Lcu.1GRN.6g026770,Lcu.1GRN.6g026770,Protein yippee-like
+Lcu.1GRN.Chr6,235562216,235563037,Lcu.1GRN.6g026780,Lcu.1GRN.6g026780,Protein yippee-like
+Lcu.1GRN.Chr6,234373782,234382420,Lcu.1GRN.6g026640,Lcu.1GRN.6g026640,Protein-serine/threonine phosphatase
+Lcu.1GRN.Chr2,51976099,51981623,Lcu.1GRN.2g015220,Lcu.1GRN.2g015220,Protein-serine/threonine phosphatase
+Lcu.1GRN.Chr3,363810770,363812486,Lcu.1GRN.3g051600,Lcu.1GRN.3g051600,PsbP domain-containing protein
+Lcu.1GRN.Chr3,360831899,360832437,Lcu.1GRN.3g050950,Lcu.1GRN.3g050950,PsbP domain-containing protein
+Lcu.1GRN.Chr4,432481809,432498968,Lcu.1GRN.4g059520,Lcu.1GRN.4g059520,Purple acid phosphatase
+Lcu.1GRN.Chr4,432558907,432566441,Lcu.1GRN.4g059550,Lcu.1GRN.4g059550,Purple acid phosphatase
+Lcu.1GRN.Chr6,175944612,175949535,Lcu.1GRN.6g020030,Lcu.1GRN.6g020030,Purple acid phosphatase
+Lcu.1GRN.Chr4,298633699,298635244,Lcu.1GRN.4g035580,Lcu.1GRN.4g035580,Rab3 GTPase-activating protein catalytic subunit
+Lcu.1GRN.Chr4,351075441,351078258,Lcu.1GRN.4g044800,Lcu.1GRN.4g044800,Rab-GAP TBC domain-containing protein
+Lcu.1GRN.Chr4,290923997,290929139,Lcu.1GRN.4g034550,Lcu.1GRN.4g034550,Rab-GAP TBC domain-containing protein
+Lcu.1GRN.Chr6,287402542,287403348,Lcu.1GRN.6g033570,Lcu.1GRN.6g033570,RecA-like protein
+Lcu.1GRN.Chr6,234835695,234837627,Lcu.1GRN.6g026710,Lcu.1GRN.6g026710,Receptor-like kinase
+Lcu.1GRN.Chr6,156210871,156213456,Lcu.1GRN.6g017490,Lcu.1GRN.6g017490,Receptor-like kinase S.2
+Lcu.1GRN.Chr6,176270747,176273939,Lcu.1GRN.6g020090,Lcu.1GRN.6g020090,Receptor-like serine/threonine-protein kinase
+Lcu.1GRN.Chr6,176424358,176427557,Lcu.1GRN.6g020200,Lcu.1GRN.6g020200,Receptor-like serine/threonine-protein kinase
+Lcu.1GRN.Chr6,177385263,177388693,Lcu.1GRN.6g020320,Lcu.1GRN.6g020320,Receptor-like serine/threonine-protein kinase
+Lcu.1GRN.Chr6,177405936,177407728,Lcu.1GRN.6g020330,Lcu.1GRN.6g020330,Receptor-like serine/threonine-protein kinase
+Lcu.1GRN.Chr6,177561793,177565004,Lcu.1GRN.6g020350,Lcu.1GRN.6g020350,Receptor-like serine/threonine-protein kinase
+Lcu.1GRN.Chr4,431609669,431612094,Lcu.1GRN.4g059410,Lcu.1GRN.4g059410,Receptor-like serine/threonine-protein kinase
+Lcu.1GRN.Chr4,290671827,290675702,Lcu.1GRN.4g034500,Lcu.1GRN.4g034500,Replication factor-A carboxy-terminal domain protein
+Lcu.1GRN.Chr4,380013219,380015508,Lcu.1GRN.4g049610,Lcu.1GRN.4g049610,Replication factor-A carboxy-terminal domain protein
+Lcu.1GRN.Chr2,51779766,51782568,Lcu.1GRN.2g015160,Lcu.1GRN.2g015160,Respiratory burst oxidase-like protein
+Lcu.1GRN.Chr4,290126920,290132994,Lcu.1GRN.4g034380,Lcu.1GRN.4g034380,Reticulon-like protein
+Lcu.1GRN.Chr6,171921341,171922048,Lcu.1GRN.6g019440,Lcu.1GRN.6g019440,Retrotransposon-related protein
+Lcu.1GRN.Chr6,171922734,171923924,Lcu.1GRN.6g019450,Lcu.1GRN.6g019450,Retrotransposon-related protein
+Lcu.1GRN.Chr4,307321531,307326782,Lcu.1GRN.4g036760,Lcu.1GRN.4g036760,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,232930236,232937314,Lcu.1GRN.6g026320,Lcu.1GRN.6g026320,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,233621537,233621767,Lcu.1GRN.6g026390,Lcu.1GRN.6g026390,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,233621907,233622218,Lcu.1GRN.6g026400,Lcu.1GRN.6g026400,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,233622462,233622922,Lcu.1GRN.6g026410,Lcu.1GRN.6g026410,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,233637475,233639010,Lcu.1GRN.6g026440,Lcu.1GRN.6g026440,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,233639049,233641968,Lcu.1GRN.6g026450,Lcu.1GRN.6g026450,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr4,432478630,432480413,Lcu.1GRN.4g059500,Lcu.1GRN.4g059500,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr4,432480666,432481358,Lcu.1GRN.4g059510,Lcu.1GRN.4g059510,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,176767770,176770922,Lcu.1GRN.6g020230,Lcu.1GRN.6g020230,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,176774733,176778174,Lcu.1GRN.6g020240,Lcu.1GRN.6g020240,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,172053483,172056924,Lcu.1GRN.6g019470,Lcu.1GRN.6g019470,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr4,350999772,351003914,Lcu.1GRN.4g044760,Lcu.1GRN.4g044760,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,234241084,234241495,Lcu.1GRN.6g026590,Lcu.1GRN.6g026590,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,234244030,234244434,Lcu.1GRN.6g026600,Lcu.1GRN.6g026600,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,234455554,234456808,Lcu.1GRN.6g026650,Lcu.1GRN.6g026650,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,287376693,287377206,Lcu.1GRN.6g033560,Lcu.1GRN.6g033560,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr3,372753398,372754328,Lcu.1GRN.3g052560,Lcu.1GRN.3g052560,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr4,380489150,380489725,Lcu.1GRN.4g049710,Lcu.1GRN.4g049710,Retrovirus-related Pol polyprotein from transposon TNT 1-94
+Lcu.1GRN.Chr6,234086871,234088154,Lcu.1GRN.6g026550,Lcu.1GRN.6g026550,Reverse transcriptase domain-containing protein
+Lcu.1GRN.Chr4,273770415,273772584,Lcu.1GRN.4g032270,Lcu.1GRN.4g032270,RHOMBOID-like protein
+Lcu.1GRN.Chr4,273912802,273914662,Lcu.1GRN.4g032300,Lcu.1GRN.4g032300,RHOMBOID-like protein
+Lcu.1GRN.Chr3,370550726,370552840,Lcu.1GRN.3g052360,Lcu.1GRN.3g052360,Ribonuclease
+Lcu.1GRN.Chr4,273117824,273121357,Lcu.1GRN.4g032140,Lcu.1GRN.4g032140,Ribonuclease H
+Lcu.1GRN.Chr6,170548574,170550565,Lcu.1GRN.6g019300,Lcu.1GRN.6g019300,Ribonuclease H
+Lcu.1GRN.Chr4,298615553,298618735,Lcu.1GRN.4g035570,Lcu.1GRN.4g035570,Ribonuclease H
+Lcu.1GRN.Chr6,176332284,176335706,Lcu.1GRN.6g020120,Lcu.1GRN.6g020120,Ribonuclease H
+Lcu.1GRN.Chr3,370675706,370678765,Lcu.1GRN.3g052410,Lcu.1GRN.3g052410,Ribonuclease H
+Lcu.1GRN.Chr2,175559809,175562875,Lcu.1GRN.2g029840,Lcu.1GRN.2g029840,Ribonuclease H
+Lcu.1GRN.Chr3,364531425,364533536,Lcu.1GRN.3g051810,Lcu.1GRN.3g051810,Ribonuclease H
+Lcu.1GRN.Chr3,364735026,364736636,Lcu.1GRN.3g051870,Lcu.1GRN.3g051870,Ribonuclease H
+Lcu.1GRN.Chr6,157100509,157107359,Lcu.1GRN.6g017650,Lcu.1GRN.6g017650,Ribonuclease H
+Lcu.1GRN.Chr3,360994408,360995796,Lcu.1GRN.3g051000,Lcu.1GRN.3g051000,Ribonuclease H
+Lcu.1GRN.Chr3,361469639,361470503,Lcu.1GRN.3g051070,Lcu.1GRN.3g051070,Ribonuclease H
+Lcu.1GRN.Chr4,380075480,380077373,Lcu.1GRN.4g049630,Lcu.1GRN.4g049630,Ribonuclease H
+Lcu.1GRN.Chr2,128938223,128939878,Lcu.1GRN.2g025140,Lcu.1GRN.2g025140,Ribonuclease H
+Lcu.1GRN.Chr3,363479993,363481758,Lcu.1GRN.3g051500,Lcu.1GRN.3g051500,Ribonuclease T(2)
+Lcu.1GRN.Chr6,175271049,175273290,Lcu.1GRN.6g019990,Lcu.1GRN.6g019990,Ribonucleoside-diphosphate reductase
+Lcu.1GRN.Chr3,365914778,365915579,Lcu.1GRN.3g052110,Lcu.1GRN.3g052110,Ribosomal RNA processing protein 1
+Lcu.1GRN.Chr4,290774025,290782368,Lcu.1GRN.4g034540,Lcu.1GRN.4g034540,Ribosome biogenesis protein BMS1
+Lcu.1GRN.Chr6,235952673,235953929,Lcu.1GRN.6g026800,Lcu.1GRN.6g026800,RING-type domain-containing protein
+Lcu.1GRN.Chr6,287650139,287651008,Lcu.1GRN.6g033610,Lcu.1GRN.6g033610,RING-type domain-containing protein
+Lcu.1GRN.Chr6,175950174,175951292,Lcu.1GRN.6g020040,Lcu.1GRN.6g020040,RING-type domain-containing protein
+Lcu.1GRN.Chr3,363309546,363312320,Lcu.1GRN.3g051430,Lcu.1GRN.3g051430,RING-type E3 ubiquitin transferase
+Lcu.1GRN.Chr6,174804138,174805689,Lcu.1GRN.6g019920,Lcu.1GRN.6g019920,RING-type E3 ubiquitin transferase
+Lcu.1GRN.Chr6,172994891,172996138,Lcu.1GRN.6g019600,Lcu.1GRN.6g019600,RING-type E3 ubiquitin transferase
+Lcu.1GRN.Chr6,167513676,167516531,Lcu.1GRN.6g018940,Lcu.1GRN.6g018940,RING-type E3 ubiquitin transferase
+Lcu.1GRN.Chr3,363781148,363782691,Lcu.1GRN.3g051570,Lcu.1GRN.3g051570,RNA polymerase II transcriptional coactivator KIWI-like
+Lcu.1GRN.Chr6,167887177,167887693,Lcu.1GRN.6g019000,Lcu.1GRN.6g019000,RNA polymerase sigma factor
+Lcu.1GRN.Chr4,334784747,334790015,Lcu.1GRN.4g041710,Lcu.1GRN.4g041710,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,274095982,274098297,Lcu.1GRN.4g032400,Lcu.1GRN.4g032400,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,274098331,274101414,Lcu.1GRN.4g032410,Lcu.1GRN.4g032410,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,274897396,274901168,Lcu.1GRN.4g032470,Lcu.1GRN.4g032470,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,273635244,273645241,Lcu.1GRN.4g032240,Lcu.1GRN.4g032240,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,273648227,273652602,Lcu.1GRN.4g032250,Lcu.1GRN.4g032250,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,307597852,307599830,Lcu.1GRN.4g036810,Lcu.1GRN.4g036810,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,232957112,232959010,Lcu.1GRN.6g026330,Lcu.1GRN.6g026330,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,232959080,232960795,Lcu.1GRN.6g026340,Lcu.1GRN.6g026340,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,273125248,273133561,Lcu.1GRN.4g032150,Lcu.1GRN.4g032150,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,234954304,234956080,Lcu.1GRN.6g026720,Lcu.1GRN.6g026720,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,170868450,170873063,Lcu.1GRN.6g019320,Lcu.1GRN.6g019320,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,171423817,171425391,Lcu.1GRN.6g019370,Lcu.1GRN.6g019370,RNA-directed DNA polymerase
+Lcu.1GRN.Chr3,363395776,363396075,Lcu.1GRN.3g051470,Lcu.1GRN.3g051470,RNA-directed DNA polymerase
+Lcu.1GRN.Chr3,363412402,363413995,Lcu.1GRN.3g051480,Lcu.1GRN.3g051480,RNA-directed DNA polymerase
+Lcu.1GRN.Chr3,364200974,364204390,Lcu.1GRN.3g051730,Lcu.1GRN.3g051730,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,432802215,432804691,Lcu.1GRN.4g059630,Lcu.1GRN.4g059630,RNA-directed DNA polymerase
+Lcu.1GRN.Chr3,372445843,372446481,Lcu.1GRN.3g052510,Lcu.1GRN.3g052510,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,177147774,177149706,Lcu.1GRN.6g020270,Lcu.1GRN.6g020270,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,175084837,175086028,Lcu.1GRN.6g019960,Lcu.1GRN.6g019960,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,234091155,234091661,Lcu.1GRN.6g026570,Lcu.1GRN.6g026570,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,234345961,234350511,Lcu.1GRN.6g026630,Lcu.1GRN.6g026630,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,174308113,174308526,Lcu.1GRN.6g019830,Lcu.1GRN.6g019830,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,174308688,174309239,Lcu.1GRN.6g019840,Lcu.1GRN.6g019840,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,173572863,173574744,Lcu.1GRN.6g019670,Lcu.1GRN.6g019670,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,287354590,287356164,Lcu.1GRN.6g033550,Lcu.1GRN.6g033550,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,290660166,290665587,Lcu.1GRN.4g034490,Lcu.1GRN.4g034490,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,290935941,290936145,Lcu.1GRN.4g034570,Lcu.1GRN.4g034570,RNA-directed DNA polymerase
+Lcu.1GRN.Chr2,175523542,175525818,Lcu.1GRN.2g029830,Lcu.1GRN.2g029830,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,156772433,156775666,Lcu.1GRN.6g017580,Lcu.1GRN.6g017580,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,167749030,167751007,Lcu.1GRN.6g018960,Lcu.1GRN.6g018960,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,160580843,160584439,Lcu.1GRN.6g018150,Lcu.1GRN.6g018150,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,160789492,160797012,Lcu.1GRN.6g018160,Lcu.1GRN.6g018160,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,106935821,106938352,Lcu.1GRN.6g012700,Lcu.1GRN.6g012700,RNA-directed DNA polymerase
+Lcu.1GRN.Chr6,106938418,106940193,Lcu.1GRN.6g012710,Lcu.1GRN.6g012710,RNA-directed DNA polymerase
+Lcu.1GRN.Chr4,335153181,335154282,Lcu.1GRN.4g041740,Lcu.1GRN.4g041740,RNase H type-1 domain-containing protein
+Lcu.1GRN.Chr6,174277880,174280879,Lcu.1GRN.6g019820,Lcu.1GRN.6g019820,RPM1 interacting protein 4 transcript protein
+Lcu.1GRN.Chr2,129588022,129590343,Lcu.1GRN.2g025200,Lcu.1GRN.2g025200,RRM domain-containing protein
+Lcu.1GRN.Chr4,305389997,305391247,Lcu.1GRN.4g036600,Lcu.1GRN.4g036600,RRM_2 domain-containing protein
+Lcu.1GRN.Chr2,129942254,129946001,Lcu.1GRN.2g025240,Lcu.1GRN.2g025240,S-adenosyl-L-methionine-dependent methyltransferases superfamily protein
+Lcu.1GRN.Chr6,171090296,171092710,Lcu.1GRN.6g019330,Lcu.1GRN.6g019330,SAWADEE domain-containing protein
+Lcu.1GRN.Chr4,274283142,274285112,Lcu.1GRN.4g032440,Lcu.1GRN.4g032440,Scarecrow-like protein
+Lcu.1GRN.Chr4,274018939,274021173,Lcu.1GRN.4g032370,Lcu.1GRN.4g032370,SCARECROW-like protein 14-like
+Lcu.1GRN.Chr4,432652197,432653974,Lcu.1GRN.4g059590,Lcu.1GRN.4g059590,SCARECROW-like protein 4-like
+Lcu.1GRN.Chr6,176117420,176121856,Lcu.1GRN.6g020060,Lcu.1GRN.6g020060,Secretory carrier-associated membrane protein
+Lcu.1GRN.Chr6,157383525,157389311,Lcu.1GRN.6g017690,Lcu.1GRN.6g017690,Sentrin-specific protease 2
+Lcu.1GRN.Chr3,370552881,370553496,Lcu.1GRN.3g052370,Lcu.1GRN.3g052370,Serine hydroxymethyltransferase
+Lcu.1GRN.Chr3,370555723,370557905,Lcu.1GRN.3g052400,Lcu.1GRN.3g052400,Serine hydroxymethyltransferase
+Lcu.1GRN.Chr4,307326764,307328541,Lcu.1GRN.4g036770,Lcu.1GRN.4g036770,Serine/threonine protein kinase SRPK1
+Lcu.1GRN.Chr6,168328525,168330031,Lcu.1GRN.6g019030,Lcu.1GRN.6g019030,serine/threonine-protein phosphatase 7 long form homolog
+Lcu.1GRN.Chr4,380340838,380342932,Lcu.1GRN.4g049660,Lcu.1GRN.4g049660,serine/threonine-protein phosphatase 7 long form homolog
+Lcu.1GRN.Chr6,107074694,107075459,Lcu.1GRN.6g012730,Lcu.1GRN.6g012730,serine/threonine-protein phosphatase 7 long form homolog
+Lcu.1GRN.Chr6,231490055,231491391,Lcu.1GRN.6g026190,Lcu.1GRN.6g026190,Serine--tRNA ligase
+Lcu.1GRN.Chr3,365633521,365634204,Lcu.1GRN.3g052050,Lcu.1GRN.3g052050,SH2 domain-containing protein
+Lcu.1GRN.Chr4,308348678,308352758,Lcu.1GRN.4g036880,Lcu.1GRN.4g036880,SH3 domain-containing protein 2
+Lcu.1GRN.Chr6,288374730,288378585,Lcu.1GRN.6g033760,Lcu.1GRN.6g033760,Signal peptide peptidase-like 4
+Lcu.1GRN.Chr4,308445422,308446554,Lcu.1GRN.4g036890,Lcu.1GRN.4g036890,Signal recognition particle receptor subunit beta
+Lcu.1GRN.Chr4,308451396,308451926,Lcu.1GRN.4g036900,Lcu.1GRN.4g036900,Signal recognition particle receptor subunit beta
+Lcu.1GRN.Chr4,305326682,305327082,Lcu.1GRN.4g036580,Lcu.1GRN.4g036580,SKP1-like protein
+Lcu.1GRN.Chr6,288368850,288373475,Lcu.1GRN.6g033750,Lcu.1GRN.6g033750,SKP1-like protein 21
+Lcu.1GRN.Chr6,234502727,234504177,Lcu.1GRN.6g026680,Lcu.1GRN.6g026680,Small COPII coat GTPase SAR1
+Lcu.1GRN.Chr4,351078894,351079566,Lcu.1GRN.4g044810,Lcu.1GRN.4g044810,Small ribosomal subunit protein S13
+Lcu.1GRN.Chr6,176373700,176374358,Lcu.1GRN.6g020170,Lcu.1GRN.6g020170,Somatic embryogenesis receptor kinase
+Lcu.1GRN.Chr6,172541056,172543951,Lcu.1GRN.6g019580,Lcu.1GRN.6g019580,Somatic embryogenesis receptor kinase 1
+Lcu.1GRN.Chr6,176290420,176291000,Lcu.1GRN.6g020100,Lcu.1GRN.6g020100,Somatic embryogenesis receptor-like protein kinase
+Lcu.1GRN.Chr6,176367464,176368044,Lcu.1GRN.6g020150,Lcu.1GRN.6g020150,Somatic embryogenesis receptor-like protein kinase
+Lcu.1GRN.Chr6,176370582,176371162,Lcu.1GRN.6g020160,Lcu.1GRN.6g020160,Somatic embryogenesis receptor-like protein kinase
+Lcu.1GRN.Chr6,176379936,176380516,Lcu.1GRN.6g020190,Lcu.1GRN.6g020190,Somatic embryogenesis receptor-like protein kinase
+Lcu.1GRN.Chr4,380984968,380991705,Lcu.1GRN.4g049840,Lcu.1GRN.4g049840,Something about silencing protein 10
+Lcu.1GRN.Chr4,380775180,380799262,Lcu.1GRN.4g049800,Lcu.1GRN.4g049800,Sorting nexin-19
+Lcu.1GRN.Chr6,177414752,177417065,Lcu.1GRN.6g020340,Lcu.1GRN.6g020340,SPX domain-containing membrane protein
+Lcu.1GRN.Chr4,308307197,308312915,Lcu.1GRN.4g036860,Lcu.1GRN.4g036860,Squalene synthase
+Lcu.1GRN.Chr3,363344212,363344827,Lcu.1GRN.3g051450,Lcu.1GRN.3g051450,Squamosa promoter-binding-like protein 14-like
+Lcu.1GRN.Chr6,107692996,107695520,Lcu.1GRN.6g012780,Lcu.1GRN.6g012780,Storage protein
+Lcu.1GRN.Chr6,168887751,168889088,Lcu.1GRN.6g019090,Lcu.1GRN.6g019090,Subtilisin-like protease
+Lcu.1GRN.Chr6,157007165,157007794,Lcu.1GRN.6g017620,Lcu.1GRN.6g017620,Subtilisin-like protease
+Lcu.1GRN.Chr6,157007858,157008292,Lcu.1GRN.6g017630,Lcu.1GRN.6g017630,Subtilisin-like protease
+Lcu.1GRN.Chr6,231801596,231805554,Lcu.1GRN.6g026220,Lcu.1GRN.6g026220,sulfoquinovosyl transferase SQD2-like
+Lcu.1GRN.Chr3,405213327,405214052,Lcu.1GRN.3g058510,Lcu.1GRN.3g058510,SWIM-type domain-containing protein
+Lcu.1GRN.Chr6,107547636,107549658,Lcu.1GRN.6g012750,Lcu.1GRN.6g012750,SWIM-type domain-containing protein
+Lcu.1GRN.Chr4,273941930,273944785,Lcu.1GRN.4g032330,Lcu.1GRN.4g032330,Tafazzin family protein
+Lcu.1GRN.Chr6,234248863,234250842,Lcu.1GRN.6g026610,Lcu.1GRN.6g026610,T-complex protein 1 subunit beta-like protein
+Lcu.1GRN.Chr6,170617598,170621449,Lcu.1GRN.6g019310,Lcu.1GRN.6g019310,T-complex protein 1 subunit eta
+Lcu.1GRN.Chr6,157237683,157239437,Lcu.1GRN.6g017680,Lcu.1GRN.6g017680,Terpene synthase
+Lcu.1GRN.Chr4,273954174,273955146,Lcu.1GRN.4g032360,Lcu.1GRN.4g032360,TF-B3 domain-containing protein
+Lcu.1GRN.Chr3,364401073,364401942,Lcu.1GRN.3g051790,Lcu.1GRN.3g051790,TF-B3 domain-containing protein
+Lcu.1GRN.Chr4,351091349,351092802,Lcu.1GRN.4g044820,Lcu.1GRN.4g044820,Thiamine thiazole synthase;  chloroplastic
+Lcu.1GRN.Chr4,291203146,291203523,Lcu.1GRN.4g034590,Lcu.1GRN.4g034590,Thionin-like protein
+Lcu.1GRN.Chr4,290530472,290531086,Lcu.1GRN.4g034460,Lcu.1GRN.4g034460,Thioredoxin domain-containing protein
+Lcu.1GRN.Chr6,157234613,157236103,Lcu.1GRN.6g017670,Lcu.1GRN.6g017670,THUMP domain-containing protein
+Lcu.1GRN.Chr2,51759478,51760997,Lcu.1GRN.2g015150,Lcu.1GRN.2g015150,Tobamovirus multiplication protein 1
+Lcu.1GRN.Chr3,365793141,365795596,Lcu.1GRN.3g052070,Lcu.1GRN.3g052070,TOM1-like protein 5
+Lcu.1GRN.Chr4,273737356,273739144,Lcu.1GRN.4g032260,Lcu.1GRN.4g032260,Topless-related protein 3-like
+Lcu.1GRN.Chr4,351155667,351158731,Lcu.1GRN.4g044830,Lcu.1GRN.4g044830,Trafficking protein particle complex subunit
+Lcu.1GRN.Chr3,364660571,364663091,Lcu.1GRN.3g051850,Lcu.1GRN.3g051850,Trafficking protein particle complex subunit 2
+Lcu.1GRN.Chr3,361148718,361149038,Lcu.1GRN.3g051040,Lcu.1GRN.3g051040,Transcription factor bHLH143-like
+Lcu.1GRN.Chr3,372711851,372714897,Lcu.1GRN.3g052550,Lcu.1GRN.3g052550,Transcription factor bHLH144-like protein
+Lcu.1GRN.Chr2,51943212,51943844,Lcu.1GRN.2g015200,Lcu.1GRN.2g015200,Transcription factor bHLH147-like protein
+Lcu.1GRN.Chr3,365435746,365446283,Lcu.1GRN.3g052020,Lcu.1GRN.3g052020,Translation factor GUF1 homolog;  chloroplastic
+Lcu.1GRN.Chr3,365462364,365475232,Lcu.1GRN.3g052030,Lcu.1GRN.3g052030,Translation factor GUF1 homolog;  chloroplastic
+Lcu.1GRN.Chr4,380017176,380017658,Lcu.1GRN.4g049620,Lcu.1GRN.4g049620,Translation initiation factor 4G
+Lcu.1GRN.Chr4,290440099,290442383,Lcu.1GRN.4g034450,Lcu.1GRN.4g034450,Transmembrane protein
+Lcu.1GRN.Chr3,405137049,405137390,Lcu.1GRN.3g058490,Lcu.1GRN.3g058490,Transmembrane protein
+Lcu.1GRN.Chr2,129886413,129887031,Lcu.1GRN.2g025230,Lcu.1GRN.2g025230,Transmembrane protein
+Lcu.1GRN.Chr3,364192176,364193300,Lcu.1GRN.3g051720,Lcu.1GRN.3g051720,Transmembrane protein;  putative
+Lcu.1GRN.Chr6,172479382,172480882,Lcu.1GRN.6g019550,Lcu.1GRN.6g019550,Transmembrane protein;  putative
+Lcu.1GRN.Chr2,51969310,51970416,Lcu.1GRN.2g015210,Lcu.1GRN.2g015210,Transmembrane protein;  putative
+Lcu.1GRN.Chr4,272521136,272522324,Lcu.1GRN.4g032110,Lcu.1GRN.4g032110,Transpos_assoc domain-containing protein
+Lcu.1GRN.Chr3,363358453,363359013,Lcu.1GRN.3g051460,Lcu.1GRN.3g051460,Transposase
+Lcu.1GRN.Chr6,231027419,231028126,Lcu.1GRN.6g026100,Lcu.1GRN.6g026100,Transposase
+Lcu.1GRN.Chr2,51264396,51266347,Lcu.1GRN.2g015110,Lcu.1GRN.2g015110,Transposase (Putative);  gypsy type
+Lcu.1GRN.Chr3,363845602,363846013,Lcu.1GRN.3g051620,Lcu.1GRN.3g051620,Transposon Ty3-G Gag-Pol polyprotein
+Lcu.1GRN.Chr6,176355080,176355707,Lcu.1GRN.6g020140,Lcu.1GRN.6g020140,Transposon Ty3-G Gag-Pol polyprotein
+Lcu.1GRN.Chr4,350972658,350973285,Lcu.1GRN.4g044740,Lcu.1GRN.4g044740,Transposon Ty3-G Gag-Pol polyprotein
+Lcu.1GRN.Chr6,173910235,173910862,Lcu.1GRN.6g019760,Lcu.1GRN.6g019760,Transposon Ty3-G Gag-Pol polyprotein
+Lcu.1GRN.Chr6,157477973,157478600,Lcu.1GRN.6g017710,Lcu.1GRN.6g017710,Transposon Ty3-G Gag-Pol polyprotein
+Lcu.1GRN.Chr4,380499328,380501117,Lcu.1GRN.4g049720,Lcu.1GRN.4g049720,Transposon Ty3-I Gag-Pol polyprotein
+Lcu.1GRN.Chr2,128650505,128652211,Lcu.1GRN.2g025090,Lcu.1GRN.2g025090,tRNA-specific adenosine deaminase-like protein 3-like
+Lcu.1GRN.Chr4,290017269,290019043,Lcu.1GRN.4g034370,Lcu.1GRN.4g034370,tRNA-splicing endonuclease subunit Sen54
+Lcu.1GRN.Chr3,363808392,363810166,Lcu.1GRN.3g051590,Lcu.1GRN.3g051590,TTF-type domain-containing protein
+Lcu.1GRN.Chr4,307359245,307359847,Lcu.1GRN.4g036780,Lcu.1GRN.4g036780,Tubulin alpha chain
+Lcu.1GRN.Chr4,307368907,307369509,Lcu.1GRN.4g036790,Lcu.1GRN.4g036790,Tubulin alpha chain
+Lcu.1GRN.Chr6,232679300,232680043,Lcu.1GRN.6g026280,Lcu.1GRN.6g026280,Ty3/gypsy retrotransposon protein
+Lcu.1GRN.Chr4,290677095,290678092,Lcu.1GRN.4g034510,Lcu.1GRN.4g034510,type IV inositol polyphosphate 5-phosphatase 3-like
+Lcu.1GRN.Chr6,106681999,106684160,Lcu.1GRN.6g012690,Lcu.1GRN.6g012690,type IV inositol polyphosphate 5-phosphatase 3-like
+Lcu.1GRN.Chr4,432216444,432219031,Lcu.1GRN.4g059490,Lcu.1GRN.4g059490,type IV inositol polyphosphate 5-phosphatase 9
+Lcu.1GRN.Chr4,290598861,290602335,Lcu.1GRN.4g034470,Lcu.1GRN.4g034470,U11/U12 small nuclear ribonucleoprotein 59 kDa protein
+Lcu.1GRN.Chr4,432914259,432914630,Lcu.1GRN.4g059640,Lcu.1GRN.4g059640,Ubiquitin carboxyl-terminal hydrolase
+Lcu.1GRN.Chr4,274566085,274567926,Lcu.1GRN.4g032450,Lcu.1GRN.4g032450,Ubiquitin fusion degradation 1 protein
+Lcu.1GRN.Chr3,363479089,363479962,Lcu.1GRN.3g051490,Lcu.1GRN.3g051490,UDP-galactose transporter 2-like protein
+Lcu.1GRN.Chr4,290342007,290343735,Lcu.1GRN.4g034420,Lcu.1GRN.4g034420,UDP-glucose 4-epimerase
+Lcu.1GRN.Chr4,273593920,273595476,Lcu.1GRN.4g032220,Lcu.1GRN.4g032220,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr4,273630284,273632243,Lcu.1GRN.4g032230,Lcu.1GRN.4g032230,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr4,432601445,432603349,Lcu.1GRN.4g059570,Lcu.1GRN.4g059570,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr4,291357301,291358889,Lcu.1GRN.4g034620,Lcu.1GRN.4g034620,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr4,291364748,291365676,Lcu.1GRN.4g034630,Lcu.1GRN.4g034630,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr6,167810432,167811637,Lcu.1GRN.6g018970,Lcu.1GRN.6g018970,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr6,167884470,167886831,Lcu.1GRN.6g018990,Lcu.1GRN.6g018990,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr3,365145249,365146452,Lcu.1GRN.3g051930,Lcu.1GRN.3g051930,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr6,160511321,160514979,Lcu.1GRN.6g018130,Lcu.1GRN.6g018130,ULP_PROTEASE domain-containing protein
+Lcu.1GRN.Chr3,363924862,363930081,Lcu.1GRN.3g051630,Lcu.1GRN.3g051630,Ultraviolet-B receptor UVR8
+Lcu.1GRN.Chr3,364993978,365001379,Lcu.1GRN.3g051900,Lcu.1GRN.3g051900,Ultraviolet-B receptor UVR8
+Lcu.1GRN.Chr4,272509419,272510135,Lcu.1GRN.4g032100,Lcu.1GRN.4g032100,Uracil phosphoribosyltransferase
+Lcu.1GRN.Chr6,236423208,236427102,Lcu.1GRN.6g026870,Lcu.1GRN.6g026870,Vacuolar cation/proton exchanger
+Lcu.1GRN.Chr6,236472534,236475484,Lcu.1GRN.6g026880,Lcu.1GRN.6g026880,Vacuolar cation/proton exchanger
+Lcu.1GRN.Chr3,363720544,363722862,Lcu.1GRN.3g051560,Lcu.1GRN.3g051560,Vacuolar protein sorting-associated protein 20 homolog 2
+Lcu.1GRN.Chr6,234475758,234477396,Lcu.1GRN.6g026670,Lcu.1GRN.6g026670,Vacuolar protein sorting-associated protein;  putative
+Lcu.1GRN.Chr6,172065694,172066494,Lcu.1GRN.6g019480,Lcu.1GRN.6g019480,WD repeat-containing protein 26 homolog
+Lcu.1GRN.Chr2,51436119,51437627,Lcu.1GRN.2g015130,Lcu.1GRN.2g015130,WRKY domain-containing protein
+Lcu.1GRN.Chr4,432720461,432722031,Lcu.1GRN.4g059620,Lcu.1GRN.4g059620,Xyloglucan endotransglucosylase/hydrolase
+Lcu.1GRN.Chr3,405138115,405139964,Lcu.1GRN.3g058500,Lcu.1GRN.3g058500,YlmG homolog protein 2;  chloroplastic
+Lcu.1GRN.Chr3,371856620,371856992,Lcu.1GRN.3g052480,Lcu.1GRN.3g052480,Zf-CCHC domain-containing protein
+Lcu.1GRN.Chr6,167826894,167827266,Lcu.1GRN.6g018980,Lcu.1GRN.6g018980,Zf-CCHC domain-containing protein
+Lcu.1GRN.Chr4,274668097,274668615,Lcu.1GRN.4g032460,Lcu.1GRN.4g032460,Zinc finger A20 and AN1 domain stress-associated protein
+Lcu.1GRN.Chr3,360969375,360974464,Lcu.1GRN.3g050990,Lcu.1GRN.3g050990,Zinc finger CCCH domain-containing protein 38-like
