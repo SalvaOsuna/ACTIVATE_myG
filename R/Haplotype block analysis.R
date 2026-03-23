@@ -223,15 +223,32 @@ split_vcf_r <- function(vcf_in, sample_ids, chr_map, output_dir, tag) {
 # Uses GenomicRanges findOverlaps to intersect block coordinates with
 # eroded and introgressed window coordinates.
 classify_blocks <- function(blocks_df, eroded_gr, introgressed_gr) {
+  
+  # HELPER: Strip all text/punctuation from chromosome names (e.g., "Chr1" -> "1")
+  # This guarantees PLINK output ("1") perfectly matches your CSVs ("Chr1" or "Lcu...Chr1")
+  extract_chr_num <- function(chr_vec) {
+    gsub("[^0-9]", "", as.character(chr_vec))
+  }
+  
+  # 1. Build GRanges for blocks using purely numeric chromosome names
   blocks_gr <- GRanges(
-    seqnames = blocks_df$chr,
+    seqnames = extract_chr_num(blocks_df$chr),
     ranges   = IRanges(start = blocks_df$block_start,
                        end   = blocks_df$block_end)
   )
   
-  eroded_hits        <- countOverlaps(blocks_gr, eroded_gr)        > 0
-  introgressed_hits  <- countOverlaps(blocks_gr, introgressed_gr)  > 0
+  # 2. Safely standardize the target GRanges chromosome names to pure numbers
+  eroded_gr_norm <- eroded_gr
+  seqlevels(eroded_gr_norm) <- extract_chr_num(seqlevels(eroded_gr_norm))
   
+  introgressed_gr_norm <- introgressed_gr
+  seqlevels(introgressed_gr_norm) <- extract_chr_num(seqlevels(introgressed_gr_norm))
+  
+  # 3. Calculate overlaps on the standardized coordinate system
+  eroded_hits        <- countOverlaps(blocks_gr, eroded_gr_norm)        > 0
+  introgressed_hits  <- countOverlaps(blocks_gr, introgressed_gr_norm)  > 0
+  
+  # 4. Apply classification back to the original dataframe
   blocks_df %>%
     mutate(
       region_type = case_when(
@@ -510,7 +527,10 @@ read_delta_he <- function(path, region_label) {
   
   df %>%
     transmute(
-      chr          = as.character(.data[[chr_col]]),
+      # NEW: Clean the chromosome column. 
+      # gsub(".*Chr", "", ...) deletes everything up to and including "Chr",
+      # turning "Lcu.1GRN.Chr4" directly into "4" so it matches PLINK perfectly.
+      chr          = gsub(".*Chr", "", as.character(.data[[chr_col]])),
       window_start = as.integer(.data[[start_col]]),
       window_end   = as.integer(.data[[end_col]])
     )
