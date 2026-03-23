@@ -4,6 +4,7 @@ library(SNPRelate)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
+library(ggpubr)
 
 cat("Starting Haplotype Block Analysis...\n")
 
@@ -410,3 +411,80 @@ p_blocks <- ggplot(plot_df, aes(x = Panel, y = Block_Size_Kb, fill = Panel)) +
 ggsave("Results/Haplotypes/Haplotype_Block_Comparison_breeding vs adaptation.png", plot = p_blocks, width = 9, height = 6, dpi = 600)
 
 cat("Done! Check the 'Results/Haplotypes' directory for your figures, CSVs, and BED files.\n")
+
+#high quality plot####
+cat("Generating high-quality labeled haplotype plot...\n")
+
+# --- 1. Prepare Data ---
+# (Assuming 'plot_df' and 'facet_labels' exist from your previous script execution)
+# If not, ensure plot_df has columns: Panel, Block_Size_Kb, Region_Type
+
+# Define the specific pairwise comparison we want (ACT vs LDP)
+# This is required by ggpubr to know which groups to draw the bracket between
+my_comparisons <- list( c("ACT", "LDP") )
+
+# Ensure Panel is a factor with correct order for X-axis
+plot_df$Panel <- factor(plot_df$Panel, levels = c("ACT", "LDP"))
+
+# Define a clean, high-contrast journal palette (Blue for ACT, Red/Orange for LDP)
+journal_colors <- c("ACT" =  "#e41a1c", "LDP" ="#377eb8")
+
+
+# --- 2. Generate the Plot ---
+p_blocks_labeled <- ggplot(plot_df, aes(x = Panel, y = Block_Size_Kb, fill = Panel)) +
+  
+  # 2a. The Data Layers (Violin -> Boxplot -> Faint Jitter)
+  geom_violin(alpha = 0.4, color = NA, trim = FALSE, scale = "width") +
+  geom_boxplot(width = 0.12, color = "black", outlier.shape = NA, alpha = 0.8, fill = "white") +
+  geom_jitter(width = 0.15, size = 1.0, alpha = 0.3, aes(color = Panel)) +
+  
+  # 2b. Faceting and Colors
+  facet_wrap(~ Region_Type, labeller = as_labeller(facet_labels), scales = "free_y") +
+  scale_fill_manual(values = journal_colors) +
+  scale_color_manual(values = journal_colors) +
+  
+  # *** 2c. ADD THE P-VALUE AND LINE (The new part!) ***
+  # stat_compare_means automatically finds the max Y-value in each facet
+  # and places the bracket and label appropriately.
+  stat_compare_means(comparisons = my_comparisons, 
+                     method = "wilcox.test",    # Must match your calculated stats
+                     label = "p.format",       # Shows formatted scientific notation (e.g., "6.9e-06")
+                     # label = "p.signif",     # Use this instead for stars (****, ns)
+                     tip.length = 0.03,         # Length of the little vertical bracket tips
+                     fontface = "bold")+              
+  
+  # 2d. Labels and Theme Refinement
+  labs(
+    title = "Haplotype Block Restructuring Driven by Selection",
+    subtitle = "Maximum contiguous linkage (r² > 0.8) within the top 1% selective sweeps and introgressions",
+    x = "Lentil Panel",
+    y = expression(bold("Haplotype Block Length (Kb)")) # Bold axis title with expression
+  ) +
+  theme_bw() + # Clean white background with subtle grid
+  theme(
+    # Titles and Subtitles
+    plot.title = element_text(face = "bold", size = 16, color = "black"),
+    plot.subtitle = element_text(size = 12, color = "gray20", margin = margin(b = 15)),
+    
+    # Facet Strips (The grey bars)
+    strip.background = element_rect(fill = "grey93", color = "black"),
+    strip.text = element_text(face = "bold", size = 12, color = "black"),
+    
+    # Axes
+    axis.text = element_text(size = 12, color = "black"),
+    axis.title.x = element_text(size = 14, face = "bold", margin = margin(t = 10)),
+    axis.title.y = element_text(size = 14, face = "bold"),
+    
+    # Clean up grid and legend
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    legend.position = "none" # Remove redundant legend as X-axis is labeled
+  )
+
+
+# --- 3. Save High-Resolution Image ---
+if(!dir.exists("Results/Haplotypes")) dir.create("Results/Haplotypes", recursive = TRUE)
+ggsave("Results/Haplotypes/Haplotype_Block_Comparison_PublicationReady_breeding vs adaptation.png", 
+       plot = p_blocks_labeled, width = 9, height = 6, dpi = 600)
+
+cat("Done! High-quality labeled plot saved successfully.\n")

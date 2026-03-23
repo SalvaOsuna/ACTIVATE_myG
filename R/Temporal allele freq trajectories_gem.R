@@ -53,8 +53,8 @@ CONFIG <- list(
   # XP-CLR AllScores files — one per scenario.
   # Using AllScores (not SignificantRegions) so the script ranks all windows
   # genome-wide and selects the true top N by XP-CLR score.
-  xpclr_file_adaptation = "Results/XPCLR_Scenario1_Adaptation_AllScores.csv",
-  xpclr_file_breeding   = "Results/XPCLR_Scenario2_Breeding_AllScores.csv",
+  xpclr_file_adaptation = "Results/XPCLR_Scenario1_Adaptation_SignificantRegions.csv",
+  xpclr_file_breeding   = "Results/XPCLR_Scenario2_Breeding_SignificantRegions.csv",
   xpclr_file_combined   = NULL,   # <- set a path here if both scenarios are in one file
   
   # If using a combined file, what is the column name that identifies the scenario?
@@ -66,13 +66,13 @@ CONFIG <- list(
   year_col      = "year_release", # numeric year column (e.g. 2003)
   
   # ── Analysis parameters ──────────────────────────────────────────────────────
-  top_n_windows    = 30,     # top N XP-CLR windows per scenario to use
+  top_n_windows    = 10,     # top N XP-CLR windows per scenario to use
   min_maf_global   = 0.05,   # discard SNPs with global MAF below this
   pvalue_threshold = 0.05,   # FDR-adjusted significance threshold
   min_slope        = 0.003,  # minimum |Δfreq/year| — filters trivial trends
   
   # ── Output ──────────────────────────────────────────────────────────────────
-  output_dir    = "Results/output_temporal_trajectories",
+  output_dir    = "output_temporal_trajectories",
   figure_width  = 12,   # inches
   figure_height = 8,
   dpi           = 300
@@ -265,15 +265,13 @@ if (!all(c("adaptation", "breeding") %in% detected_scenarios))
           "  Got: ", paste(detected_scenarios, collapse = ", "),
           "\n  Check file paths or scenario column values in your CSVs.")
 
-# Select top N windows per scenario by raw XP-CLR score
+# Use ALL windows provided in the SignificantRegions files
 top_windows <- xpclr_all %>%
-  group_by(scenario) %>%
-  slice_max(xpclr_score, n = CONFIG$top_n_windows, with_ties = FALSE) %>%
-  ungroup() %>%
   arrange(scenario, chr, window_start)
 
-message("\n  Top ", CONFIG$top_n_windows,
-        " windows selected per scenario (ranked by XP-CLR score):")
+message("\n  Using all ", nrow(top_windows), 
+        " significant windows provided in the input files:")
+
 print(top_windows %>%
         select(scenario, chr, window_start, window_end, xpclr_score, z_score, n_snps_win))
 
@@ -650,10 +648,10 @@ make_scenario_plot <- function(scen) {
       title    = sprintf("Allele frequency trajectories — %s phase",
                          tools::toTitleCase(scen)),
       subtitle = sprintf(
-        paste0("Top %d XP-CLR windows | ",
+        paste0("All significant XP-CLR windows | ",
                "%d / %d candidate SNPs with significant trends ",
                "(FDR < %.2f, |β| \u2265 %.3f/yr)"),
-        CONFIG$top_n_windows, n_sig_plot, n_tot_plot,
+        n_sig_plot, n_tot_plot,
         CONFIG$pvalue_threshold, CONFIG$min_slope
       ),
       caption  = paste0(
@@ -669,7 +667,7 @@ make_scenario_plot <- function(scen) {
 for (scen in detected_scenarios) {
   p   <- make_scenario_plot(scen)
   out <- file.path(CONFIG$output_dir,
-                   paste0("plot_trajectories_", scen, ".pdf"))
+                   paste0("plot_trajectories_2", scen, ".pdf"))
   ggsave(out, p,
          width  = CONFIG$figure_width,
          height = CONFIG$figure_height,
@@ -721,8 +719,8 @@ p_combined <- ggplot(plot_df,
   labs(
     title    = "Temporal allele frequency trajectories — XP-CLR top sweep candidates",
     subtitle = sprintf(
-      "Top %d windows per scenario | Coloured: FDR-significant trends (FDR < %.2f)",
-      CONFIG$top_n_windows, CONFIG$pvalue_threshold
+      "All significant windows per scenario | Coloured: FDR-significant trends (FDR < %.2f)",
+      CONFIG$pvalue_threshold
     ),
     caption  = paste0(
       "Each line = one candidate SNP.  Grey: non-significant.  ",
@@ -733,7 +731,7 @@ p_combined <- ggplot(plot_df,
   theme(legend.position = "bottom")
 
 ggsave(
-  file.path(CONFIG$output_dir, "plot_trajectories_combined.pdf"),
+  file.path(CONFIG$output_dir, "plot_trajectories_combined2.pdf"),
   p_combined,
   width  = CONFIG$figure_width,
   height = CONFIG$figure_height * 0.75,
