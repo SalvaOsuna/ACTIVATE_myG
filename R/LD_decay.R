@@ -161,6 +161,96 @@ print(p)
 ggsave("Results/ACTIVATE_LD_Decay_Comparison2.png", plot = p, width = 9, height = 6, dpi = 600)
 cat("Done! Plot saved to ACTIVATE_LD_Decay_Comparison.png\n")
 
+#high quality Figure####
+# --- 4. Plot the LD Decay Curves ---
+cat("\nGenerating publication-ready faceted LD Decay plots...\n")
+
+if(!require(patchwork)) install.packages("patchwork")
+library(patchwork)
+
+plots <- list()
+plot_index <- 1 # Counter to track panel a, b, c
+
+for (ds in unique(plot_data$Dataset)) {
+  
+  df_sub <- plot_data %>% filter(Dataset == ds)
+  
+  # Mathematically calculate where the curve crosses R2 = 0.2
+  model <- lm(R2 ~ log(Distance), data = df_sub)
+  b0 <- coef(model)[1]
+  b1 <- coef(model)[2]
+  
+  cross_dist_bp <- exp((0.2 - b0) / b1)
+  cross_dist_mb <- cross_dist_bp / 1000000
+  crosses_threshold <- !is.na(cross_dist_mb) && cross_dist_mb > 0 && cross_dist_mb <= (max_distance_bp / 1000000)
+  
+  # Base plot with base_size = 12 for the whole A4 page requirement
+  p <- ggplot(df_sub, aes(x = Distance / 1000000, y = R2)) +
+    geom_point(alpha = 0.03, size = 0.5, color = "grey40", stroke = 0) +
+    geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = "dodgerblue4", linewidth = 1.2) +
+    geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+    scale_y_continuous(limits = c(0, 1)) +
+    
+    # Apply standard size 10 font universally
+    theme_bw(base_size = 10) + 
+    theme(
+      panel.grid.minor = element_blank(),
+      axis.title = element_text(face = "bold"),
+      # Slightly reduce margins so panels sit closer together
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 5) 
+    )
+  
+  # Conditional formatting based on panel position (1 = 'a', 2 = 'b', 3 = 'c')
+  if (plot_index == 1) {
+    p <- p + labs(
+      x = "Physical Distance (Mb)",
+      y = NULL, #expression(bold("Linkage Disequilibrium (" * r^2 * ")")),
+      title = NULL # Removed title for caption
+    )
+  } else {
+    p <- p + labs(
+      x = "Physical Distance (Mb)",
+      y = NULL,    # Remove Y axis title
+      title = NULL # Removed title for caption
+    ) + theme(
+      axis.text.y = element_blank(),  # Remove Y axis numbers
+      axis.ticks.y = element_blank()  # Remove Y axis ticks
+    )
+  }
+  
+  # Add intersection line and text
+  if (crosses_threshold) {
+    p <- p + 
+      geom_vline(xintercept = cross_dist_mb, linetype = "dotted", color = "black", linewidth = 0.8) +
+      # ggplot annotate size is in mm. size = 3.5 roughly matches 10-11pt text.
+      annotate("text", x = cross_dist_mb + 0.15, y = 0.25, 
+               label = sprintf("%.2f Mb", cross_dist_mb), 
+               color = "black", fontface = "bold", size = 3.5, hjust = 0)
+  }
+  
+  plots[[ds]] <- p
+  plot_index <- plot_index + 1
+}
+
+# Arrange plots side-by-side
+# The '&' operator applies the theme to the entire patchwork assembly
+final_plot <- wrap_plots(plots, ncol = 3) + 
+  plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+  theme(plot.tag = element_text(face = 'bold', size = 10))
+
+print(final_plot)
+
+if(!dir.exists("Results")) dir.create("Results")
+
+# Save explicitly mapped to a 17cm width for an A4 page
+ggsave("Results/ACTIVATE_LD_Decay_Publication_Clean.png", 
+       plot = final_plot, 
+       width = 18, 
+       height = 7, 
+       units = "cm", 
+       dpi = 600)
+
+cat("Done! Clean publication plot saved to Results/ACTIVATE_LD_Decay_Publication_Clean.png\n")
 #by chromosome####
 # Load necessary libraries
 library(gdsfmt)

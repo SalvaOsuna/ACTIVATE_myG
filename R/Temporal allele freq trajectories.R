@@ -24,7 +24,7 @@
 #                                  XPCLR_Scenario2_Breeding_AllScores.csv
 #                                columns: chr, start, stop, mid_pos_mb,
 #                                n_snps, xpclr, z_score, chr_num, color_group
-#                                AllScores (not SignificantRegions) is used so the
+#                                AllScores (not ficantRegions) is used so the
 #                                script can rank all windows and pick the true top N.
 #
 # OUTPUT FILES (written to CONFIG$output_dir):
@@ -51,7 +51,7 @@ CONFIG <- list(
   metadata_file = "data/activate_metadata.csv",
   
   # XP-CLR AllScores files — one per scenario.
-  # Using AllScores (not SignificantRegions) so the script ranks all windows
+  # Using AllScores (not ficantRegions) so the script ranks all windows
   # genome-wide and selects the true top N by XP-CLR score.
   xpclr_file_adaptation = "Results/XPCLR_Scenario1_Adaptation_AllScores.csv",
   xpclr_file_breeding   = "Results/XPCLR_Scenario2_Breeding_AllScores.csv",
@@ -68,7 +68,7 @@ CONFIG <- list(
   # ── Analysis parameters ──────────────────────────────────────────────────────
   top_n_windows    = 30,     # top N XP-CLR windows per scenario to use
   min_maf_global   = 0.05,   # discard SNPs with global MAF below this
-  pvalue_threshold = 0.05,   # FDR-adjusted significance threshold
+  pvalue_threshold = 0.05,   # FDR-adjusted ficance threshold
   min_slope        = 0.003,  # minimum |Δfreq/year| — filters trivial trends
   
   # ── Output ──────────────────────────────────────────────────────────────────
@@ -788,3 +788,170 @@ if (n_sig > 0) {
 }
 
 cat("\n")
+
+# =============================================================================
+# ── 8. COMBINED PUBLICATION FIGURE (MANHATTAN + TRAJECTORIES) ────────────────
+# =============================================================================
+cat("\nGenerating Combined 3-Panel Publication Figure...\n")
+
+if(!require(patchwork)) install.packages("patchwork")
+if(!require(ggrepel)) install.packages("ggrepel")
+library(patchwork)
+library(ggrepel)
+library(scales)
+
+# --- 1. Define Gene Labels ---
+labels_adapt <- data.frame(
+  chr_num = c(2,4,2,4),
+  bp_mid = c(52.657,106.326,416.548,288.766), # Replace with your actual physical positions in Mb!
+  xpclr_val = c(300,435,405,240),             # The height of the peak to attach the label to
+  gene_name = c("Phytochrome","Meristem maintenance/development","Structural chrom maintenance","GIGANTEA")
+)
+
+labels_breed <- data.frame(
+  chr_num = c(3, 6, 6),
+  bp_mid = c(110.047, 292.989, 375.836), 
+  xpclr_val = c(200, 235, 240),
+  gene_name = c("Cellulose synthase", "Actin-depolymerizing factor","Meristem maintenance/development")
+)
+
+# --- 2. Helper Function: Calculate Cumulative X-Axis ---
+# This uses your exact math to turn 7 chromosomes into one continuous X-axis
+prep_cum_data <- function(df_sub, threshold_quantile = 0.99) {
+  
+  # FIXED: Strip everything before and including "Chr" so "Lcu.1GRN.Chr1" becomes just "1"
+  df_sub <- df_sub %>% mutate(chr_num = as.numeric(gsub(".*Chr", "", chr)))
+  
+  # Calculate cumulative offsets
+  chr_lens <- df_sub %>% group_by(chr_num) %>% summarize(chr_max = max(window_start, na.rm = TRUE), .groups = "drop")
+  chr_lens$offset <- cumsum(as.numeric(chr_lens$chr_max)) - chr_lens$chr_max
+  
+  df_sub <- df_sub %>% 
+    left_join(chr_lens, by = "chr_num") %>% 
+    mutate(bp_cum = window_start + offset)
+  
+  # Calculate center of each chromosome for the X-axis labels
+  axis_df <- df_sub %>% group_by(chr_num) %>% summarize(center = mean(bp_cum, na.rm = TRUE), .groups = "drop")
+  
+  thresh_val <- quantile(df_sub$xpclr_score, threshold_quantile, na.rm = TRUE)
+  
+  return(list(data = df_sub, axis = axis_df, threshold = thresh_val))
+}
+
+# Process the data already loaded in your environment (xpclr_all)
+data_adapt <- prep_cum_data(xpclr_all %>% filter(scenario == "adaptation"))
+data_breed <- prep_cum_data(xpclr_all %>% filter(scenario == "breeding"))
+
+# Color Palette
+chr_colors <- c("1"="#1b9e77", "2"="#d95f02", "3"="#7570b3", "4"="#e7298a", "5"="#66a61e", "6"="#e6ab02", "7"="#a6761d")
+
+# --- 3. Helper Function: Plot Manhattan/Lollipop ---
+make_lollipop_plot <- function(prep_data, show_x_labels = FALSE, labels_df = NULL) {
+  df <- prep_data$data
+  ax <- prep_data$axis
+  thr <- prep_data$threshold
+  
+  p <- ggplot(df, aes(x = bp_cum, y = xpclr_score, color = as.character(chr_num))) +
+    geom_segment(aes(xend = bp_cum, yend = 0), alpha = 0.8, linewidth = 0.4) +
+    geom_point(size = 1.2, alpha = 0.9) +
+    geom_hline(yintercept = thr, color = "firebrick", linetype = "dashed", linewidth = 0.8) +
+    annotate("text", x = min(df$bp_cum) - (max(df$bp_cum)*0.01), y = thr, 
+             label = round(thr, 2), color = "firebrick", hjust = 1, vjust = -0.5, size = 3.5, fontface = "bold") +
+    scale_color_manual(values = chr_colors) +
+    scale_x_continuous(breaks = ax$center, labels = paste("LG", ax$chr_num, sep=""), expand = c(0.02, 0.02)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.25))) + # Extra room for ggrepel labels
+    coord_cartesian(clip = "off") + 
+    labs(x = NULL, y = "XP-CLR") +
+    
+    # 10pt Standard Theme
+    theme_classic(base_size = 10) +
+    theme(
+      legend.position = "none",
+      axis.title.y = element_text(face = "bold", margin = margin(r = 10)),
+      axis.text.y = element_text(color = "black"),
+      axis.text.x = if(show_x_labels) element_text(face = "bold", color = "black") else element_blank(),
+      axis.ticks.x = if(show_x_labels) element_line(color = "black") else element_blank(),
+      axis.line.x = if(show_x_labels) element_line(color = "black") else element_blank(),
+      plot.margin = margin(t = 5, r = 10, b = if(show_x_labels) 10 else 2, l = 15)
+    )
+  
+  # Add ggrepel annotations
+  if (!is.null(labels_df)) {
+    # Dynamically apply the offset to the label coordinates
+    offset_map <- df %>% distinct(chr_num, offset)
+    # Convert Mb back to raw bp to match the window_start scale
+    labels_mapped <- labels_df %>%
+      mutate(bp_raw = bp_mid * 1e6) %>%
+      left_join(offset_map, by = "chr_num") %>%
+      mutate(bp_cum = bp_raw + offset)
+    
+    p <- p + geom_label_repel(
+      data = labels_mapped,
+      aes(x = bp_cum, y = xpclr_val, label = gene_name),
+      inherit.aes = FALSE,
+      color = "black", fill = "white", fontface = "bold", size = 3.5,
+      box.padding = 1.2, point.padding = 0.5, segment.color = "black", segment.size = 0.6,
+      min.segment.length = 0,
+      nudge_y = max(df$xpclr_score) * 0.15 
+    )
+  }
+  return(p)
+}
+
+# --- 4. Generate the Individual Plots ---
+p_a <- make_lollipop_plot(data_adapt, show_x_labels = FALSE, labels_df = labels_adapt)
+p_b <- make_lollipop_plot(data_breed, show_x_labels = TRUE, labels_df = labels_breed)
+
+# Trajectory Plot (From previous step)
+p_c <- ggplot(plot_df, aes(x = mean_year, y = alt_freq, group = snp_id)) +
+  geom_line(data = plot_df %>% 
+              filter(!significant | is.na(significant)), 
+            colour = "grey84", 
+            linewidth = 0.3, 
+            alpha = 0.55) +
+  geom_line(data = plot_df 
+            %>% filter(significant), 
+            aes(colour = direction), 
+            linewidth = 0.9, 
+            alpha = 0.8) +
+  geom_point(data = plot_df %>% 
+               filter(significant), 
+             aes(colour = direction), 
+             size = 1.8, 
+             alpha = 0.8) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", colour = "grey50", linewidth = 0.35) +
+  scale_colour_manual(values = DIRECTION_PALETTE[c("increasing", "decreasing")], labels = c("alt allele favoured by selection", "ref allele favoured by selection)")) +
+  scale_x_continuous(breaks = cohort_summary$mean_year, labels = round(cohort_summary$mean_year)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, 0.25), labels = percent_format(accuracy = 1)) +
+  facet_wrap(~ scenario, ncol = 2, labeller = as_labeller(c(adaptation = "Adaptation phase", breeding = "Breeding phase"))) +
+  labs(x = "Mean cohort release year", y = "Alternative allele frequency", color = NULL) +
+  
+  # 10pt Standard Theme
+  theme_bw(base_size = 10) +
+  theme(
+    legend.position = "bottom",
+    strip.background = element_rect(fill = "grey96", color = "black"),
+    strip.text = element_text(face = "bold", size = 12),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    axis.text.x = element_text(angle = 35, hjust = 1),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(t = 15, r = 5, b = 5, l = 5)
+  )
+
+# --- 5. Assemble and Save the Final Plot ---
+final_plot <- p_a / p_b / p_c + 
+  plot_layout(heights = c(1, 1, 1.3)) +
+  plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+  theme(plot.tag = element_text(face = 'bold', size = 10))
+
+# Save strictly to A4 width specifications
+ggsave(file.path(CONFIG$output_dir, "Figure_XPCLR_Trajectories_Combined.png"), 
+       plot = final_plot, 
+       width = 17, 
+       height = 20, 
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+
+cat("Done! Full-page publication figure saved to: Figure_XPCLR_Trajectories_Combined.png\n")

@@ -164,8 +164,8 @@ cat("Generating plots...\n")
 
 # Custom labels for the facets
 facet_labels <- c(
-  "Erosion (Top 1%)" = "Eroded Regions (Sweeps)",
-  "Introgression (Bottom 1%)" = "Introgressed Regions (Novel Diversity)"
+  "Erosion (Top 1%)" = "Eroded Regions",
+  "Introgression (Bottom 1%)" = "Introgressed Regions"
 )
 
 p_blocks <- ggplot(plot_df, aes(x = Panel, y = Block_Size_Kb, fill = Panel)) +
@@ -375,8 +375,8 @@ cat("Generating plots...\n")
 
 # Custom labels for the facets
 facet_labels <- c(
-  "Modern Breeding Sweeps" = "Improved Regions (breeding)",
-  "Adaptation Sweeps" = "Adapted Regions (adaptation)"
+  "Modern Breeding Sweeps" = "Improved Regions",
+  "Adaptation Sweeps" = "Adapted Regions"
 )
 
 p_blocks <- ggplot(plot_df, aes(x = Panel, y = Block_Size_Kb, fill = Panel)) +
@@ -439,7 +439,7 @@ p_blocks_labeled <- ggplot(plot_df, aes(x = Panel, y = Block_Size_Kb, fill = Pan
   geom_jitter(width = 0.15, size = 1.0, alpha = 0.3, aes(color = Panel)) +
   
   # 2b. Faceting and Colors
-  facet_wrap(~ Region_Type, labeller = as_labeller(facet_labels), scales = "free_y") +
+  facet_wrap(~ Region_Type, labeller = as_labeller(facet_labels)) +
   scale_fill_manual(values = journal_colors) +
   scale_color_manual(values = journal_colors) +
   

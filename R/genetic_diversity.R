@@ -676,7 +676,7 @@ snpgdsCreateGeno("Merged_Analysis.gds",
                  snp.position = 1:ncol(geno_Combined))         # Dummy pos
 
 # 6. Run PCA
-f_merge <- snpgdsOpen("Merged_Analysis.gds")
+f_merge <- snpgdsOpen("data/Merged_Analysis.gds")
 pca <- snpgdsPCA(f_merge, autosome.only=FALSE)
 snpgdsClose(f_merge)
 
@@ -942,7 +942,7 @@ library(RColorBrewer) # Good for distinct palettes
 
 # 1. Prepare Base Data (Recreate if needed)
 # Ensure pca_df has sample.id, EV1, EV2
-# if(!exists("pca_df")) pca_df <- data.frame(sample.id = pca$sample.id, EV1 = pca$eigenvect[,1], EV2 = pca$eigenvect[,2])
+if(!exists("pca_df")) pca_df <- data.frame(sample.id = pca$sample.id, EV1 = pca$eigenvect[,1], EV2 = pca$eigenvect[,2])
 
 # 2. Define Panel (Shape)
 pca_df$Panel <- case_when(
@@ -953,7 +953,7 @@ pca_df$Panel <- case_when(
 
 # 3. Merge GenGroup Metadata
 # Assuming GenGroup is in your origin file. Update filename if it's different.
-ldp_meta <- read.csv("LDP324_origin.csv", stringsAsFactors = FALSE)
+ldp_meta <- read.csv("data/LDP324_origin.csv", stringsAsFactors = FALSE)
 
 # Check if 'GenGroup' column exists, if not, adjust column name
 # Merge
@@ -969,7 +969,6 @@ pca_df_merged$GenGroup[is.na(pca_df_merged$GenGroup)] <- "Breeding Program"
 
 # 5. Define Plot
 # We use a custom color palette because 8 clusters + 1 Breeding group = 9 colors.
-# Paired or Set1 are good qualitative palettes.
 
 p <- ggplot(pca_df_merged, aes(x = EV1, y = EV2, 
                                color = GenGroup, 
@@ -982,33 +981,53 @@ p <- ggplot(pca_df_merged, aes(x = EV1, y = EV2,
   geom_point(size = 3, alpha = 0.8) +
   
   # --- SHAPES ---
-  # LDP = X (4), ACT = Circle (16)
+  # LDP = Circle (16), ACT = Cross (4)
   scale_shape_manual(values = c("LDP (Diversity)" = 16, 
                                 "ACTIVATE (Breeding)" = 4)) +
   
   # --- COLORS ---
-  # Assign "Breeding Program" to Black/Blue so it pops out against the 8 clusters
-  # We let ggplot pick the rest, or define a manual scale if you have specific cluster colors.
   scale_color_manual(values = c("Breeding Program" = "black", 
-                                # Define colors for your 8 clusters (1-8) if known, or use defaults
                                 "1"="#E41A1C", "2"="#377EB8", "3"="#4DAF4A", "4"="#984EA3",
                                 "5"="#FF7F00", "6"="#FFFF33", "7"="#A65628", "8"="#F781BF",
-                                # Fallback if names are "Cluster 1" etc
                                 "Cluster 1"="#E41A1C", "Cluster 2"="#377EB8")) + 
-  # Note: If your GenGroups are named differently (e.g., "K1", "K2"), remove the manual scale 
-  # or update the names above. Removing 'scale_color_manual' lets R pick auto colors.
   
-  labs(title = "PCA: Breeding Lines vs LDP by Genetic Clusters",
-       subtitle = "Based on 136957 common SNPs",
-       x = pc1_lab, 
+  # Removed title and subtitle. 
+  # Added tag = "a)" to place the panel letter natively in the top left.
+  labs(x = pc1_lab, 
        y = pc2_lab,
        color = "Genetic Group (K)",
-       shape = "Panel") +
+       shape = "Panel",
+       tag = "a)") +
   
-  theme_bw()
+  # Apply universal 10pt font size
+  theme_bw(base_size = 10) +
+  theme(
+    # Format the 'a)' tag to be bold and slightly larger for visibility
+    plot.tag = element_text(face = "bold", size = 10),
+    
+    # Clean up the axes and legend for a professional journal look
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    legend.title = element_text(face = "bold"),
+    legend.position = "right",
+    
+    # Remove minor gridlines to keep the plot background clean
+    panel.grid.minor = element_blank()
+  )
 
-ggsave("PCA_PC1-PC2_GenGroup.png", p, width = 8, height = 5, bg = "White")
+print(p)
 
+# Save the plot explicitly defined for a 17 cm A4 column width
+if(!dir.exists("Results")) dir.create("Results")
+ggsave("Results/PCA_PC1-PC2_Publication.png", 
+       plot = p, 
+       width = 18, 
+       height = 9, # Maintains a standard ~3:2 aesthetic aspect ratio 
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+
+cat("Done! Publication PCA plot saved to Results/PCA_PC1-PC2_Publication.png\n")
 # 6. Interactive
 interactive_pca_gen <- ggplotly(p, tooltip = "text")
 interactive_pca_gen

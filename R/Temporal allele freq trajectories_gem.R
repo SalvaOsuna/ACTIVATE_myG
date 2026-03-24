@@ -786,3 +786,118 @@ if (n_sig > 0) {
 }
 
 cat("\n")
+
+
+# ── 8. COMBINED PUBLICATION FIGURE (MANHATTAN + TRAJECTORIES) ────────────────
+cat("\nGenerating Combined 3-Panel Publication Figure...\n")
+
+if(!require(patchwork)) install.packages("patchwork")
+library(patchwork)
+library(scales)
+
+# --- 1. Prepare Data for Manhattan Plots ---
+# We use the xpclr_all dataset loaded earlier in the script
+man_df <- xpclr_all %>%
+  mutate(
+    chr_num = as.numeric(gsub("[^0-9]", "", chr)),
+    chr_label = factor(paste0("LG", chr_num), levels = paste0("LG", 1:7))
+  )
+
+# Calculate the exact 99th percentile thresholds for the dashed lines
+thresh_adapt <- quantile(man_df$xpclr_score[man_df$scenario == "adaptation"], 0.99, na.rm=TRUE)
+thresh_breed <- quantile(man_df$xpclr_score[man_df$scenario == "breeding"], 0.99, na.rm=TRUE)
+
+# Base theme for Manhattan plots to ensure seamless stacking
+theme_manhattan <- theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    axis.title.y = element_text(face = "bold", margin = margin(r = 10)),
+    strip.placement = "outside",
+    strip.background = element_blank(),
+    plot.margin = margin(b = 2, t = 5, l = 5, r = 5) # Tight bottom margin for stacking
+  )
+
+# --- 2. Plot A: Adaptation Manhattan ---
+p_a <- ggplot(man_df %>% filter(scenario == "adaptation"), 
+              aes(x = window_start / 1e6, y = xpclr_score, color = as.factor(chr_num))) +
+  geom_point(size = 1.2, alpha = 0.8) +
+  geom_hline(yintercept = thresh_adapt, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  
+  # Facet creates the continuous chromosomal X-axis
+  facet_grid(. ~ chr_label, scales = "free_x", space = "free_x", switch = "x") +
+  
+  # Use a distinct, professional color palette for chromosomes
+  scale_color_brewer(palette = "Dark2") +
+  labs(y = "XP-CLR", x = NULL) +
+  theme_manhattan +
+  theme(
+    axis.text.x = element_blank(), # Remove X text for the top plot
+    axis.ticks.x = element_blank(),
+    strip.text = element_blank()   # Remove chromosome labels for the top plot to match your example
+  )
+
+# --- 3. Plot B: Breeding Manhattan ---
+p_b <- ggplot(man_df %>% filter(scenario == "breeding"), 
+              aes(x = window_start / 1e6, y = xpclr_score, color = as.factor(chr_num))) +
+  geom_point(size = 1.2, alpha = 0.8) +
+  geom_hline(yintercept = thresh_breed, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  facet_grid(. ~ chr_label, scales = "free_x", space = "free_x", switch = "x") +
+  scale_color_brewer(palette = "Dark2") +
+  labs(y = "XP-CLR", x = NULL) +
+  theme_manhattan +
+  theme(
+    axis.text.x = element_blank(), 
+    axis.ticks.x = element_blank(),
+    strip.text = element_text(face = "bold", size = 11, color = "black") # Keep LG labels here
+  )
+
+# --- 4. Plot C: Allele Trajectories ---
+# Uses the plot_df created in step 7 of your trajectory script
+p_c <- ggplot(plot_df, aes(x = mean_year, y = alt_freq, group = snp_id)) +
+  geom_line(data = plot_df %>% filter(!significant | is.na(significant)), 
+            color = "grey85", linewidth = 0.4, alpha = 0.5) +
+  geom_line(data = plot_df %>% filter(significant), 
+            aes(color = direction), linewidth = 1.2, alpha = 0.8) +
+  geom_point(data = plot_df %>% filter(significant), 
+             aes(color = direction), size = 1.8, alpha = 0.9) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey50", linewidth = 0.5) +
+  
+  scale_color_manual(values = c("increasing" = "#D6604D", "decreasing" = "#4393C3"),
+                     labels = c("Increasing (Favored)", "Decreasing (Selected Against)")) +
+  scale_x_continuous(breaks = cohort_summary$mean_year, labels = round(cohort_summary$mean_year)) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  
+  facet_wrap(~ scenario, ncol = 2, labeller = as_labeller(c(adaptation = "Adaptation phase", breeding = "Breeding phase"))) +
+  
+  labs(x = "Mean cohort release year", y = "Alternative allele frequency", color = NULL) +
+  theme_bw(base_size = 12) +
+  theme(
+    strip.background = element_rect(fill = "white", color = "black", linewidth = 1),
+    strip.text = element_text(face = "bold", size = 12),
+    legend.position = "bottom",
+    legend.text = element_text(size = 11, face = "bold"),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(t = 15, r = 5, b = 5, l = 5) # Push it down slightly from the Manhattan plots
+  )
+
+# --- 5. Assemble and Save the Final Plot ---
+# Combine vertically. The heights argument gives the trajectory plot slightly more vertical room
+final_plot <- p_a / p_b / p_c + 
+  plot_layout(heights = c(1, 1, 1.4)) +
+  plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+  theme(plot.tag = element_text(face = 'bold', size = 14))
+
+# Save to A4 specifications
+ggsave(file.path(CONFIG$output_dir, "Figure_XPCLR_Trajectories_Combined.png"), 
+       plot = final_plot, 
+       width = 17, 
+       height = 24, # 24 cm height perfectly fills a full A4 page with margins
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+
+cat("Done! Full-page publication figure saved to: Figure_XPCLR_Trajectories_Combined.png\n")
