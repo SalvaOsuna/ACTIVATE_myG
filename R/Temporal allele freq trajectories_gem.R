@@ -808,7 +808,7 @@ thresh_adapt <- quantile(man_df$xpclr_score[man_df$scenario == "adaptation"], 0.
 thresh_breed <- quantile(man_df$xpclr_score[man_df$scenario == "breeding"], 0.99, na.rm=TRUE)
 
 # Base theme for Manhattan plots to ensure seamless stacking
-theme_manhattan <- theme_minimal(base_size = 12) +
+theme_manhattan <- theme_minimal(base_size = 10) +
   theme(
     legend.position = "none",
     panel.grid.minor = element_blank(),
@@ -850,7 +850,7 @@ p_b <- ggplot(man_df %>% filter(scenario == "breeding"),
   theme(
     axis.text.x = element_blank(), 
     axis.ticks.x = element_blank(),
-    strip.text = element_text(face = "bold", size = 11, color = "black") # Keep LG labels here
+    strip.text = element_text(face = "bold", size = 10, color = "black") # Keep LG labels here
   )
 
 # --- 4. Plot C: Allele Trajectories ---
@@ -872,12 +872,12 @@ p_c <- ggplot(plot_df, aes(x = mean_year, y = alt_freq, group = snp_id)) +
   facet_wrap(~ scenario, ncol = 2, labeller = as_labeller(c(adaptation = "Adaptation phase", breeding = "Breeding phase"))) +
   
   labs(x = "Mean cohort release year", y = "Alternative allele frequency", color = NULL) +
-  theme_bw(base_size = 12) +
+  theme_bw(base_size = 10) +
   theme(
     strip.background = element_rect(fill = "white", color = "black", linewidth = 1),
-    strip.text = element_text(face = "bold", size = 12),
+    strip.text = element_text(face = "bold", size = 10),
     legend.position = "bottom",
-    legend.text = element_text(size = 11, face = "bold"),
+    legend.text = element_text(size = 10, face = "bold"),
     axis.title = element_text(face = "bold"),
     axis.text = element_text(color = "black"),
     panel.grid.minor = element_blank(),
@@ -887,15 +887,15 @@ p_c <- ggplot(plot_df, aes(x = mean_year, y = alt_freq, group = snp_id)) +
 # --- 5. Assemble and Save the Final Plot ---
 # Combine vertically. The heights argument gives the trajectory plot slightly more vertical room
 final_plot <- p_a / p_b / p_c + 
-  plot_layout(heights = c(1, 1, 1.4)) +
+  plot_layout(heights = c(1.2, 1.2, 1)) +
   plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
-  theme(plot.tag = element_text(face = 'bold', size = 14))
+  theme(plot.tag = element_text(face = 'bold', size = 10))
 
 # Save to A4 specifications
 ggsave(file.path(CONFIG$output_dir, "Figure_XPCLR_Trajectories_Combined.png"), 
        plot = final_plot, 
-       width = 17, 
-       height = 24, # 24 cm height perfectly fills a full A4 page with margins
+       width = 18, 
+       height = 21, # 24 cm height perfectly fills a full A4 page with margins
        units = "cm", 
        dpi = 600, 
        bg = "white")

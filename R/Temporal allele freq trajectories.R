@@ -810,8 +810,8 @@ labels_adapt <- data.frame(
 
 labels_breed <- data.frame(
   chr_num = c(3, 6, 6),
-  bp_mid = c(110.047, 292.989, 375.836), 
-  xpclr_val = c(200, 235, 240),
+  bp_mid = c(110.047, 305.989, 385.836), 
+  xpclr_val = c(200, 240, 250),
   gene_name = c("Cellulose synthase", "Actin-depolymerizing factor","Meristem maintenance/development")
 )
 
@@ -856,7 +856,7 @@ make_lollipop_plot <- function(prep_data, show_x_labels = FALSE, labels_df = NUL
     geom_point(size = 1.2, alpha = 0.9) +
     geom_hline(yintercept = thr, color = "firebrick", linetype = "dashed", linewidth = 0.8) +
     annotate("text", x = min(df$bp_cum) - (max(df$bp_cum)*0.01), y = thr, 
-             label = round(thr, 2), color = "firebrick", hjust = 1, vjust = -0.5, size = 3.5, fontface = "bold") +
+             label = round(thr, 2), color = "firebrick", hjust = 0, vjust = 0, size = 3, fontface = "bold") +
     scale_color_manual(values = chr_colors) +
     scale_x_continuous(breaks = ax$center, labels = paste("LG", ax$chr_num, sep=""), expand = c(0.02, 0.02)) +
     scale_y_continuous(expand = expansion(mult = c(0, 0.25))) + # Extra room for ggrepel labels
@@ -889,7 +889,7 @@ make_lollipop_plot <- function(prep_data, show_x_labels = FALSE, labels_df = NUL
       data = labels_mapped,
       aes(x = bp_cum, y = xpclr_val, label = gene_name),
       inherit.aes = FALSE,
-      color = "black", fill = "white", fontface = "bold", size = 3.5,
+      color = "black", fill = "white", fontface = "bold", size = 3,
       box.padding = 1.2, point.padding = 0.5, segment.color = "black", segment.size = 0.6,
       min.segment.length = 0,
       nudge_y = max(df$xpclr_score) * 0.15 
@@ -931,25 +931,25 @@ p_c <- ggplot(plot_df, aes(x = mean_year, y = alt_freq, group = snp_id)) +
   theme(
     legend.position = "bottom",
     strip.background = element_rect(fill = "grey96", color = "black"),
-    strip.text = element_text(face = "bold", size = 12),
+    strip.text = element_text(face = "bold", size = 10),
     axis.title = element_text(face = "bold"),
     axis.text = element_text(color = "black"),
     axis.text.x = element_text(angle = 35, hjust = 1),
     panel.grid.minor = element_blank(),
-    plot.margin = margin(t = 15, r = 5, b = 5, l = 5)
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5)
   )
 
 # --- 5. Assemble and Save the Final Plot ---
 final_plot <- p_a / p_b / p_c + 
-  plot_layout(heights = c(1, 1, 1.3)) +
+  plot_layout(heights = c(1.2, 1.2, 1)) +
   plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
   theme(plot.tag = element_text(face = 'bold', size = 10))
 
 # Save strictly to A4 width specifications
 ggsave(file.path(CONFIG$output_dir, "Figure_XPCLR_Trajectories_Combined.png"), 
        plot = final_plot, 
-       width = 17, 
-       height = 20, 
+       width = 18, 
+       height = 21, 
        units = "cm", 
        dpi = 600, 
        bg = "white")

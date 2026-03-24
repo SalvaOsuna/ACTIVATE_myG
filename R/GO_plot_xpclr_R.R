@@ -411,7 +411,7 @@ plot_unique_lollipop <- function(df, target_terms, title_label, filename_out) {
   # Generate the plot
   p <- ggplot(go_counts, aes(x = reorder(term_name, gene_count), y = gene_count, color = ontology_full)) +
     geom_segment(aes(xend = term_name, yend = 0), linewidth = 1) +
-    geom_point(size = 4, alpha = 0.9) +
+    geom_point(size = 3, alpha = 0.9) +
     coord_flip() + 
     facet_grid(ontology_full ~ ., scales = "free_y", space = "free_y") +
     scale_color_manual(values = c("Biological Process" = "#1b9e77", 
@@ -426,9 +426,9 @@ plot_unique_lollipop <- function(df, target_terms, title_label, filename_out) {
     theme_bw() +
     theme(
       legend.position = "none",
-      axis.text.y = element_text(size = 11, color = "black"),
+      axis.text.y = element_text(size = 10, color = "black"),
       strip.background = element_rect(fill = "grey90", color = "black"),
-      strip.text.y = element_text(size = 11, face = "bold", angle = 270),
+      strip.text.y = element_text(size = 10, face = "bold", angle = 270),
       panel.grid.minor = element_blank(),
       panel.grid.major.y = element_blank(),
       plot.title = element_text(face = "bold")
@@ -444,3 +444,138 @@ plot_unique_lollipop(df_adapt, unique_adapt, "Adaptation Phase", "Results/Py_Sce
 plot_unique_lollipop(df_breed, unique_breed, "Modern Breeding Phase", "Results/Py_Scenario2_Unique_GO_Faceted.png")
 
 cat("Done! Both unique plots saved successfully.\n")
+
+# =============================================================================
+# ── PUBLICATION FIGURE: GO OVERLAP (BP, CC, MF) AND UNIQUE BP DRIVERS ────────
+# =============================================================================
+cat("\nGenerating Cell Press formatted 5-Panel GO Figure...\n")
+
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(ggVennDiagram)
+library(patchwork)
+library(stringr)
+
+# --- 1. Load the Data ---
+df_adapt <- read.csv("Results/XPCLR_Scenario1_Adaptation_Final_GO.csv", stringsAsFactors = FALSE)
+df_breed <- read.csv("Results/XPCLR_Scenario2_Breeding_Final_GO.csv", stringsAsFactors = FALSE)
+
+# Colors to link everything
+color_adapt <- "#1b9e77"
+color_breed <- "#d95f02"
+
+# --- 2. Helper Function: Extract Unique Terms by Ontology ---
+get_terms <- function(df, ontology_type) {
+  df %>% filter(ONTOLOGY == ontology_type) %>% pull(term_name) %>% unique()
+}
+
+# Extract all term sets
+bp_adapt <- get_terms(df_adapt, "BP")
+bp_breed <- get_terms(df_breed, "BP")
+
+cc_adapt <- get_terms(df_adapt, "CC")
+cc_breed <- get_terms(df_breed, "CC")
+
+mf_adapt <- get_terms(df_adapt, "MF")
+mf_breed <- get_terms(df_breed, "MF")
+
+# --- 3. Build the Three Horizontal Venn Diagrams (Panels a, b, c) ---
+
+# Helper function to generate a clean, standardized Venn
+make_venn <- function(terms_adapt, terms_breed, title_label) {
+  venn_list <- list("Adaptation" = terms_adapt, "Breeding" = terms_breed)
+  
+  ggVennDiagram(venn_list, 
+                label_alpha = 0,             
+                set_size = 3,  # Slightly smaller to fit the narrow column             
+                label_size = 3,            
+                set_color = c(color_adapt, color_breed)) + 
+    
+    scale_fill_gradient(low = "#F8F9FA", high = "#DEE2E6") +
+    
+    # Massive expansion on the X-axis so the labels "Adaptation/Breeding" don't get cut off
+    scale_x_continuous(expand = expansion(mult = 0.35)) +
+    scale_y_continuous(expand = expansion(mult = 0.15)) +
+    
+    labs(title = title_label) +
+    theme(
+      legend.position = "none", 
+      # hjust = 0.5 centers the text, lineheight squishes the multi-line text nicely
+      plot.title = element_text(face = "bold", size = 10, hjust = 0.5, lineheight = 1.1),
+      plot.margin = margin(5, 5, 5, 5) 
+    )
+}
+
+# Generate the three Venns using \n to break the titles onto two lines!
+v_bp <- make_venn(bp_adapt, bp_breed, "Biological Process\n(BP)")
+v_cc <- make_venn(cc_adapt, cc_breed, "Cellular Component\n(CC)")
+v_mf <- make_venn(mf_adapt, mf_breed, "Molecular Function\n(MF)")
+
+# Assemble the top row
+venn_plot <- v_bp + v_cc + v_mf +
+  plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+  theme(plot.tag = element_text(size = 10, face = "bold"))
+
+if(!dir.exists("Results")) dir.create("Results")
+ggsave("Results/Figure_GO_Part1_Venns_abc.png", 
+       plot = venn_plot, 
+       width = 17, 
+       height = 5,  # Optimized height for a single row of circles
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+cat("Saved Part 1: Figure_GO_Part1_Venns_abc.png\n")
+
+# --- 4. Identify Unique BP Terms for Lollipops ---
+unique_adapt_bp <- setdiff(bp_adapt, bp_breed)
+unique_breed_bp <- setdiff(bp_breed, bp_adapt)
+
+# Helper function to prep the top 10 lollipop data and wrap long text
+prep_lollipop_data <- function(df, unique_terms) {
+  df %>%
+    filter(term_name %in% unique_terms & ONTOLOGY == "BP") %>%
+    count(term_name, name = "gene_count") %>%
+    slice_max(order_by = gene_count, n = 10, with_ties = FALSE) %>%
+    mutate(term_wrapped = str_wrap(term_name, width = 45)) 
+}
+
+lolli_adapt <- prep_lollipop_data(df_adapt, unique_adapt_bp)
+lolli_breed <- prep_lollipop_data(df_breed, unique_breed_bp)
+
+
+# --- 5. Helper Function: Plot Lollipops ---
+make_lollipop <- function(data, color, y_label) {
+  ggplot(data, aes(x = gene_count, y = reorder(term_wrapped, gene_count))) +
+    geom_segment(aes(xend = 0, yend = term_wrapped), linewidth = 1, color = color) +
+    geom_point(size = 3, color = color) +
+    
+    scale_x_continuous(breaks = scales::pretty_breaks()) +
+    labs(x = "Number of Selected Genes", y = y_label) +
+    
+    theme_bw(base_size = 10) +
+    theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major.y = element_blank(), 
+      axis.text = element_text(color = "black"),
+      axis.title = element_text(face = "bold"),
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 5)
+    )
+}
+
+# Generate Panels D and E
+p_d <- make_lollipop(lolli_adapt, color_adapt, "Adaptation-Specific\nBiological Processes")
+p_e <- make_lollipop(lolli_breed, color_breed, "Breeding-Specific\nBiological Processes")
+# Assemble the bottom two rows, forcing the tags to be "d)" and "e)"
+lollipop_plot <- p_d / p_e +
+  plot_annotation(tag_levels = list(c('d', 'e')), tag_suffix = ')') & 
+  theme(plot.tag = element_text(size = 10, face = "bold"))
+
+ggsave("Results/Figure_GO_Part2_Lollipops_de.png", 
+       plot = lollipop_plot, 
+       width = 17, 
+       height = 13, # Optimized height for the two vertical plots
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+cat("Saved Part 2: Figure_GO_Part2_Lollipops_de.png\n")
