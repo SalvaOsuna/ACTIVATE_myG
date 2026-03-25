@@ -66,7 +66,7 @@ CONFIG <- list(
   year_col      = "year_release", # numeric year column (e.g. 2003)
   
   # ── Analysis parameters ──────────────────────────────────────────────────────
-  top_n_windows    = 10,     # top N XP-CLR windows per scenario to use
+  top_n_windows    = 30,     # top N XP-CLR windows per scenario to use
   min_maf_global   = 0.05,   # discard SNPs with global MAF below this
   pvalue_threshold = 0.05,   # FDR-adjusted significance threshold
   min_slope        = 0.003,  # minimum |Δfreq/year| — filters trivial trends
@@ -901,3 +901,244 @@ ggsave(file.path(CONFIG$output_dir, "Figure_XPCLR_Trajectories_Combined.png"),
        bg = "white")
 
 cat("Done! Full-page publication figure saved to: Figure_XPCLR_Trajectories_Combined.png\n")
+
+#eroded and introgresed regions####
+# =============================================================================
+# Temporal Allele Frequency Trajectories — Top Delta He Windows
+# =============================================================================
+# WHAT THIS SCRIPT DOES:
+#   1. Reads the ACTIVATE panel VCF + release-year metadata
+#   2. Parses the top Significant Erosion and Introgression windows
+#   3. Stratifies elite lines into decadal cohorts
+#   4. Calculates alt allele frequency per candidate SNP per cohort
+#   5. Fits a linear regression (frequency ~ mean cohort year) per SNP
+#   6. Produces publication-ready ggplot2 figures
+# =============================================================================
+
+# ── 1. CONFIGURATION ─────────────────────────────────────────────────────────
+CONFIG <- list(
+  # Input file paths
+  vcf_file      = "data/Merged_Analysis.vcf.gz",
+  metadata_file = "data/activate_metadata.csv",
+  
+  # Delta He Significant Window Files
+  file_erosion  = "Results/Significant_Erosion_Sweeps_DeltaHe.csv",
+  file_intro    = "Results/Significant_Introgression_DeltaHe.csv",
+  
+  # Metadata columns
+  sample_id_col = "sample_id",    
+  year_col      = "year_release", 
+  
+  # Analysis parameters
+  top_n_windows    = 30,     # Top N windows from each extreme to analyze
+  min_maf_global   = 0.01,   
+  pvalue_threshold = 0.05,   
+  min_slope        = 0.003,  
+  
+  # Output
+  output_dir    = "Results/Temporal_Trajectories_DeltaHe",
+  figure_width  = 12,   
+  figure_height = 6,
+  dpi           = 600
+)
+
+# ── 2. PACKAGES ───────────────────────────────────────────────────────────────
+suppressPackageStartupMessages({
+  library(SeqArray); library(SeqVarTools)
+  library(dplyr); library(tidyr); library(purrr); library(tibble)
+  library(ggplot2); library(ggrepel); library(scales); library(broom)
+})
+
+if (!dir.exists(CONFIG$output_dir)) dir.create(CONFIG$output_dir, recursive = TRUE)
+
+# ── 3. HELPER FUNCTIONS ───────────────────────────────────────────────────────
+assign_decadal_cohort <- function(years) {
+  decade_start  <- floor(years / 5) * 5
+  cohort_labels <- paste0(decade_start, "s")
+  factor(cohort_labels, levels = unique(sort(cohort_labels)))
+}
+
+calc_alt_freq <- function(d) {
+  d <- d[!is.na(d)]
+  if (!length(d)) return(NA_real_)
+  sum(d) / (2 * length(d))
+}
+
+calc_maf <- function(d) {
+  af <- calc_alt_freq(d)
+  if (is.na(af)) return(NA_real_)
+  min(af, 1 - af)
+}
+
+run_regression <- function(df) {
+  df <- df %>% filter(!is.na(mean_year), !is.na(alt_freq))
+  if (nrow(df) < 3) return(NULL)     
+  fit <- lm(alt_freq ~ mean_year, data = df)
+  broom::tidy(fit) %>%
+    filter(term == "mean_year") %>%
+    rename(slope = estimate) %>%
+    mutate(r_squared = summary(fit)$r.squared)
+}
+
+# ── 4. LOAD & VALIDATE DATA ───────────────────────────────────────────────────
+cat("\n[1/5] Loading metadata and Delta He regions...\n")
+
+meta <- read.csv(CONFIG$metadata_file, stringsAsFactors = FALSE, sep = ";") %>%
+  rename_with(tolower) %>%
+  rename(sample_id = all_of(tolower(CONFIG$sample_id_col)),
+         year_release = all_of(tolower(CONFIG$year_col))) %>%
+  mutate(year_release = as.integer(year_release)) %>%
+  filter(!is.na(year_release)) %>%
+  mutate(cohort = assign_decadal_cohort(year_release))
+
+cohort_summary <- meta %>%
+  group_by(cohort) %>%
+  summarise(n = n(), mean_year = mean(year_release), .groups = "drop")
+
+# Load and subset the Top N windows for Erosion and Introgression
+df_ero <- read.csv(CONFIG$file_erosion) %>% head(CONFIG$top_n_windows) %>% mutate(scenario = "erosion")
+df_int <- read.csv(CONFIG$file_intro) %>% head(CONFIG$top_n_windows) %>% mutate(scenario = "introgression")
+
+top_windows <- bind_rows(df_ero, df_int) %>%
+  transmute(
+    chr = as.character(chr),
+    window_start = as.integer(start),
+    window_end = as.integer(stop),
+    delta_score = as.numeric(delta_He),
+    scenario = scenario
+  ) %>%
+  arrange(scenario, chr, window_start)
+
+cat(sprintf("  Loaded Top %d windows for Genetic Erosion and Top %d for Introgression.\n", 
+            nrow(df_ero), nrow(df_int)))
+
+# ── 5. VCF → GDS & GENOTYPE EXTRACTION ────────────────────────────────────────
+cat("\n[2/5] Extracting genotypes from Top Delta He windows...\n")
+
+gds_path <- file.path("Results", "merged_analysis.gds") # Re-using the GDS from the XP-CLR script if it exists
+if (!file.exists(gds_path)) {
+  seqVCF2GDS(CONFIG$vcf_file, gds_path, verbose = FALSE)
+}
+gds <- seqOpen(gds_path)
+
+common_samples <- intersect(seqGetData(gds, "sample.id"), meta$sample_id)
+common_samples <- common_samples[1:187] #Remove LR-86 lines!!
+seqSetFilter(gds, sample.id = common_samples)
+meta <- meta %>% filter(sample_id %in% common_samples)
+
+extract_window <- function(chr, window_start, window_end, delta_score, scenario, ...) {
+  seqResetFilter(gds)
+  seqSetFilter(gds, sample.id = common_samples, verbose = FALSE)
+  
+  all_chr <- seqGetData(gds, "chromosome")
+  all_pos <- seqGetData(gds, "position")
+  var_sel <- all_chr == as.character(chr) & all_pos >= window_start & all_pos <= window_end
+  
+  if (!any(var_sel)) return(NULL)
+  
+  seqSetFilter(gds, sample.id = common_samples, variant.sel = var_sel, verbose = FALSE)
+  
+  geno <- seqGetData(gds, "$dosage")
+  snp_ids <- paste0(seqGetData(gds, "chromosome"), ":", seqGetData(gds, "position"))
+  colnames(geno) <- snp_ids
+  rownames(geno) <- seqGetData(gds, "sample.id")
+  
+  global_maf <- apply(geno, 2, calc_maf)
+  geno <- geno[, global_maf >= CONFIG$min_maf_global, drop = FALSE]
+  if (ncol(geno) == 0) return(NULL)
+  
+  as.data.frame(geno) %>%
+    rownames_to_column("sample_id") %>%
+    pivot_longer(-sample_id, names_to = "snp_id", values_to = "dosage") %>%
+    mutate(chr = chr, window_start = window_start, delta_score = delta_score, scenario = scenario)
+}
+
+all_geno <- pmap_dfr(top_windows, extract_window)
+seqClose(gds)
+
+# Handle Overlapping Windows
+all_geno <- all_geno %>%
+  arrange(scenario, sample_id, snp_id, desc(abs(delta_score))) %>%
+  distinct(scenario, sample_id, snp_id, .keep_all = TRUE)
+
+cat(sprintf("  Extracted %d unique candidate SNPs.\n", n_distinct(all_geno$snp_id)))
+
+# ── 6. ALLELE FREQUENCIES & REGRESSION ───────────────────────────────────────
+cat("\n[3/5] Calculating cohort allele frequencies and running regressions...\n")
+
+freq_table <- all_geno %>%
+  left_join(meta %>% select(sample_id, cohort, year_release), by = "sample_id") %>%
+  filter(!is.na(cohort), !is.na(dosage)) %>%
+  group_by(scenario, snp_id, chr, window_start, delta_score, cohort) %>%
+  summarise(alt_freq = calc_alt_freq(dosage), .groups = "drop") %>%
+  left_join(cohort_summary %>% select(cohort, mean_year, n), by = "cohort") %>%
+  rename(cohort_size = n)
+
+reg_results <- freq_table %>%
+  group_by(scenario, snp_id, chr, window_start, delta_score) %>%
+  group_modify(~ { res <- run_regression(.x); if (is.null(res)) tibble() else res }) %>%
+  ungroup() %>%
+  mutate(
+    fdr_p = p.adjust(p.value, method = "BH"),
+    significant = fdr_p < CONFIG$pvalue_threshold & abs(slope) >= CONFIG$min_slope,
+    direction = case_when(
+      slope >  CONFIG$min_slope ~ "increasing",
+      slope < -CONFIG$min_slope ~ "decreasing",
+      TRUE ~ "stable"
+    )
+  )
+
+write.csv(reg_results, file.path(CONFIG$output_dir, "DeltaHe_regression_results.csv"), row.names = FALSE)
+
+# ── 7. PUBLICATION FIGURE ─────────────────────────────────────────────────────
+cat("\n[4/5] Generating Publication Figure...\n")
+
+plot_df <- freq_table %>%
+  left_join(reg_results %>% select(scenario, snp_id, significant, direction), by = c("scenario", "snp_id"))
+
+DIRECTION_PALETTE <- c("increasing" = "#D6604D", "decreasing" = "#4393C3", "stable" = "grey70")
+
+p_combined <- ggplot(plot_df, aes(x = mean_year, y = alt_freq, group = snp_id)) +
+  
+  geom_line(data = plot_df %>% filter(!significant | is.na(significant)), 
+            colour = "grey84", linewidth = 0.3, alpha = 0.55) +
+  geom_line(data = plot_df %>% filter(significant), 
+            aes(colour = direction), linewidth = 0.9, alpha = 0.8) +
+  geom_point(data = plot_df %>% filter(significant), 
+             aes(colour = direction), size = 1.8, alpha = 0.8) +
+  
+  geom_hline(yintercept = 0.5, linetype = "dashed", colour = "grey50", linewidth = 0.35) +
+  
+  scale_colour_manual(name = "Trend direction",
+                      values = DIRECTION_PALETTE[c("increasing", "decreasing")],
+                      labels = c("Increasing (Allele favored by selection)",
+                                 "Decreasing (Allele selected against)")) +
+  
+  scale_x_continuous(name = "Mean cohort release year",
+                     breaks = cohort_summary$mean_year,
+                     labels = round(cohort_summary$mean_year)) +
+  
+  scale_y_continuous(name = "Alternative allele frequency",
+                     limits = c(0, 1), breaks = seq(0, 1, 0.25),
+                     labels = percent_format(accuracy = 1)) +
+  
+  # Format Facets for Erosion and Introgression
+  facet_wrap(~ scenario, ncol = 2, 
+             labeller = as_labeller(c(erosion = "Genetic Erosion Phase", 
+                                      introgression = "Targeted Introgression Phase"))) +
+  
+  theme_bw(base_size = 10) +
+  theme(
+    legend.position = "bottom",
+    strip.background = element_rect(fill = "white", color = "black", linewidth = 1),
+    strip.text = element_text(face = "bold", size = 10),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5)
+  )
+
+ggsave(file.path(CONFIG$output_dir, "Figure_DeltaHe_Trajectories.png"), 
+       plot = p_combined, width = 17, height = 8, units = "cm", dpi = 600, bg = "white")
+
+cat("\n[5/5] Done! High-resolution Delta He Trajectory plot saved.\n")

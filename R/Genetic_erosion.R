@@ -8,8 +8,8 @@ library(data.table)
 
 # --- 1. Configuration ---
 gds_file <- "data/Merged_Analysis_RealCoords.gds"
-window_size <- 1000000  # 500 Kb windows (bins)
-step_size <- 500000    # 100 Kb slide (Change to 500000 for non-overlapping rigid bins)
+window_size <- 1000000  # 1500 Kb windows (bins)
+step_size <- 500000    # 500 Kb slide (Change to 500000 for non-overlapping rigid bins)
 
 cat("Opening GDS file and defining populations...\n")
 f <- snpgdsOpen(gds_file)
@@ -30,26 +30,30 @@ calc_diversity_metrics <- function(gds_obj, target_samples) {
   freq_info <- snpgdsSNPRateFreq(gds_obj, sample.id=target_samples, with.id=TRUE)
   p <- freq_info$AlleleFreq
   
-  # Note: 2p(1-p) is symmetric, so it doesn't matter if p is the major or minor allele!
-  He <- 2 * p * (1 - p)
+  # Calculate Minor Allele Frequency (MAF)
+  # pmin takes the smaller value between p and 1-p
+  MAF <- pmin(p, 1 - p)
   
-  # PIC formula: 2p(1-p) - 2[2p(1-p)]^2  ==  He - 2*(He^2)
+  He <- 2 * p * (1 - p)
   PIC <- He - ((He^2) / 2)
   
   # 2. Get Observed Genotypes to calculate Ho
-  # snpgdsGetGeno returns a matrix where 1 = heterozygous
   geno_matrix <- snpgdsGetGeno(gds_obj, sample.id=target_samples, verbose=FALSE)
-  
-  # Ho = (count of 1s) / (count of non-missing genotypes)
   Ho <- colSums(geno_matrix == 1, na.rm=TRUE) / colSums(!is.na(geno_matrix))
+  
+  # 3. Calculate Inbreeding Coefficient (Fis)
+  # Safely handle division by zero if a SNP is completely fixed (He = 0)
+  Fis <- ifelse(He == 0, NA, 1 - (Ho / He))
   
   # Return a dataframe of metrics
   data.frame(
     snp.id = freq_info$snp.id,
     p = p,
+    MAF = MAF,
     Ho = Ho,
     He = He,
-    PIC = PIC
+    PIC = PIC,
+    Fis = Fis
   )
 }
 
@@ -97,13 +101,23 @@ for(c in main_chrs) {
       stop = e,
       mid_pos_mb = (s + window_size/2) / 1e6,
       n_snps = nrow(win_snps),
-      # Average the metrics across the window
-      avg_Ho_act = mean(win_snps$Ho_act, na.rm=TRUE),
-      avg_He_act = mean(win_snps$He_act, na.rm=TRUE),
+      
+      # Average the continuous metrics
+      avg_MAF_act = mean(win_snps$MAF_act, na.rm=TRUE),
+      avg_Ho_act  = mean(win_snps$Ho_act, na.rm=TRUE),
+      avg_He_act  = mean(win_snps$He_act, na.rm=TRUE),
       avg_PIC_act = mean(win_snps$PIC_act, na.rm=TRUE),
-      avg_Ho_ldp = mean(win_snps$Ho_ldp, na.rm=TRUE),
-      avg_He_ldp = mean(win_snps$He_ldp, na.rm=TRUE),
-      avg_PIC_ldp = mean(win_snps$PIC_ldp, na.rm=TRUE)
+      avg_Fis_act = mean(win_snps$Fis_act, na.rm=TRUE),
+      
+      avg_MAF_ldp = mean(win_snps$MAF_ldp, na.rm=TRUE),
+      avg_Ho_ldp  = mean(win_snps$Ho_ldp, na.rm=TRUE),
+      avg_He_ldp  = mean(win_snps$He_ldp, na.rm=TRUE),
+      avg_PIC_ldp = mean(win_snps$PIC_ldp, na.rm=TRUE),
+      avg_Fis_ldp = mean(win_snps$Fis_ldp, na.rm=TRUE),
+      
+      # Calculate Percentage of Polymorphic Loci (SNPs where MAF > 0)
+      avg_PctPoly_act = (sum(win_snps$MAF_act > 0, na.rm=TRUE) / nrow(win_snps)) * 100,
+      avg_PctPoly_ldp = (sum(win_snps$MAF_ldp > 0, na.rm=TRUE) / nrow(win_snps)) * 100
     )
   }
   all_windows[[c]] <- do.call(rbind, chr_results)
@@ -111,7 +125,123 @@ for(c in main_chrs) {
 
 clean_df <- do.call(rbind, all_windows)
 
-# --- 4. Calculate Delta He and Two-Tailed Thresholds ---
+#diversity metric figure####
+# =============================================================================
+# ── PUBLICATION FIGURE: DIVERSITY METRICS (Ho, He, Fis) ──────────────────────
+# =============================================================================
+cat("\nPreparing data for faceted plotting...\n")
+
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggpubr) # Required for stat_compare_means
+
+# --- 1. Reshape Data (Wide to Long) and Filter ---
+plot_df <- clean_df %>%
+  select(chr, starts_with("avg_")) %>%
+  pivot_longer(
+    cols = starts_with("avg_"),
+    names_to = c("Metric", "Panel"),
+    names_pattern = "avg_(.*)_(.*)", 
+    values_to = "Value"
+  ) %>%
+  
+  # NEW: Keep ONLY the three requested metrics
+  filter(Metric %in% c("Ho", "He", "Fis")) %>%
+  
+  mutate(
+    Panel = factor(toupper(Panel), levels = c("LDP", "ACT")),
+    # Order the columns logically for the plot
+    Metric = factor(Metric, levels = c("Ho", "He", "Fis")),
+    chr_num = as.numeric(gsub(".*Chr", "", chr)),
+    chr_label = factor(paste0("Chr", chr_num), levels = paste0("Chr", 1:7))
+  ) %>%
+  filter(!is.na(Value))
+
+# --- 2. Configure Aesthetics and Pre-calculate Stats ---
+panel_colors <- c("LDP" = "#e41a1c", "ACT" = "#377eb8")
+
+# Pre-calculate the Wilcoxon tests safely to prevent zero-variance crashes
+p_vals <- compare_means(
+  Value ~ Panel, 
+  data = plot_df, 
+  group.by = c("chr_label", "Metric"), 
+  method = "wilcox.test"
+) %>% 
+  filter(!is.na(p)) # Drop broken NaNs from flatlines
+
+# THE FIX: Explicitly set the bracket heights based on the Metric!
+p_vals <- p_vals %>%
+  mutate(
+    y.position = case_when(
+      Metric == "Ho"  ~ 0.2,
+      Metric == "He"  ~ 0.6,
+      Metric == "Fis" ~ 1.05,
+      TRUE ~ 0.5 # A fallback just in case
+    )
+  )
+
+# --- 3. Build the Master Faceted Plot ---
+cat("Generating the faceted violin/boxplot with custom scales...\n")
+
+# Install ggh4x if you don't have it already
+if(!require(ggh4x)) install.packages("ggh4x")
+library(ggh4x)
+
+p_diversity <- ggplot(plot_df, aes(x = Panel, y = Value, fill = Panel)) +
+  
+  geom_violin(alpha = 0.4, color = NA, trim = TRUE) +
+  geom_boxplot(width = 0.2, color = "black", outlier.shape = NA, alpha = 0.8) +
+  
+  # Facet Grid creates Chromosomes (Rows) ~ Metrics (Columns)
+  facet_grid(Metric ~ chr_label, scales = "free_y") +
+  
+  # Explicitly define the custom Y-axis limits per metric
+  facetted_pos_scales(
+    y = list(
+      Metric == "Ho"  ~ scale_y_continuous(limits = c(0, 0.25)),
+      Metric == "He"  ~ scale_y_continuous(limits = c(0, 0.65)),
+      Metric == "Fis" ~ scale_y_continuous(limits = c(0.4, 1.1)) # Bumped to 1.05 so the 1.0 bracket fits!
+    )
+  ) +
+  
+  # THE FIX: Changed label to "p.signif" and increased size to 5 for better star visibility!
+  stat_pvalue_manual(p_vals, label = "p.signif", y.position = "y.position", size = 5) +
+  
+  scale_fill_manual(values = panel_colors) +
+  labs(
+    x = NULL, 
+    y = "Diversity Metric Value"
+  ) +
+  
+  # 12pt Standard Theme for A4 page width
+  theme_bw(base_size = 10) +
+  theme(
+    legend.position = "none", 
+    strip.background = element_rect(fill = "grey93", color = "black"),
+    strip.text = element_text(face = "bold", size = 9),
+    axis.text.x = element_text(face = "bold", color = "black"),
+    axis.text.y = element_text(color = "black", size = 9),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5) 
+  )
+
+print(p_diversity)
+
+# --- 4. Save the Publication Figure ---
+if(!dir.exists("Results")) dir.create("Results")
+
+ggsave("Results/Diversity_Metrics_Ho_He_Fis.png", 
+       plot = p_diversity, 
+       width = 18, 
+       height = 8, 
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+
+cat("Done! High-resolution 21-panel figure saved to Results/Diversity_Metrics_Ho_He_Fis.png\n")
+
+# --- 4. Calculate Delta He and Two-Tailed Thresholds####
 cat("Calculating Reduction of Diversity (Delta He) and thresholds...\n")
 clean_df <- clean_df %>%
   mutate(
@@ -170,53 +300,88 @@ chr_metrics <- df_snps %>%
 write.csv(chr_metrics, "Results/Chromosome_Diversity_Metrics.csv", row.names = FALSE)
 cat("Chromosome metrics saved to 'Results/Chromosome_Diversity_Metrics.csv'!\n")
 
-# --- 6. Plotting the Two-Tailed Manhattan Plot ---
-cat("Generating Two-Tailed Delta He Manhattan Plot...\n")
-clean_df$color_group <- ifelse(clean_df$chr_num %% 2 == 0, "Even", "Odd")
+# --- 6. Plotting the Two-Tailed Manhattan Plot (Dot Style) ---
+cat("Generating Two-Tailed Delta He Dot Plot...\n")
 
-p_delta <- ggplot(clean_df, aes(x = mid_pos_mb, y = delta_He)) +
-  # Background chromosomes
-  geom_point(aes(color = color_group), alpha = 0.6, size = 1.2) +
+# 1. Categorize and sort the windows
+clean_df <- clean_df %>%
+  mutate(
+    category = case_when(
+      delta_He >= threshold_erosion ~ "Erosion",
+      delta_He <= threshold_introgression ~ "Introgression",
+      TRUE ~ "Background"
+    ),
+    # Lock the factor levels so Background is plotted first (at the bottom)
+    category = factor(category, levels = c("Background", "Erosion", "Introgression"))
+  ) %>%
+  # Sort so significant points are drawn last (on top of the grey mass)
+  arrange(category) 
+
+# 2. Build the Plot
+p_delta <- ggplot(clean_df, aes(x = mid_pos_mb, y = delta_He, color = category)) +
   
-  # Highlight Top 1% (Erosion) in Dark Orange
-  geom_point(data = filter(clean_df, delta_He >= threshold_erosion), color = "darkorange", size = 1.6) +
+  # Use points, mapping size and alpha to the category to reduce background clutter
+  geom_point(aes(size = category, alpha = category), stroke = 0) +
   
-  # Highlight Bottom 1% (Introgression) in Dodger Blue
-  geom_point(data = filter(clean_df, delta_He <= threshold_introgression), color = "dodgerblue", size = 1.6) +
+  # Add threshold and zero lines
+  geom_hline(yintercept = threshold_erosion, linetype = "dashed", color = "darkred", linewidth = 0.6) +
+  geom_hline(yintercept = 0, linetype = "solid", color = "black", linewidth = 0.4) +
+  geom_hline(yintercept = threshold_introgression, linetype = "dashed", color = "darkred", linewidth = 0.6) +
   
-  # Add both threshold lines
-  geom_hline(yintercept = threshold_erosion, linetype = "dashed", color = "black", linewidth = 0.8) +
-  geom_hline(yintercept = 0, linetype = "dashed", color = "darkred", linewidth = 0.5) +
-  geom_hline(yintercept = threshold_introgression, linetype = "dashed", color = "black", linewidth = 0.8) +
+  # Facet by chromosome, keeping labels at the top
+  facet_grid(. ~ chr_num, scales = "free_x", space = "free_x", 
+             labeller = labeller(chr_num = function(x) paste0("Chr", x))) +
   
-  # Add text labels for the exact threshold values on the Y-axis
-  #annotate("text", x = min(clean_df$mid_pos_mb), y = threshold_erosion, 
-  #         label = round(threshold_erosion, 3), vjust = -0.5, hjust = 0, color = "darkorange", fontface = "bold") +
-  #annotate("text", x = min(clean_df$mid_pos_mb), y = threshold_introgression, 
-  #         label = round(threshold_introgression, 3), vjust = 1.5, hjust = 0, color = "dodgerblue", fontface = "bold") +
+  # Assign specific colors, sizes, and transparencies
+  scale_color_manual(values = c(
+    "Erosion" = "darkorange", 
+    "Introgression" = "dodgerblue", 
+    "Background" = "grey65"
+  )) +
+  scale_size_manual(values = c(
+    "Erosion" = 1.8, 
+    "Introgression" = 1.8, 
+    "Background" = 0.9   # Make background dots much smaller
+  )) +
+  scale_alpha_manual(values = c(
+    "Erosion" = 0.9, 
+    "Introgression" = 0.9, 
+    "Background" = 0.35  # Make background dots highly transparent
+  )) +
   
-  facet_grid(. ~ chr_num, scales = "free_x", space = "free_x", switch = "x") +
-  scale_color_manual(values = c("Even" = "gray50", "Odd" = "gray75")) +
+  # Force X-axis breaks every 100 Mb
+  scale_x_continuous(breaks = seq(0, 1500, by = 200)) +
+  
   labs(
-  #  title = "Genome-Wide Scan for Genetic Erosion and Introgression",
-  #  subtitle = "Reduction of Diversity (\u0394He) highlighting extreme bottlenecks (top 1%) and introgressions (bottom 1%)",
-    x = "Chromosome",
+    x = "Physical Distance (Mb)",
     y = expression(paste(Delta, "He (LDP - ACTIVATE)"))
   ) +
-  theme_bw() +
+  
+  # Apply 12pt Standard Journal Theme
+  theme_bw(base_size = 10) +
   theme(
     legend.position = "none",
     panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank(),
-    axis.text.x = element_blank(),
-    axis.ticks.x = element_blank(),
-    strip.background = element_rect(fill = "grey90", color = NA),
-    strip.text.x = element_text(face = "bold", size = 10)
+    panel.grid.major.x = element_line(color = "grey92"),
+    strip.background = element_rect(fill = "grey95", color = "black"),
+    strip.text.x = element_text(face = "bold", size = 9),
+    axis.text.x = element_text(size = 9, angle = 45, hjust = 1, color = "black"),
+    axis.text.y = element_text(size = 9, color = "black"),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5)
   )
 
-ggsave("Results/Delta_He_TwoTailed_Plot_1Percent.png", plot = p_delta, width = 11, height = 5, dpi = 600)
+print(p_delta)
 
-cat("Done! 1% Two-tailed diversity scan complete. Check the 'Results' folder.\n")
+# Save the plot mapped to standard 17 cm A4 page width
+ggsave("Results/Delta_He_TwoTailed_Dots_Publication.png", 
+       plot = p_delta, 
+       width = 18, 
+       height = 6, 
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+
+cat("Done! Publication-ready Dot scan complete. Check the 'Results' folder.\n")
 
 #Extracting Proteins from Delta He Sweeps####
 library(GenomicRanges)
@@ -687,3 +852,134 @@ plot_unique_lollipop(df_intro, unique_breed, "Introgression", "Results/Introgres
 
 cat("Done! Both unique plots saved successfully.\n")
 
+# ── PUBLICATION FIGURE####
+# DELTA He GO OVERLAP AND UNIQUE DRIVERS ───────────────
+cat("\nGenerating Cell Press formatted GO Figures for Delta He...\n")
+
+# Load required libraries
+library(dplyr)
+library(ggplot2)
+library(ggVennDiagram)
+library(patchwork)
+library(stringr)
+
+# --- 1. Load the Data ---
+# Make sure these filenames match whatever you output from your GO extraction script!
+df_erosion <- read.csv("Results/DeltaHe_Erosion_Final_GO.csv", stringsAsFactors = FALSE)
+df_intro   <- read.csv("Results/DeltaHe_Introgression_Final_GO.csv", stringsAsFactors = FALSE)
+
+# Colors matching your Two-Tailed Manhattan plot perfectly
+color_erosion <- "darkorange"
+color_intro   <- "dodgerblue"
+
+# --- 2. Helper Function: Extract Unique Terms by Ontology ---
+get_terms <- function(df, ontology_type) {
+  df %>% filter(ONTOLOGY == ontology_type) %>% pull(term_name) %>% unique()
+}
+
+# Extract all term sets
+bp_erosion <- get_terms(df_erosion, "BP")
+bp_intro   <- get_terms(df_intro, "BP")
+
+cc_erosion <- get_terms(df_erosion, "CC")
+cc_intro   <- get_terms(df_intro, "CC")
+
+mf_erosion <- get_terms(df_erosion, "MF")
+mf_intro   <- get_terms(df_intro, "MF")
+
+# =============================================================================
+# --- PART 1: THE VENN DIAGRAMS (Panels a, b, c) ---
+# =============================================================================
+
+make_venn <- function(terms_erosion, terms_intro, title_label) {
+  venn_list <- list("Erosion" = terms_erosion, "Introgression" = terms_intro)
+  
+  ggVennDiagram(venn_list, 
+                label_alpha = 0,             
+                set_size = 3,              
+                label_size = 3,            
+                set_color = c(color_erosion, color_intro)) + 
+    
+    scale_fill_gradient(low = "#F8F9FA", high = "#DEE2E6") +
+    scale_x_continuous(expand = expansion(mult = 0.35)) +
+    scale_y_continuous(expand = expansion(mult = 0.15)) +
+    
+    labs(title = title_label) +
+    theme(
+      legend.position = "none", 
+      plot.title = element_text(face = "bold", size = 10, hjust = 0.5, lineheight = 1.1),
+      plot.margin = margin(5, 5, 5, 5) 
+    )
+}
+
+v_bp <- make_venn(bp_erosion, bp_intro, "Biological Process\n(BP)")
+v_cc <- make_venn(cc_erosion, cc_intro, "Cellular Component\n(CC)")
+v_mf <- make_venn(mf_erosion, mf_intro, "Molecular Function\n(MF)")
+
+# Assemble the top row
+venn_plot <- v_bp + v_cc + v_mf +
+  plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+  theme(plot.tag = element_text(size = 10, face = "bold"))
+
+if(!dir.exists("Results")) dir.create("Results")
+ggsave("Results/Figure_DeltaHe_GO_Part1_Venns_abc.png", 
+       plot = venn_plot, 
+       width = 17, 
+       height = 7,  
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+cat("Saved Part 1: Figure_DeltaHe_GO_Part1_Venns_abc.png\n")
+
+# =============================================================================
+# --- PART 2: THE LOLLIPOP PLOTS (Panels d, e) ---
+# =============================================================================
+
+unique_erosion_bp <- setdiff(bp_erosion, bp_intro)
+unique_intro_bp   <- setdiff(bp_intro, bp_erosion)
+
+prep_lollipop_data <- function(df, unique_terms) {
+  df %>%
+    filter(term_name %in% unique_terms & ONTOLOGY == "BP") %>%
+    count(term_name, name = "gene_count") %>%
+    slice_max(order_by = gene_count, n = 10, with_ties = FALSE) %>%
+    mutate(term_wrapped = str_wrap(term_name, width = 45)) 
+}
+
+lolli_erosion <- prep_lollipop_data(df_erosion, unique_erosion_bp)
+lolli_intro   <- prep_lollipop_data(df_intro, unique_intro_bp)
+
+make_lollipop <- function(data, color, y_label) {
+  ggplot(data, aes(x = gene_count, y = reorder(term_wrapped, gene_count))) +
+    geom_segment(aes(xend = 0, yend = term_wrapped), linewidth = 1, color = color) +
+    geom_point(size = 3.5, color = color) +
+    
+    scale_x_continuous(breaks = scales::pretty_breaks()) +
+    labs(x = "Number of Selected Genes", y = y_label) +
+    
+    theme_bw(base_size = 10) +
+    theme(
+      panel.grid.minor = element_blank(),
+      panel.grid.major.y = element_blank(), 
+      axis.text = element_text(color = "black"),
+      axis.title = element_text(face = "bold"),
+      plot.margin = margin(t = 5, r = 5, b = 5, l = 5)
+    )
+}
+
+p_d <- make_lollipop(lolli_erosion, color_erosion, "Erosion-Specific\nBiological Processes")
+p_e <- make_lollipop(lolli_intro, color_intro, "Introgression-Specific\nBiological Processes")
+
+# Assemble the bottom two rows, forcing the tags to be "d)" and "e)"
+lollipop_plot <- p_d / p_e +
+  plot_annotation(tag_levels = list(c('d', 'e')), tag_suffix = ')') & 
+  theme(plot.tag = element_text(size = 10, face = "bold"))
+
+ggsave("Results/Figure_DeltaHe_GO_Part2_Lollipops_de.png", 
+       plot = lollipop_plot, 
+       width = 17, 
+       height = 13, 
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+cat("Saved Part 2: Figure_DeltaHe_GO_Part2_Lollipops_de.png\n")
