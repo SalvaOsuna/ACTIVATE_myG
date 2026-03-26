@@ -488,3 +488,87 @@ ggsave("Results/Haplotypes/Haplotype_Block_Comparison_PublicationReady_breeding 
        plot = p_blocks_labeled, width = 9, height = 6, dpi = 600)
 
 cat("Done! High-quality labeled plot saved successfully.\n")
+
+# Figure Empirical CDF####
+# ── PUBLICATION FIGURE: EMPIRICAL CDF OF HAPLOTYPE BLOCK LENGTHS 
+cat("\nGenerating High-Resolution ECDF Plot for Haplotype Blocks...\n")
+
+library(ggplot2)
+library(scales)
+
+# 1. Clean and order the factors so Background plots first/bottom
+blocks_all <- blocks_all %>%
+  mutate(
+    region_type = factor(region_type, levels = c("background", "eroded", "introgressed")),
+    # Ensure LDP is on the left, ACTIVATE on the right (matching your diversity plots)
+    panel = factor(toupper(panel), levels = c("LDP", "ACTIVATE")) 
+  )
+
+# 2. Define standard journal colors matching the Delta He analysis
+region_colors <- c(
+  "eroded"       = "darkorange", 
+  "introgressed" = "dodgerblue", 
+  "background"   = "grey65"
+)
+
+region_labels <- c(
+  "eroded"       = "Genetic Erosion", 
+  "introgressed" = "Targeted Introgression", 
+  "background"   = "Background Genome"
+)
+
+# 3. Build the Plot
+p_ecdf <- ggplot(blocks_all, aes(x = block_len_bp / 1000, color = region_type, linetype = region_type)) +
+  
+  # The ECDF step lines
+  stat_ecdf(linewidth = 1, geom = "step") +
+  
+  # Custom scales for colors and linetypes to make the significant regions pop
+  scale_color_manual(name = "Genomic Region", values = region_colors, labels = region_labels) +
+  scale_linetype_manual(name = "Genomic Region", 
+                        values = c("eroded" = "solid", "introgressed" = "solid", "background" = "dashed"),
+                        labels = region_labels) +
+  
+  # Log10 scale is critical to visualize block lengths effectively
+  scale_x_continuous(
+    name   = "Haplotype Block Length (kb)",
+    trans  = "log10",
+    labels = comma_format(accuracy = 1)
+  ) +
+  
+  scale_y_continuous(
+    name   = "Cumulative Proportion",
+    labels = percent_format(accuracy = 1)
+  ) +
+  
+  # Facet by Panel
+  facet_wrap(~ panel, ncol = 2) +
+  
+  # Apply the established Cell Press / Plant Communications 12pt theme
+  theme_bw(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10),
+    strip.background = element_rect(fill = "grey95", color = "black", linewidth = 1),
+    strip.text = element_text(face = "bold", size = 12),
+    axis.title = element_text(face = "bold"),
+    axis.text = element_text(color = "black"),
+    panel.grid.minor = element_blank(),
+    plot.margin = margin(t = 10, r = 15, b = 5, l = 5)
+  )
+
+print(p_ecdf)
+
+# 4. Save the plot mapped to standard 17 cm A4 page width
+if(!dir.exists("Results")) dir.create("Results")
+
+ggsave(file.path(CONFIG$output_dir, "Figure_Haplotype_Blocks_ECDF_Publication.png"), 
+       plot = p_ecdf, 
+       width = 17, 
+       height = 10,  # 10 cm height creates a sleek, wide half-page panel
+       units = "cm", 
+       dpi = 600, 
+       bg = "white")
+
+cat("Done! High-resolution ECDF figure saved.\n")
