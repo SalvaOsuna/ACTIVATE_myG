@@ -309,7 +309,7 @@ if (!dir.exists(CONFIG$output_dir))
 #        C:\Tools\plink\plink.exe
 #   3. Set it here using forward slashes:
 #
-# options(plink.path = "C:/Users/YourName/plink_win64/plink.exe")
+options(plink.path = "C:/Users/Salva/Downloads/plink_win64_20250819/plink.exe")
 #
 # If PLINK genetics is not installed yet, download it from:
 #   https://www.cog-genomics.org/plink/  (use the Windows 64-bit zip)
