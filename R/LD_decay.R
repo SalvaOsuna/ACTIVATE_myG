@@ -251,6 +251,211 @@ ggsave("Results/ACTIVATE_LD_Decay_Publication_Clean.png",
        dpi = 600)
 
 cat("Done! Clean publication plot saved to Results/ACTIVATE_LD_Decay_Publication_Clean.png\n")
+
+# =============================================================================
+# ── PUBLICATION FIGURE: 3-PANEL LD DECAY (FULL SETS VS COMMON SET) ───────────
+# =============================================================================
+cat("Starting Multi-Panel LD Decay Analysis...\n")
+
+library(gdsfmt)
+library(SNPRelate)
+library(ggplot2)
+library(dplyr)
+if(!require(patchwork)) install.packages("patchwork")
+library(patchwork)
+
+# --- 1. Configuration ---
+gds_ldp_full <- "data/LDP324_nofiltered.gds"
+gds_act_full <- "data/ACT197_biallelic.gds"
+gds_merged   <- "data/Merged_Analysis_RealCoords.gds"
+
+act_samples_file <- "data/ACT187_samples.txt"
+ldp_samples_file <- "data/LDP324_samples.txt"
+
+max_snps_per_chr <- 10000      
+max_distance_bp  <- 10000000  # 10 Mb
+plot_points      <- 20000     
+
+# Load sample lists for the merged panel
+act_samples <- readLines(act_samples_file)
+ldp_samples <- readLines(ldp_samples_file)
+
+# Manuscript Color Palette
+line_colors <- c("LDP" = "dodgerblue", "ACTIVATE" = "darkorange", "Combined" = "grey45")
+
+# --- 2. Master LD Calculation Function ---
+calculate_ld <- function(file_path, sample_subset = NULL, label) {
+  
+  if(!file.exists(file_path)) stop(paste("File not found:", file_path))
+  cat(paste("\nProcessing:", label, "...\n"))
+  
+  genofile <- snpgdsOpen(file_path)
+  
+  # If no subset is provided, use all samples in the file
+  if(is.null(sample_subset)) {
+    sample_subset <- read.gdsn(index.gdsn(genofile, "sample.id"))
+  } else {
+    # Ensure requested samples actually exist in this file
+    all_samps <- read.gdsn(index.gdsn(genofile, "sample.id"))
+    sample_subset <- intersect(sample_subset, all_samps)
+  }
+  
+  cat("  Filtering for MAF > 0.05...\n")
+  snpset <- snpgdsSelectSNP(genofile, sample.id = sample_subset, maf = 0.05, 
+                            missing.rate = 0.2, autosome.only = FALSE, verbose = FALSE)
+  
+  snp_id <- read.gdsn(index.gdsn(genofile, "snp.id"))
+  chr <- as.character(read.gdsn(index.gdsn(genofile, "snp.chromosome")))
+  pos <- read.gdsn(index.gdsn(genofile, "snp.position"))
+  
+  df_meta <- data.frame(snp_id = snp_id, chr = chr, pos = pos, stringsAsFactors=FALSE)
+  df_meta <- df_meta[df_meta$snp_id %in% unlist(snpset), ]
+  
+  main_chrs <- unique(df_meta$chr)[grepl("Chr[1-7]$|^[1-7]$", unique(df_meta$chr))]
+  ld_results <- list()
+  
+  cat("  Calculating pairwise r^2...\n")
+  for(c in main_chrs) {
+    chr_snps <- df_meta[df_meta$chr == c, ]
+    if(nrow(chr_snps) > max_snps_per_chr) {
+      chr_snps <- chr_snps[sort(sample(1:nrow(chr_snps), max_snps_per_chr)), ]
+    }
+    
+    ld_mat <- snpgdsLDMat(genofile, sample.id = sample_subset, snp.id = chr_snps$snp_id, 
+                          method = "r", slide = -1, verbose = FALSE)$LD
+    
+    ld_mat[lower.tri(ld_mat, diag=TRUE)] <- NA
+    pos_mat <- abs(outer(chr_snps$pos, chr_snps$pos, "-"))
+    
+    valid <- !is.na(as.vector(ld_mat^2)) & as.vector(pos_mat) > 0 & as.vector(pos_mat) <= max_distance_bp
+    
+    ld_results[[c]] <- data.frame(
+      Distance = as.vector(pos_mat)[valid],
+      R2 = as.vector(ld_mat^2)[valid]
+    )
+  }
+  
+  snpgdsClose(genofile)
+  
+  chr_ld_df <- do.call(rbind, ld_results)
+  chr_ld_df$Panel <- label
+  chr_ld_df$Distance_Mb <- chr_ld_df$Distance / 1e6
+  
+  if(nrow(chr_ld_df) > plot_points) {
+    chr_ld_df <- chr_ld_df[sample(1:nrow(chr_ld_df), plot_points), ]
+  }
+  return(chr_ld_df)
+}
+
+# --- 3. Execute Calculations ---
+df_a_ldp  <- calculate_ld(gds_ldp_full, NULL, "LDP")
+df_b_act  <- calculate_ld(gds_act_full, NULL, "ACTIVATE")
+
+df_c_ldp  <- calculate_ld(gds_merged, ldp_samples, "LDP")
+df_c_act  <- calculate_ld(gds_merged, act_samples, "ACTIVATE")
+df_c_comb <- calculate_ld(gds_merged, NULL, "Combined")
+
+df_c_all <- bind_rows(df_c_ldp, df_c_act, df_c_comb)
+df_c_all$Panel <- factor(df_c_all$Panel, levels = c("LDP", "Combined", "ACTIVATE"))
+
+# --- 4. Helper to calculate Intersection (r2 = 0.2) ---
+get_intersection <- function(df) {
+  model <- lm(R2 ~ log(Distance), data = df)
+  cross_bp <- exp((0.2 - coef(model)[1]) / coef(model)[2])
+  return(cross_bp / 1e6)
+}
+
+# --- 5. Generate Individual Plots ---
+cat("\nGenerating Panels...\n")
+
+base_theme <- theme_bw(base_size = 11) + 
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", size = 11, hjust = 0.5),
+    axis.title = element_text(face = "bold"),
+    plot.margin = margin(t = 5, r = 5, b = 5, l = 5) 
+  )
+
+# --- Panel A: LDP Full ---
+cross_a <- get_intersection(df_a_ldp)
+p_a <- ggplot(df_a_ldp, aes(x = Distance_Mb, y = R2)) +
+  geom_point(alpha = 0.03, size = 0.5, color = "grey40", stroke = 0) +
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = line_colors["LDP"], linewidth = 1.2) +
+  geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  geom_vline(xintercept = cross_a, linetype = "dotted", color = "black", linewidth = 0.8) +
+  annotate("text", x = cross_a + 0.3, y = 0.25, label = sprintf("%.2f Mb", cross_a), fontface = "bold", size = 3.5, hjust = 0) +
+  scale_x_continuous(breaks = seq(0, 10, by = 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Physical Distance (Mb)", y = expression(bold(Linkage~Disequilibrium~(r^2))), title = "LDP (Full SNP Set)") +
+  base_theme
+
+# --- Panel B: ACTIVATE Full ---
+cross_b <- get_intersection(df_b_act)
+p_b <- ggplot(df_b_act, aes(x = Distance_Mb, y = R2)) +
+  geom_point(alpha = 0.03, size = 0.5, color = "grey40", stroke = 0) +
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = line_colors["ACTIVATE"], linewidth = 1.2) +
+  geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  geom_vline(xintercept = cross_b, linetype = "dotted", color = "black", linewidth = 0.8) +
+  annotate("text", x = cross_b + 0.3, y = 0.25, label = sprintf("%.2f Mb", cross_b), fontface = "bold", size = 3.5, hjust = 0) +
+  scale_x_continuous(breaks = seq(0, 10, by = 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Physical Distance (Mb)", y = NULL, title = "ACTIVATE (Full SNP Set)") +
+  base_theme + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
+# --- Panel C: Common Set (Overlaid) ---
+cross_c_ldp <- get_intersection(df_c_ldp)
+cross_c_act <- get_intersection(df_c_act)
+cross_c_com <- get_intersection(df_c_comb)
+
+p_c <- ggplot(df_c_all, aes(x = Distance_Mb, y = R2, color = Panel)) +
+  geom_point(alpha = 0.02, size = 0.5, color = "grey40", stroke = 0) +
+  
+  # Grouped smooth lines
+  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, linewidth = 1.2) +
+  geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
+  
+  # Three intersection lines
+  geom_vline(xintercept = cross_c_ldp, linetype = "dotted", color = "black", linewidth = 0.6) +
+  geom_vline(xintercept = cross_c_com, linetype = "dotted", color = "black", linewidth = 0.6) +
+  geom_vline(xintercept = cross_c_act, linetype = "dotted", color = "black", linewidth = 0.6) +
+  
+  # Three staggered annotations to prevent overlap
+  annotate("text", x = cross_c_ldp + 0.2, y = 0.24, label = sprintf("%.2f", cross_c_ldp), color = line_colors["LDP"], fontface = "bold", size = 3.5, hjust = 0) +
+  annotate("text", x = cross_c_com + 0.2, y = 0.31, label = sprintf("%.2f", cross_c_com), color = line_colors["Combined"], fontface = "bold", size = 3.5, hjust = 0) +
+  annotate("text", x = cross_c_act + 0.2, y = 0.38, label = sprintf("%.2f", cross_c_act), color = line_colors["ACTIVATE"], fontface = "bold", size = 3.5, hjust = 0) +
+  
+  scale_color_manual(values = line_colors) +
+  scale_x_continuous(breaks = seq(0, 10, by = 2), limits = c(0, 10)) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(x = "Physical Distance (Mb)", y = NULL, title = "Merged (Common SNP Set)") +
+  
+  base_theme + 
+  theme(
+    axis.text.y = element_blank(), axis.ticks.y = element_blank(),
+    legend.position = c(0.75, 0.85),
+    legend.title = element_blank(),
+    legend.text = element_text(face="bold", size=9),
+    legend.background = element_rect(fill=alpha("white", 0.8), color=NA),
+    legend.key.size = unit(0.5, "cm")
+  )
+
+# --- 6. Assemble and Save Final Plot ---
+final_plot <- p_a | p_b | p_c + 
+  plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+  theme(plot.tag = element_text(face = 'bold', size = 13))
+
+if(!dir.exists("Results")) dir.create("Results")
+ggsave("Results/Figure_LD_Decay_3Panel_Publication.png", 
+       plot = final_plot, 
+       width = 17, 
+       height = 6, 
+       units = "cm", 
+       dpi = 600,
+       bg = "white")
+
+cat("Done! Clean 3-Panel publication plot saved to Results/Figure_LD_Decay_3Panel_Publication.png\n")
+
+
 #by chromosome####
 # Load necessary libraries
 library(gdsfmt)
