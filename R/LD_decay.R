@@ -281,7 +281,7 @@ act_samples <- readLines(act_samples_file)
 ldp_samples <- readLines(ldp_samples_file)
 
 # Manuscript Color Palette
-line_colors <- c("LDP" = "dodgerblue", "ACTIVATE" = "darkorange", "Combined" = "grey45")
+line_colors <- c("LDP" = "#e41a1c", "ACTIVATE" = "#377eb8", "Combined" = "grey45")
 
 # --- 2. Master LD Calculation Function ---
 calculate_ld <- function(file_path, sample_subset = NULL, label) {
@@ -380,26 +380,33 @@ base_theme <- theme_bw(base_size = 11) +
 cross_a <- get_intersection(df_a_ldp)
 p_a <- ggplot(df_a_ldp, aes(x = Distance_Mb, y = R2)) +
   geom_point(alpha = 0.03, size = 0.5, color = "grey40", stroke = 0) +
-  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = line_colors["LDP"], linewidth = 1.2) +
+  geom_smooth(method = "gam", formula = y ~ log(x), se = FALSE, color = line_colors["LDP"], linewidth = 1.2) +
   geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
   geom_vline(xintercept = cross_a, linetype = "dotted", color = "black", linewidth = 0.8) +
-  annotate("text", x = cross_a + 0.3, y = 0.25, label = sprintf("%.2f Mb", cross_a), fontface = "bold", size = 3.5, hjust = 0) +
+  annotate("text", 
+           x = cross_a + 0.3, y = 0.4, 
+           color = line_colors["LDP"], 
+           label = sprintf("%.2f Mb", cross_a), 
+           fontface = "bold", 
+           size = 3, 
+           hjust = 0,
+           angle = 90) +
   scale_x_continuous(breaks = seq(0, 10, by = 2), limits = c(0, 10)) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Physical Distance (Mb)", y = expression(bold(Linkage~Disequilibrium~(r^2))), title = "LDP (Full SNP Set)") +
+  labs(x = NULL, y = expression(bold(Linkage~Disequilibrium~(r^2))), title = NULL) +
   base_theme
 
 # --- Panel B: ACTIVATE Full ---
 cross_b <- get_intersection(df_b_act)
 p_b <- ggplot(df_b_act, aes(x = Distance_Mb, y = R2)) +
   geom_point(alpha = 0.03, size = 0.5, color = "grey40", stroke = 0) +
-  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, color = line_colors["ACTIVATE"], linewidth = 1.2) +
+  geom_smooth(method = "gam", formula = y ~ log(x), se = FALSE, color = line_colors["ACTIVATE"], linewidth = 1.2) +
   geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
   geom_vline(xintercept = cross_b, linetype = "dotted", color = "black", linewidth = 0.8) +
   annotate("text", x = cross_b + 0.3, y = 0.25, label = sprintf("%.2f Mb", cross_b), fontface = "bold", size = 3.5, hjust = 0) +
   scale_x_continuous(breaks = seq(0, 10, by = 2), limits = c(0, 10)) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Physical Distance (Mb)", y = NULL, title = "ACTIVATE (Full SNP Set)") +
+  labs(x = "Physical Distance (Mb)", y = NULL, title = NULL) +
   base_theme + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 
 # --- Panel C: Common Set (Overlaid) ---
@@ -411,7 +418,7 @@ p_c <- ggplot(df_c_all, aes(x = Distance_Mb, y = R2, color = Panel)) +
   geom_point(alpha = 0.02, size = 0.5, color = "grey40", stroke = 0) +
   
   # Grouped smooth lines
-  geom_smooth(method = "lm", formula = y ~ log(x), se = FALSE, linewidth = 1.2) +
+  geom_smooth(method = "gam", formula = y ~ log(x), se = FALSE, linewidth = 1.2) +
   geom_hline(yintercept = 0.2, linetype = "dashed", color = "darkred", linewidth = 0.8) +
   
   # Three intersection lines
@@ -420,14 +427,17 @@ p_c <- ggplot(df_c_all, aes(x = Distance_Mb, y = R2, color = Panel)) +
   geom_vline(xintercept = cross_c_act, linetype = "dotted", color = "black", linewidth = 0.6) +
   
   # Three staggered annotations to prevent overlap
-  annotate("text", x = cross_c_ldp + 0.2, y = 0.24, label = sprintf("%.2f", cross_c_ldp), color = line_colors["LDP"], fontface = "bold", size = 3.5, hjust = 0) +
-  annotate("text", x = cross_c_com + 0.2, y = 0.31, label = sprintf("%.2f", cross_c_com), color = line_colors["Combined"], fontface = "bold", size = 3.5, hjust = 0) +
-  annotate("text", x = cross_c_act + 0.2, y = 0.38, label = sprintf("%.2f", cross_c_act), color = line_colors["ACTIVATE"], fontface = "bold", size = 3.5, hjust = 0) +
+  annotate("text", x = cross_c_ldp + 0.3, y = 0.40, label = sprintf("%.2f Mb", cross_c_ldp), 
+           color = line_colors["LDP"], fontface = "bold", size = 3, hjust = 0,angle = 90) +
+  annotate("text", x = cross_c_com + 0.3, y = 0.40, label = sprintf("%.2f Mb", cross_c_com), 
+           color = line_colors["Combined"], fontface = "bold", size = 3, hjust = 0,angle = 90) +
+  annotate("text", x = cross_c_act + 0.3, y = 0.40, label = sprintf("%.2f Mb", cross_c_act), 
+           color = line_colors["ACTIVATE"], fontface = "bold", size = 3, hjust = 0,angle = 90) +
   
   scale_color_manual(values = line_colors) +
   scale_x_continuous(breaks = seq(0, 10, by = 2), limits = c(0, 10)) +
   scale_y_continuous(limits = c(0, 1)) +
-  labs(x = "Physical Distance (Mb)", y = NULL, title = "Merged (Common SNP Set)") +
+  labs(x = NULL, y = NULL, title = NULL) +
   
   base_theme + 
   theme(
@@ -447,8 +457,8 @@ final_plot <- p_a | p_b | p_c +
 if(!dir.exists("Results")) dir.create("Results")
 ggsave("Results/Figure_LD_Decay_3Panel_Publication.png", 
        plot = final_plot, 
-       width = 17, 
-       height = 6, 
+       width = 18, 
+       height = 7, 
        units = "cm", 
        dpi = 600,
        bg = "white")
